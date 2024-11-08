@@ -3,3 +3,28 @@
 @tailwind utilities;
 
 
+body {
+    font-family: 'Roboto', 'Helvetica', sans-serif;
+}
+.header-menu li {
+    display: inline-block;
+    background-color: orange;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-right: 0px;
+    margin-left: 0px;
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.header-menu li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    white-space: normal; /* Allow text to wrap within the block */
+    word-break: break-word; /* Break long words to fit within the block */
+}
+
+.header-menu li a:hover {
+    text-decoration: underline;
+}
