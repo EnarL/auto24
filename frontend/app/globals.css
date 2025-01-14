@@ -2,29 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body {
     font-family: 'Roboto', 'Helvetica', sans-serif;
+
 }
+
 .header-menu li {
-    display: inline-block;
-    background-color: orange;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin-right: 0px;
-    margin-left: 0px;
-    white-space: nowrap; /* Prevent text from wrapping */
+    background-color: #FCBA3C;
+    border-radius: .714rem .714rem 0 0;
+    height: calc(2 * 0.857rem + 2 * 0.5rem);
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0 1em;
+    min-width: 10ch;
+    margin-right: 1px;
+    color: #fff;
+    font-weight: 500;
 }
 
 .header-menu li a {
     color: white;
     text-decoration: none;
+    white-space: normal;
     display: block;
     text-align: center;
-    white-space: normal; /* Allow text to wrap within the block */
-    word-break: break-word; /* Break long words to fit within the block */
 }
 
-.header-menu li a:hover {
-    text-decoration: underline;
+.header-menu li.current {
+    background-color: #06c;
 }
+
+
+/*screen width*/
+
+/* In your globals.css file */
+.max-w-custom {
+    max-width: 1000px;
+}
+
+
+@media (min-width: 1160px) and (max-width: 1320px) {
+    .max-w-custom {
+        max-width: 1170px;
+    }
+}
+
+@media(min-width: 320px) and (max-width: 600px){
+    .logo-details{
+        width: 400px;
+
+    }
+    .sub-logo-details{
+        width: 20px;
+
+    }
+    .overall-margin-left{
+        margin-left:8px;
+
+    }
+    .search-section{
+        width: 205px;
+        height: 120px;
+    }
+    .grid-columns{
+        grid-column: 1;
+        grid: inherit;
+    }
+
+    .grid-cols-2-custom {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+

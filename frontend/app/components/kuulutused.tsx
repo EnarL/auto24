@@ -1,38 +1,42 @@
-import React from 'react';
-import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-
-const carImages = [
-    '/path/to/car7.jpg',
-    '/path/to/car9.jpg','/path/to/car1.jpg',
-    '/path/to/car2.jpg', '/path/to/car1.jpg',
-    '/path/to/car2.jpg','/path/to/car1.jpg',
-    '/path/to/car2.jpg', '/path/to/car1.jpg',
-    '/path/to/car2.jpg','/path/to/car1.jpg',
-    '/path/to/car2.jpg', '/path/to/car1.jpg',
-    '/path/to/car2.jpg','/path/to/car1.jpg',
-    '/path/to/car2.jpg', '/path/to/car1.jpg',
-    '/path/to/car2.jpg','/path/to/car1.jpg',
-    '/path/to/car2.jpg', '/path/to/car1.jpg',
-    '/path/to/car2.jpg','/path/to/car1.jpg',
-    '/path/to/car2.jpg', '/path/to/car1.jpg',
-    '/path/to/car2.jpg','/path/to/car1.jpg',
-    '/path/to/car2.jpg', '/path/to/car1.jpg',
-    '/path/to/car2.jpg'
-    // Add more image paths here
-];
+import S3Image from "@/app/components/S3Image";
 
 const CarGrid: React.FC = () => {
+    const [imageUrl, setImageUrl] = useState<string>('');
+
+    useEffect(() => {
+        const fetchImageUrl = async () => {
+            const response = await fetch('http://localhost:8080/productImages/download/Volvo X40.jpg');
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                setImageUrl(url);
+            } else {
+                console.error('Failed to fetch image');
+            }
+        };
+
+        fetchImageUrl();
+    }, []);
+
     return (
-        <div className="grid grid-cols-6 gap-4 p-4">
-            {carImages.map((src, index) => (
-                <Link href={`/car/${index}`} key={index}>
-
-                        <Image src={src} alt={`Car ${index + 1}`} width={200} height={150} className="object-cover w-full h-full" />
-
-                </Link>
-            ))}
-        </div>
+        <>
+            <h1 className="text-1xl font-extralight font-thin opacity-65">VALIK KUULUTUSI</h1>
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 grid-cols-2-custom">
+                {Array(30).fill(imageUrl).map((src, index) => (
+                    <Link href={`/cars/${index}`} key={index}>
+                        <div className="flex flex-col border-2 border-gray-100">
+                            {src && <S3Image src={src} alt={`Car ${index + 1}`} className="w-full h-auto" />}
+                            <div className="border-2 border-gray-100 p-2">
+                                <div>Audi</div>
+                                <div>99999EUR</div>
+                            </div>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+        </>
     );
 };
 

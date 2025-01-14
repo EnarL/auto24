@@ -1,3 +1,4 @@
+// backend/src/main/java/com/example/auto24/config/AmazonS3Config.java
 package com.example.auto24.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -13,8 +14,8 @@ public class AmazonS3Config {
 
     private final Dotenv dotenv;
 
-    public AmazonS3Config() {
-        this.dotenv = Dotenv.configure().directory("./backend/").load();
+    public AmazonS3Config(Dotenv dotenv) {
+        this.dotenv = dotenv;
     }
 
     @Bean

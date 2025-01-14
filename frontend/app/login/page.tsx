@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 md:p-16 rounded shadow-md w-full max-w-4xl flex flex-col md:flex-row">
                 <div className="w-full md:w-1/2 pr-0 md:pr-4 mb-8 md:mb-0">
                     <h2 className="text-2xl mb-6 text-center">Logi sisse</h2>

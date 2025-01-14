@@ -1,36 +1,79 @@
 "use client"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../app/components/footer';
 import MenuBar from '../app/components/menubar';
-import Kuulutused from '../app/components/kuulutused';
+import Placeholder from '../app/components/placeholder';
+import CarGrid from '../app/components/kuulutused';
+import SearchSection from "@/app/components/searchsection";
+import PopularBrands from "@/app/components/popularbrands";
+
+const carBrands = [
+    'Audi', 'BMW', 'Citroen', 'Ford', 'Honda', 'Hyundai','Kia', 'Mercedes-Benz', 'Nissan',
+    'Opel', 'Peugeot', 'Renault', 'Skoda', 'Subaru', 'Toyota', 'Volkswagen', 'Volvo'
+];
+
+const otherBrands = [
+    'Alfa Romeo', 'Aston Martin', 'Bentley', 'Cadillac', 'Chevrolet', 'Chrysler', 'Cupra', 'Dacia', 'Dodge',
+    'Ferrari', 'Fiat', 'GAZ', 'GMC','Infiniti','Jaguar', 'Jeep' , 'Lamborghini','Lancia', 'Land Rover',
+    'Lexus', 'Lincoln', 'MINI', 'Maserati', 'Mercedes-AMG', 'Mitsubishi', 'Moskvich','Porsche','Ram','SEAT',
+    'Saab','SsangYong','Suzuki','Tesla', 'VAZ'
+];
+
+const splitArrayIntoChunks = (array: string[], chunkSize: number) => {
+    const result = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+        result.push(array.slice(i, i + chunkSize));
+    }
+    return result;
+};
+
 const Page: React.FC = () => {
-  return (
-      <>
-          <div className="flex flex-col min-h-screen pl-8">
+    const columns = splitArrayIntoChunks(carBrands, Math.ceil(carBrands.length / 2));
+    return (
+        <>
+            <div className="mt-4">
+                <main className="">
+                    <div className="grid grid-cols-2 gap-[10px] h-[633px]" style={{ gridTemplateColumns: '250px 740px' }}>
+                        <div className="col-span-1 w-[250px]">
+                            <MenuBar />
+                        </div>
+                        <div className="col-span-1 row-span-1">
+                            <div className="grid grid-cols-2 grid-columns w-[740px] row-span-1 h-[250px]">
+                                <SearchSection/>
+                                <PopularBrands columns={columns} otherBrands={otherBrands}/>
+                            </div>
+                            <div
+                                className="col-span-2 row-span-2 w-[740px] h-[116px] mt-4 flex justify-between items-center invisible md:visible md:flex">
+                                <div className="flex items-center">
+                                    <input type="search" id="search"
+                                           className="w-32 h-10 mr-2 ml-6 text-center text-2xl rounded-md border-2 focus:border-gray-300 focus:outline-none"></input>
+                                    <button className="bg-[#06c] text-white text-[12px] p-2 pr-6 pl-6">
+                                        Vaata turuhinda
+                                    </button>
+                                </div>
+                                <div className="flex items-center">
+                                    <img src={"https://www.auto24.ee/images/custom_sections/main_offers/add_ad.png"}
+                                         alt="Add ad" className="object-cover mr-2 "/>
+                                    <button className="bg-[#FCBA3C] text-white text-[12px] p-2 pr-6 pl-6">
+                                        Lisa kuulutus
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="col-span-2 row-span-3 ">
+                                <Placeholder/>
+                            </div>
+                        </div>
 
-              <main className="flex-grow">
-                  <h1 className="text-1xl mb-4 mt-4 font-extralight font-thin opacity-65">SÕIDUKIKUULUTUSED</h1>
-                  <MenuBar></MenuBar>
-                  <section className="mb-8">
-                      <h2 className="text-2xl font-semibold mb-2">Popular Car Marks</h2>
-                      <ul className="list-disc list-inside">
-                          <li>Toyota</li>
-                          <li>Ford</li>
-                          <li>BMW</li>
-                          <li>Mercedes</li>
-                      </ul>
-                  </section>
+                    </div>
+                    <div className="pt-6">
+                        <CarGrid/>
+                    </div>
 
-                  <section className="mb-8">
-                      <h2 className="text-2xl font-semibold mb-2">Search for Cars</h2>
-                      <input type="text" placeholder="Search for cars..." className="border p-2 w-full"/>
-                  </section>
-<Kuulutused></Kuulutused>
-              </main>
-              <Footer/>
-          </div>
-      </>
-  );
+                </main>
+                <Footer/>
+            </div>
+        </>
+    );
 };
 
 export default Page;
