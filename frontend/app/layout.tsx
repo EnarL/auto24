@@ -3,10 +3,12 @@ import "./globals.css";
 import TopBar from "./components/topbar";
 import Header from "./components/header";
 import Kuuluta from "./components/kuuluta";
+import Foobar from "./components/foobar";
 import Logo from "./components/logo";
 import Sublogos from "./components/sublogos";
 import React from "react";
 import Banner from "@/app/components/banner";
+import FooterSection from "@/app/components/footersection";
 
 export const metadata: Metadata = {
     title: "Avaleht - auto24.ee",
@@ -24,7 +26,7 @@ export default function RootLayout({
         <Header className="w-full hidden md:block"></Header>
         <div className="mx-auto flex flex-col w-full max-w-custom">
             <div>
-                <Banner className="hidden md:block"></Banner>
+                <Banner className="hidden lg:block"></Banner>
                 <div className="flex items-center w-full ">
                     <Logo className="flex-grow logo-details overall-margin-left mr-4"></Logo>
                     <Sublogos></Sublogos>
@@ -36,6 +38,8 @@ export default function RootLayout({
                 </div>
             </div>
         </div>
+        <Foobar></Foobar>
+        <FooterSection></FooterSection>
         </body>
         </html>
     );

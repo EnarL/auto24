@@ -1,6 +1,7 @@
 "use client"
-import React, { useEffect, useState } from 'react';
-import Footer from '../app/components/footer';
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import Foobar from './components/foobar';
 import MenuBar from '../app/components/menubar';
 import Placeholder from '../app/components/placeholder';
 import CarGrid from '../app/components/kuulutused';
@@ -28,7 +29,13 @@ const splitArrayIntoChunks = (array: string[], chunkSize: number) => {
 };
 
 const Page: React.FC = () => {
+    const router = useRouter();
     const columns = splitArrayIntoChunks(carBrands, Math.ceil(carBrands.length / 2));
+
+    const handleBrandClick = (brand: string) => {
+        router.push(`/${brand}`);
+    };
+
     return (
         <>
             <div className="mt-4">
@@ -40,7 +47,7 @@ const Page: React.FC = () => {
                         <div className="col-span-1 row-span-1">
                             <div className="grid grid-cols-2 grid-columns w-[740px] row-span-1 h-[250px]">
                                 <SearchSection/>
-                                <PopularBrands columns={columns} otherBrands={otherBrands}/>
+                                <PopularBrands columns={columns} otherBrands={otherBrands} onBrandClick={handleBrandClick}/>
                             </div>
                             <div
                                 className="col-span-2 row-span-2 w-[740px] h-[116px] mt-4 flex justify-between items-center invisible md:visible md:flex">
@@ -66,11 +73,11 @@ const Page: React.FC = () => {
 
                     </div>
                     <div className="pt-6">
-                        <CarGrid/>
+                        <CarGrid columns={6} rows={5} carCount={30} />
                     </div>
 
                 </main>
-                <Footer/>
+
             </div>
         </>
     );

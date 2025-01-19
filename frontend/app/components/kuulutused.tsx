@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import S3Image from "@/app/components/S3Image";
 
-const CarGrid: React.FC = () => {
+interface CarGridProps {
+    columns: number;
+    rows: number;
+    carCount: number;
+}
+
+const CarGrid: React.FC<CarGridProps> = ({ columns, rows, carCount }) => {
     const [imageUrl, setImageUrl] = useState<string>('');
 
     useEffect(() => {
@@ -23,12 +29,12 @@ const CarGrid: React.FC = () => {
     return (
         <>
             <h1 className="text-1xl font-extralight font-thin opacity-65">VALIK KUULUTUSI</h1>
-            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 grid-cols-2-custom">
-                {Array(30).fill(imageUrl).map((src, index) => (
+            <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+                {Array(carCount).fill(imageUrl).map((src, index) => (
                     <Link href={`/cars/${index}`} key={index}>
                         <div className="flex flex-col border-2 border-gray-100">
-                            {src && <S3Image src={src} alt={`Car ${index + 1}`} className="w-full h-auto" />}
-                            <div className="border-2 border-gray-100 p-2">
+                            {src && <S3Image src={src} alt={`Car ${index + 1}`} className="" />}
+                            <div className="border-2 border-gray-100">
                                 <div>Audi</div>
                                 <div>99999EUR</div>
                             </div>

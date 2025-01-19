@@ -11,8 +11,8 @@ const S3Image: React.FC<S3ImageProps> = ({ src, alt, className }) => {
         <Image
             src={src}
             alt={alt}
-            width={150}
-            height={150}
+            width={250}
+            height={160}
             className={className}
             priority
         />
