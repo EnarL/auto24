@@ -15,15 +15,14 @@ const CarGrid: React.FC<CarGridProps> = ({ columns, rows, carCount }) => {
         const fetchImageUrl = async () => {
             const response = await fetch('http://localhost:8080/productImages/download/Volvo X40.jpg');
             if (response.ok) {
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
+                const url = await response.text();
                 setImageUrl(url);
             } else {
                 console.error('Failed to fetch image');
             }
         };
 
-        fetchImageUrl();
+        fetchImageUrl().then(r => {});
     }, []);
 
     return (

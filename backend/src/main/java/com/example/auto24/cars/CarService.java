@@ -24,26 +24,25 @@ public class CarService {
     }
 
     public Car saveCar(Car car) {
-        return carRepository.save(car);
+        Users owner = userRepository.findById(car.getOwnerId()).orElse(null);
+        if (owner != null) {
+            Car savedCar = carRepository.save(car);
+            owner.getCarIds().add(savedCar.getId());
+            userRepository.save(owner);
+            return savedCar;
+        }
+        return null;
     }
 
     public void deleteCar(String id) {
-        carRepository.deleteById(id);
-    }
-
-    public Car postCar(Car car) {
-        if (car.getId() == null) {
-            car.setId(generateUniqueId());
+        Car car = carRepository.findById(id).orElse(null);
+        if (car != null) {
+            Users owner = userRepository.findById(car.getOwnerId()).orElse(null);
+            if (owner != null) {
+                owner.getCarIds().remove(car.getId());
+                userRepository.save(owner);
+            }
+            carRepository.deleteById(id);
         }
-        return carRepository.save(car);
-    }
-    private String generateUniqueId() {
-        // Implement a method to generate a unique ID
-        return java.util.UUID.randomUUID().toString();
-    }
-
-    public List<Car> getUserPostedCars(String userId) {
-        Users user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        return user.getPostedCars();
     }
 }

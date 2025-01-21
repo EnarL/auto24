@@ -26,6 +26,7 @@ const LoginPage: React.FC = () => {
             if (response.ok) {
                 console.log('Successfully logged in');
                 setError('');
+                router.push('/minu');
             } else {
                 const errorMessage = await response.text();
                 setError(errorMessage);

@@ -1,5 +1,7 @@
 package com.example.auto24.aws;
 
+import com.example.auto24.cars.Car;
+import com.example.auto24.cars.CarRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -8,14 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URL;
 import java.util.List;
-
 
 @RequestMapping("/productImages")
 @RestController
 public class ImageController {
     @Autowired
     private ImageService service;
+
+    @Autowired
+    private CarRepository carRepository;
 
     @Autowired
     private Dotenv dotenv;
@@ -35,29 +40,33 @@ public class ImageController {
 
         return "Environment variables are loaded. Check the logs for details.";
     }
+
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/upload")
-    public String createProduct(@RequestParam("file") MultipartFile file) throws Exception{
-        service.uploadFile(file);
-        return "File uploaded successfully";
+    public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") List<MultipartFile> files, @RequestParam("userId") String userId) {
+        List<String> fileUrls = service.uploadFiles(files, userId);
+
+        Car car = new Car();
+        car.setImageUrls(fileUrls);
+        car.setOwnerId(userId);
+        carRepository.save(car);
+
+        return ResponseEntity.ok(fileUrls);
     }
     @GetMapping("/download/{fileName}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
-        byte[] data = service.downloadFile(fileName);
-        ByteArrayResource resource = new ByteArrayResource(data);
-        return ResponseEntity
-                .ok()
-                .contentLength(data.length)
-                .header("Content-type", "application/octet-stream")
-                .header("Content-disposition", "attachment; filename=\"" + fileName + "\"")
-                .body(resource);
+    public ResponseEntity<String> downloadFile(@PathVariable String fileName) {
+        URL url = service.generatePresignedUrl(fileName);
+        return ResponseEntity.ok(url.toString());
     }
+
+
 
     @DeleteMapping("/delete/{fileName}")
     public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
         return new ResponseEntity<>(service.deleteFile(fileName), HttpStatus.OK);
     }
+
     @GetMapping("/downloadAll")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<ByteArrayResource>> downloadAllFiles() {

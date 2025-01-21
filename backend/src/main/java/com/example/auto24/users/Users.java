@@ -1,11 +1,8 @@
 package com.example.auto24.users;
 
-import com.example.auto24.cars.Car;
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,7 +13,6 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "users")
@@ -41,4 +37,8 @@ public class Users {
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
     private String email;
+
+ //   private Boolean newsletter = false;
+    private List<String> carIds = new ArrayList<>();
+
 }

@@ -1,6 +1,7 @@
 package com.example.auto24.aws;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
@@ -13,8 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ImageService {
@@ -25,7 +29,6 @@ public class ImageService {
     private final Dotenv dotenv;
     private final String bucketName;
     private final String bucketRegion;
-    private String fileName;
 
     public ImageService() {
         this.dotenv = Dotenv.configure().directory("./backend/").load();
@@ -34,16 +37,26 @@ public class ImageService {
     }
 
     @Transactional
-    public String uploadFile(final MultipartFile multipartFile) {
-        try {
-            final File file = convertMultiPartFileToFile(multipartFile);
-            fileName = uploadFileToS3Bucket(bucketName, file);
-            file.deleteOnExit();  // To remove the file locally created in the project folder.
-        } catch (final AmazonServiceException ex) {
-            System.out.println("Error while uploading file = " + ex.getMessage());
+    public List<String> uploadFiles(final List<MultipartFile> multipartFiles, String userId) {
+        List<String> fileUrls = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            String fileName = generateFileName(multipartFile, userId);
+            try {
+                final File file = convertMultiPartFileToFile(multipartFile);
+                uploadFileToS3Bucket(bucketName, file, fileName);
+                file.deleteOnExit();  // To remove the file locally created in the project folder.
+                fileUrls.add(String.format("https://s3.%s.amazonaws.com/%s/%s", bucketRegion, bucketName, fileName));
+            } catch (final AmazonServiceException ex) {
+                System.out.println("Error while uploading file = " + ex.getMessage());
+            }
         }
+        return fileUrls;
+    }
 
-        return String.format("https://s3.%s.amazonaws.com/%s/%s", bucketRegion, bucketName, fileName);
+    private String generateFileName(MultipartFile multipartFile, String userId) {
+        String originalFileName = multipartFile.getOriginalFilename();
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        return userId + "_" + UUID.randomUUID().toString() + fileExtension;
     }
 
     private File convertMultiPartFileToFile(final MultipartFile multipartFile) {
@@ -57,12 +70,23 @@ public class ImageService {
     }
 
     @Transactional
-    protected String uploadFileToS3Bucket(final String bucketName, final File file) {
-        final PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, file.getName(), file);
+    protected void uploadFileToS3Bucket(final String bucketName, final File file, final String fileName) {
+        final PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, file);
         s3Client.putObject(putObjectRequest);
-        return file.getName();
     }
 
+    public URL generatePresignedUrl(String fileName) {
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 60; // 1 hour
+        expiration.setTime(expTimeMillis);
+
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(bucketName, fileName)
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(expiration);
+        return s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+    }
 
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);
@@ -76,11 +100,11 @@ public class ImageService {
         return null;
     }
 
-
     public String deleteFile(String fileName) {
         s3Client.deleteObject(bucketName, fileName);
         return fileName + " removed ...";
     }
+
     public List<byte[]> downloadAllFiles() {
         List<byte[]> filesContent = new ArrayList<>();
         ObjectListing objectListing = s3Client.listObjects(bucketName);

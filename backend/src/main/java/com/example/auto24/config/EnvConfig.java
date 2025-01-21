@@ -11,7 +11,7 @@ public class EnvConfig {
     @Bean
     public Dotenv dotenv() {
         return Dotenv.configure()
-                .directory("backend") // Specify the directory where the .env file is located
+                .directory("backend")
                 .load();
     }
 }
