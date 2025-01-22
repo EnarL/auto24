@@ -18,7 +18,7 @@ const Topbar: React.FC = () => {
         { href: '/forums', label: 'Foorumid' },
         { href: '/financing', label: 'Finantseerimine' },
         { href: '/ostuabi', label: 'Ostuabi' },
-        { href: '/minu', label: 'Minu konto' },
+        { href: '/users/minu/', label: 'Minu konto' },
     ];
 
     return (
