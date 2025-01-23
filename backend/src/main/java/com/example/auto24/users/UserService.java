@@ -1,7 +1,14 @@
 package com.example.auto24.users;
 
+import com.example.auto24.config.MyUserDetailsService;
+import com.example.auto24.email.EmailSender;
+import com.example.auto24.jwt.JWTUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,24 +20,33 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final AuthenticationManager authManager;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder encoder;
     private final UsersDTOMapper usersDTOMapper;
-
-    public UserService(UserRepository userRepository, AuthenticationManager authManager, PasswordEncoder encoder, UsersDTOMapper usersDTOMapper) {
+    private final MyUserDetailsService userDetailsService;
+    private final JWTUtil jwtUtil;
+    private final EmailSender emailSender;
+    public UserService(UserRepository userRepository, AuthenticationManager authenticationManager, PasswordEncoder encoder, UsersDTOMapper usersDTOMapper, MyUserDetailsService userDetailsService, JWTUtil jwtUtil, EmailSender emailSender) {
         this.userRepository = userRepository;
-        this.authManager = authManager;
+        this.authenticationManager = authenticationManager;
         this.encoder = encoder;
         this.usersDTOMapper = usersDTOMapper;
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+        this.emailSender = emailSender;
     }
 
 
     public List<UsersDTO> getAllUsers() {
-        return userRepository.findAll().stream().map(usersDTOMapper).collect(Collectors.toList());
+        return userRepository.findAll().
+                stream().map(usersDTOMapper).
+                collect(Collectors.toList());
     }
 
     public UsersDTO getUserById(String id) {
-        return userRepository.findById(id).map(usersDTOMapper).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return userRepository.findById(id).
+                map(usersDTOMapper).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     public void register(UserRegistrationRequest request) {
@@ -49,15 +65,17 @@ public class UserService {
                 .newsletter(request.newsletter())
                 .build();
         userRepository.save(user);
+        // Send confirmation email
+        String emailContent = "Dear " + user.getFirstname() + ",\n\nThank you for registering. Please confirm your email address by clicking the link below:\n\n[Confirmation Link]\n\nBest regards,\nAuto24 Team";
+        emailSender.send(user.getEmail(), emailContent);
     }
-    public void login(UserLoginRequest request) {
-        Users user = userRepository.findByUsername(request.username());
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-        if (!encoder.matches(request.password(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
-        }
+    public String login(UserLoginRequest request) throws AuthenticationException {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.username(), request.password())
+        );
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return jwtUtil.generateToken(userDetails.getUsername());
     }
     public void deleteUser(String id) {
         userRepository.deleteById(id);

@@ -31,8 +31,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
-        userService.login(request);
-        return ResponseEntity.ok("User logged in successfully");
+        String token = userService.login(request);
+        return ResponseEntity.ok(new LoginResponse(token));
     }
 
     @DeleteMapping("/{userId}")
