@@ -46,7 +46,7 @@ This project is a clone of the Auto24 website, a popular online marketplace for 
 
 ## Contact
 
-Your Name - [enar.leini00@gmail.com](mailto:enar.leini00@gmail.com)
+email: [enar.leini00@gmail.com](mailto:enar.leini00@gmail.com)
 
 ---
 
