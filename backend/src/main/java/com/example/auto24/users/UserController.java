@@ -1,7 +1,6 @@
 package com.example.auto24.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,29 +14,36 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<Users> getAllUsers() {
+    public List<UsersDTO> getAllUsers() {
         return userService.getAllUsers();
     }
-    @GetMapping("/{id}")
-    public Users getUserById(@PathVariable String id) {
-        return userService.getUserById(id);
+
+    @GetMapping("/{userId}")
+    public UsersDTO getUserById(@PathVariable("userId") String userId) {
+        return userService.getUserById(userId);
     }
+
     @PostMapping("/register")
-    public Users registerUser(@RequestBody Users user) {
-        return userService.register(user);
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest request){
+        userService.register(request);
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestParam String username, @RequestParam String password) {
-        Users user = userService.loginUser(username, password);
-        if (user != null) {
-            return ResponseEntity.ok("Successfully logged in");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
-        }
+    public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
+        userService.login(request);
+        return ResponseEntity.ok("User logged in successfully");
     }
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable String id) {
-        userService.deleteUser(id);
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok("User deleted successfully");
     }
+    @PostMapping("/{userId}/change-password")
+    public ResponseEntity<?> changePassword(@PathVariable("userId") String userId, @RequestBody ChangePasswordRequest request) {
+        userService.changePassword(userId, request);
+        return ResponseEntity.ok("Password changed successfully");
+    }
+
 }

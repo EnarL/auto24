@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection }) => {
                 <h2 className="border-gray-100 border-b-2 p-2 text-[#06c] font-semibold">MINU KONTO</h2>
                 <div className="break-words from-white to-gray-50 opacity-80 bg-gradient-to-t p-2">
                     <a href="#" className={`block ${getLinkClass('Andmete kinnitamine')}`}>Andmete kinnitamine</a>
-                    <a href="#" className={`block ${getLinkClass('Muuda andmeid')}`}>Muuda andmeid</a>
+                    <a href="change_data" className={`block ${getLinkClass('Muuda andmeid')}`}>Muuda andmeid</a>
                     <a href="change_pw" className={`block ${getLinkClass('Muuda parool')}`}>Muuda parool</a>
                     <a href="#" className={`block ${getLinkClass('Kasutustingimused')}`}>Kasutustingimused</a>
                     <a href="#" className={`block ${getLinkClass('Abi')}`}>Abi</a>

@@ -2,18 +2,20 @@ package com.example.auto24.cars;
 
 import com.example.auto24.users.UserRepository;
 import com.example.auto24.users.Users;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CarService {
-    @Autowired
-    private CarRepository carRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final CarRepository carRepository;
+
+    public CarService(UserRepository userRepository, CarRepository carRepository) {
+        this.userRepository = userRepository;
+        this.carRepository = carRepository;
+    }
 
     public List<Car> getAllCars() {
         return carRepository.findAll();
