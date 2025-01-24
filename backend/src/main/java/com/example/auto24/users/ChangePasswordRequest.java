@@ -1,15 +1,10 @@
 package com.example.auto24.users;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-@Builder
-public class ChangePasswordRequest {
+public record ChangePasswordRequest(
+        String currentPassword,
+        String newPassword,
+        String confirmationPassword
+) {
 
-    private String currentPassword;
-    private String newPassword;
-    private String confirmationPassword;
 }

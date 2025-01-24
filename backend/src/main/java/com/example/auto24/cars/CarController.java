@@ -1,6 +1,9 @@
 package com.example.auto24.cars;
 
+import com.example.auto24.jwt.JWTUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,22 +15,24 @@ public class CarController {
     private CarService carService;
 
     @GetMapping
-    public List<Car> getAllCars() {
+    public List<CarDTO> getAllCars() {
         return carService.getAllCars();
     }
 
-    @GetMapping("/{id}")
-    public Car getCarById(@PathVariable String id) {
-        return carService.getCarById(id);
+    @GetMapping("/{carId}")
+    public CarDTO getCarById(@PathVariable String carId) {
+        return carService.getCarById(carId);
     }
 
     @PostMapping
-    public Car createCar(@RequestBody Car car) {
-        return carService.saveCar(car);
+    public ResponseEntity<?> createCar(@RequestBody CarRegisterRequest request, HttpServletRequest jwt) {
+        carService.saveCar(request, jwt);
+        return ResponseEntity.ok("Car created successfully");
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCar(@PathVariable String id) {
+    public ResponseEntity<?> deleteCar(@PathVariable String id) {
         carService.deleteCar(id);
+        return ResponseEntity.ok("Car deleted successfully");
     }
 }

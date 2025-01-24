@@ -1,14 +1,9 @@
 package com.example.auto24.users;
 
-import com.example.auto24.config.MyUserDetailsService;
-import com.example.auto24.email.EmailSender;
-import com.example.auto24.jwt.JWTUtil;
+import com.example.auto24.cars.CarService;
+import com.example.auto24.email.EmailService;
+import com.example.auto24.jwt.AuthService;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,20 +15,18 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder encoder;
     private final UsersDTOMapper usersDTOMapper;
-    private final MyUserDetailsService userDetailsService;
-    private final JWTUtil jwtUtil;
-    private final EmailSender emailSender;
-    public UserService(UserRepository userRepository, AuthenticationManager authenticationManager, PasswordEncoder encoder, UsersDTOMapper usersDTOMapper, MyUserDetailsService userDetailsService, JWTUtil jwtUtil, EmailSender emailSender) {
+    private final CarService carService;
+    private final EmailService emailService;
+    private final AuthService authService;
+    public UserService(UserRepository userRepository, PasswordEncoder encoder, UsersDTOMapper usersDTOMapper, CarService carService, EmailService emailService, AuthService authService) {
         this.userRepository = userRepository;
-        this.authenticationManager = authenticationManager;
         this.encoder = encoder;
         this.usersDTOMapper = usersDTOMapper;
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
-        this.emailSender = emailSender;
+        this.carService = carService;
+        this.emailService = emailService;
+        this.authService = authService;
     }
 
 
@@ -43,8 +36,8 @@ public class UserService {
                 collect(Collectors.toList());
     }
 
-    public UsersDTO getUserById(String id) {
-        return userRepository.findById(id).
+    public UsersDTO getUserById(String UserId) {
+        return userRepository.findById(UserId).
                 map(usersDTOMapper).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
@@ -65,34 +58,32 @@ public class UserService {
                 .newsletter(request.newsletter())
                 .build();
         userRepository.save(user);
-        // Send confirmation email
-        String emailContent = "Dear " + user.getFirstname() + ",\n\nThank you for registering. Please confirm your email address by clicking the link below:\n\n[Confirmation Link]\n\nBest regards,\nAuto24 Team";
-        emailSender.send(user.getEmail(), emailContent);
+        emailService.sendConfirmationEmail(user);
     }
-    public String login(UserLoginRequest request) throws AuthenticationException {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.username(), request.password())
-        );
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return jwtUtil.generateToken(userDetails.getUsername());
+    public String login(UserLoginRequest request) {
+        return authService.login(request);
     }
-    public void deleteUser(String id) {
-        userRepository.deleteById(id);
+    public void deleteUser(String UserId) {
+        userRepository.findById(UserId)
+                .ifPresentOrElse(user -> {
+                    carService.deleteCarsByUserId(UserId);
+                    userRepository.deleteById(user.getId());
+                }, () -> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+                });
     }
-
     public void changePassword(String userId, ChangePasswordRequest request) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (!encoder.matches(request.getCurrentPassword(), user.getPassword())) {
+        if (!encoder.matches(request.currentPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current password is incorrect");
         }
 
-        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+        if (!request.newPassword().equals(request.confirmationPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirmation password do not match");
         }
 
-        user.setPassword(encoder.encode(request.getNewPassword()));
+        user.setPassword(encoder.encode(request.newPassword()));
         userRepository.save(user);
     }
 }

@@ -13,6 +13,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // admin request to get all users
     @GetMapping
     public List<UsersDTO> getAllUsers() {
         return userService.getAllUsers();
@@ -32,7 +33,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
         String token = userService.login(request);
-        return ResponseEntity.ok(new LoginResponse(token));
+        return ResponseEntity.ok(token);
     }
 
     @DeleteMapping("/{userId}")

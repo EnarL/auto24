@@ -1,5 +1,6 @@
 package com.example.auto24.users;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.CreatedDate;
@@ -39,6 +40,9 @@ public class Users {
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
     private String email;
+
+    @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Phone number is invalid")
+    private String phoneNumber;
 
     private Boolean newsletter = false;
     private List<String> carIds = new ArrayList<>();

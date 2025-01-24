@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/productImages")
 @RestController
 public class ImageController {
@@ -41,20 +41,17 @@ public class ImageController {
         return "Environment variables are loaded. Check the logs for details.";
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/upload")
-    public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") List<MultipartFile> files, @RequestParam("userId") String userId) {
-        List<String> fileUrls = service.uploadFiles(files, userId);
+    public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") List<MultipartFile> files, @RequestParam("carId") String carId) {
+        List<String> fileKeys = service.uploadFiles(files, carId);
 
-        Car car = new Car();
-        car.setImageUrls(fileUrls);
-        car.setOwnerId(userId);
+        Car car = carRepository.findById(carId).orElseThrow(() -> new IllegalArgumentException("Car not found"));
+        car.getImageKeys().addAll(fileKeys);
         carRepository.save(car);
 
-        return ResponseEntity.ok(fileUrls);
+        return ResponseEntity.ok(fileKeys);
     }
     @GetMapping("/download/{fileName}")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> downloadFile(@PathVariable String fileName) {
         URL url = service.generatePresignedUrl(fileName);
         return ResponseEntity.ok(url.toString());
@@ -68,7 +65,6 @@ public class ImageController {
     }
 
     @GetMapping("/downloadAll")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<ByteArrayResource>> downloadAllFiles() {
         List<byte[]> filesData = service.downloadAllFiles();
         List<ByteArrayResource> resources = filesData.stream()

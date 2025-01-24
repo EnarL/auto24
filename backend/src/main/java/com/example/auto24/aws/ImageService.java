@@ -28,29 +28,27 @@ public class ImageService {
 
     private final Dotenv dotenv;
     private final String bucketName;
-    private final String bucketRegion;
 
     public ImageService() {
         this.dotenv = Dotenv.configure().directory("./backend/").load();
         this.bucketName = dotenv.get("AWS_BUCKET_NAME");
-        this.bucketRegion = dotenv.get("AWS_REGION");
     }
 
     @Transactional
-    public List<String> uploadFiles(final List<MultipartFile> multipartFiles, String userId) {
-        List<String> fileUrls = new ArrayList<>();
+    public List<String> uploadFiles(final List<MultipartFile> multipartFiles, String carId) {
+        List<String> fileKeys = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
-            String fileName = generateFileName(multipartFile, userId);
+            String fileKey = generateFileName(multipartFile, carId);
             try {
                 final File file = convertMultiPartFileToFile(multipartFile);
-                uploadFileToS3Bucket(bucketName, file, fileName);
+                uploadFileToS3Bucket(bucketName, file, fileKey);
                 file.deleteOnExit();  // To remove the file locally created in the project folder.
-                fileUrls.add(String.format("https://s3.%s.amazonaws.com/%s/%s", bucketRegion, bucketName, fileName));
+                fileKeys.add(fileKey);
             } catch (final AmazonServiceException ex) {
                 System.out.println("Error while uploading file = " + ex.getMessage());
             }
         }
-        return fileUrls;
+        return fileKeys;
     }
 
     private String generateFileName(MultipartFile multipartFile, String userId) {
@@ -75,19 +73,18 @@ public class ImageService {
         s3Client.putObject(putObjectRequest);
     }
 
-    public URL generatePresignedUrl(String fileName) {
+    public URL generatePresignedUrl(String fileKey) {
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
         expTimeMillis += 1000 * 60 * 60; // 1 hour
         expiration.setTime(expTimeMillis);
 
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(bucketName, fileName)
+                new GeneratePresignedUrlRequest(bucketName, fileKey)
                         .withMethod(HttpMethod.GET)
                         .withExpiration(expiration);
         return s3Client.generatePresignedUrl(generatePresignedUrlRequest);
     }
-
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
