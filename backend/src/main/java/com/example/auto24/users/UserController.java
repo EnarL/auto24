@@ -46,5 +46,10 @@ public class UserController {
         userService.changePassword(userId, request);
         return ResponseEntity.ok("Password changed successfully");
     }
+    @GetMapping("/confirm")
+    public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
+        userService.confirmEmail(token);
+        return ResponseEntity.ok("Email confirmed");
+    }
 
 }

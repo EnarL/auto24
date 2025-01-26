@@ -3,6 +3,7 @@ package com.example.auto24.users;
 import com.example.auto24.cars.CarService;
 import com.example.auto24.email.EmailService;
 import com.example.auto24.jwt.AuthService;
+import com.example.auto24.jwt.JWTUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,15 +21,17 @@ public class UserService {
     private final CarService carService;
     private final EmailService emailService;
     private final AuthService authService;
-    public UserService(UserRepository userRepository, PasswordEncoder encoder, UsersDTOMapper usersDTOMapper, CarService carService, EmailService emailService, AuthService authService) {
+    private final JWTUtil jwtUtil;
+
+    public UserService(UserRepository userRepository, PasswordEncoder encoder, UsersDTOMapper usersDTOMapper, CarService carService, EmailService emailService, AuthService authService, JWTUtil jwtUtil) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.usersDTOMapper = usersDTOMapper;
         this.carService = carService;
         this.emailService = emailService;
         this.authService = authService;
+        this.jwtUtil = jwtUtil;
     }
-
 
     public List<UsersDTO> getAllUsers() {
         return userRepository.findAll().
@@ -56,13 +59,17 @@ public class UserService {
                 .email(request.email())
                 .password(encoder.encode(request.password()))
                 .newsletter(request.newsletter())
+                .active(false)
                 .build();
         userRepository.save(user);
-        emailService.sendConfirmationEmail(user);
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+        emailService.sendConfirmationEmail(user, token);
     }
+
     public String login(UserLoginRequest request) {
         return authService.login(request);
     }
+
     public void deleteUser(String UserId) {
         userRepository.findById(UserId)
                 .ifPresentOrElse(user -> {
@@ -72,6 +79,7 @@ public class UserService {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
                 });
     }
+
     public void changePassword(String userId, ChangePasswordRequest request) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -84,6 +92,13 @@ public class UserService {
         }
 
         user.setPassword(encoder.encode(request.newPassword()));
+        userRepository.save(user);
+    }
+
+    public void confirmEmail(String token) {
+        String userId = jwtUtil.extractUserId(token);
+        Users user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token"));
+        user.setActive(true);
         userRepository.save(user);
     }
 }

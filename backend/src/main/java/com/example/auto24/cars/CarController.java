@@ -1,6 +1,5 @@
 package com.example.auto24.cars;
 
-import com.example.auto24.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cars")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CarController {
     @Autowired
     private CarService carService;
