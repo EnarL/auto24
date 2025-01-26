@@ -36,7 +36,7 @@ public class EmailService implements EmailSender {
     }
 
     public void sendConfirmationEmail(Users user, String token) {
-        String confirmationUrl = "http://localhost:8080/api/auth/confirm?token=" + token;
+        String confirmationUrl = "http://localhost:8080/users/confirm?token=" + token;
         String emailContent = "Dear " + user.getFirstname() + ",\n\nThank you for registering. Please confirm your email address by clicking the link below:\n\n" + confirmationUrl + "\n\nBest regards,\nAuto24 Team";
         send(user.getEmail(), emailContent);
     }

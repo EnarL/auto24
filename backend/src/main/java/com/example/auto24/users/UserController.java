@@ -46,6 +46,10 @@ public class UserController {
         userService.changePassword(userId, request);
         return ResponseEntity.ok("Password changed successfully");
     }
+
+    //to do
+    //Unvalidate the token after confirmation
+
     @GetMapping("/confirm")
     public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
         userService.confirmEmail(token);
