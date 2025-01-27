@@ -40,7 +40,7 @@ const SafetyEquipment: React.FC<SafetyEquipmentProps> = ({ formData, handleChang
 
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-4">TURVA- JA OHUTUSVARUSTUS</h2>
+            <h2 className="text-[16px] mb-2 mt-2">TURVA- JA OHUTUSVARUSTUS</h2>
             <div className="grid grid-cols-2 text-[12px]">
                 {safetyEquipment.map((item) => (
                     <label
@@ -52,7 +52,7 @@ const SafetyEquipment: React.FC<SafetyEquipmentProps> = ({ formData, handleChang
                             name={item.name}
                             checked={formData[item.name]}
                             onChange={handleChange}
-                            className="mr-2"
+                            className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2 "
                         />
                         {item.label}
                     </label>

@@ -40,7 +40,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = ({ formData, handleChange 
                 {contactFields.map((field) => (
                     <div key={field.name} className="flex items-center gap-4 text-[12px]">
                         <label
-                            className="bg-gray-100 px-1 py-1 text-right w-[250px] font-bold"
+                            className="bg-gray-100 px-1 py-1 text-right w-[250px] font-bold "
                         >
                             {field.label} {field.required && <span className="text-red-600">*</span>}
                         </label>
@@ -52,7 +52,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = ({ formData, handleChange 
                             onChange={handleChange}
                             required={field.required}
                             readOnly={field.readOnly}
-                            className="w-[300px] border border-gray-300 px-2 py-1"
+                            className="w-[300px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mr-2"
                         />
                     </div>
                 ))}

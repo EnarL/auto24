@@ -17,7 +17,7 @@ const SportFeatures: React.FC<SportFeaturesProps> = ({ formData, handleChange })
 
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-4">SPORTVARUSTUS</h2>
+            <h2 className="text-[16px] mb-2 mt-2">SPORTVARUSTUS</h2>
             <div className="grid grid-cols-2 text-[12px]">
                 {sportFeatures.map((item) => (
                     <label
@@ -29,7 +29,7 @@ const SportFeatures: React.FC<SportFeaturesProps> = ({ formData, handleChange })
                             name={item.name}
                             checked={formData[item.name]}
                             onChange={handleChange}
-                            className="mr-2"
+                            className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2"
                         />
                         {item.label}
                     </label>

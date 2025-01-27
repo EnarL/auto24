@@ -8,7 +8,7 @@ interface AdditionalFeaturesProps {
 const AdditionalFeatures: React.FC<AdditionalFeaturesProps> = ({ formData, handleChange }) => {
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-4">MUU VARUSTUS</h2>
+            <h1 className="text-[16px] mb-2 mt-2 ">MUU VARUSTUS</h1>
             <div className="grid grid-cols-2 text-[12px]">
                 {[
                     { name: "adjustableSuspension", label: "Reguleeritav vedrustus" },
@@ -47,7 +47,7 @@ const AdditionalFeatures: React.FC<AdditionalFeaturesProps> = ({ formData, handl
                             name={item.name}
                             checked={formData[item.name]}
                             onChange={handleChange}
-                            className="mr-2"
+                            className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2"
                         />
                         {item.label}
                     </label>
@@ -59,7 +59,7 @@ const AdditionalFeatures: React.FC<AdditionalFeaturesProps> = ({ formData, handl
                         name="otherExtras"
                         value={formData.otherExtras}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded px-2 py-1 text-[12px]"
+                        className="border border-gray-300 rounded px-2 py-1 text-[12px] focus:border-blue-600 focus:outline-none mr-2"
                         placeholder="Lisa oma lisad"
                     />
                 </label>

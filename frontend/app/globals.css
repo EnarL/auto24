@@ -34,11 +34,31 @@ body {
 .header-menu li.current {
     background-color: #06c;
 }
+.square-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.square-checkbox:checked::before {
+    content: '';
+    width: 75%;
+    height: 75%;
+    background-color: #007bff;
+    border-radius: 0;
+}
 
 /*screen width*/
 
-/* In your globals.css file */
 .max-w-custom {
     max-width: 1000px;
 }

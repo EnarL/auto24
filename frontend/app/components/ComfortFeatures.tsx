@@ -45,7 +45,7 @@ const ComfortFeatures: React.FC<ComfortFeaturesProps> = ({ formData, handleChang
 
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-4">MUGAVUSVARUSTUS</h2>
+            <h2 className="text-[16px] mb-2 mt-2">MUGAVUSVARUSTUS</h2>
             <div className="grid grid-cols-2 text-[12px]">
                 {features.map((feature) => (
                     <label
@@ -57,7 +57,7 @@ const ComfortFeatures: React.FC<ComfortFeaturesProps> = ({ formData, handleChang
                             name={feature.name}
                             checked={formData[feature.name]}
                             onChange={handleChange}
-                            className="mr-2"
+                            className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2"
                         />
                         {feature.label}
                     </label>

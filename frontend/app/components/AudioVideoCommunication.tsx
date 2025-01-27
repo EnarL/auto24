@@ -8,7 +8,7 @@ interface AudioVideoCommunicationProps {
 const AudioVideoCommunication: React.FC<AudioVideoCommunicationProps> = ({ formData, handleChange }) => {
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-4">AUDIO, VIDEO, KOMMUNIKATSIOON</h2>
+            <h1 className="text-[16px] mb-2 mt-2">AUDIO, VIDEO, KOMMUNIKATSIOON</h1>
             <div className="grid grid-cols-2 text-[12px]">
                 {[
                     { name: "stereo", label: "Stereo" },
@@ -36,7 +36,7 @@ const AudioVideoCommunication: React.FC<AudioVideoCommunicationProps> = ({ formD
                             name={item.name}
                             checked={formData[item.name]}
                             onChange={handleChange}
-                            className="mr-2"
+                            className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2"
                         />
                         {item.label}
                     </label>

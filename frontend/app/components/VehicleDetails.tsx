@@ -59,9 +59,7 @@ const VehicleDetails: React.FC<VehicleDetailsProps> = ({ formData, handleChange 
         { name: "exchangePossible", label: "Vahetuse võimalus", type: "checkbox" },
         { name: "exchangeDetails", label: "Vahetuse detailid", type: "text" },
         { name: "description", label: "Sõiduki kirjeldus", type: "textarea" }
-
-
-        ];
+    ];
 
     return (
         <div>
@@ -89,14 +87,14 @@ const VehicleDetails: React.FC<VehicleDetailsProps> = ({ formData, handleChange 
                                 name={field.name}
                                 checked={formData[field.name]}
                                 onChange={handleChange}
-                                className="h-4 w-4"
+                                className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none"
                             />
                         ) : field.type === "textarea" ? (
                             <textarea
                                 name={field.name}
                                 value={formData[field.name]}
                                 onChange={handleChange}
-                                className="w-[300px] border border-gray-300 px-2 py-1 resize-none h-[80px]"
+                                className="w-[300px] border border-gray-300 px-2 py-1 resize-none h-[80px] focus:border-blue-600 focus:outline-none"
                             />
                         ) : (
                             <input
@@ -104,7 +102,7 @@ const VehicleDetails: React.FC<VehicleDetailsProps> = ({ formData, handleChange 
                                 name={field.name}
                                 value={formData[field.name]}
                                 onChange={handleChange}
-                                className="w-[300px] border border-gray-300 px-2 py-1"
+                                className="w-[300px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mr-2"
                                 readOnly={field.readOnly || false}
                             />
                         )}

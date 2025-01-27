@@ -23,7 +23,7 @@ const LightsDetails: React.FC<LightsDetailsProps> = ({ formData, handleChange })
 
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-4">TULED</h2>
+            <h2 className="text-[16px] mb-2 mt-2">TULED</h2>
             <div className="grid grid-cols-2 text-[12px]">
                 {lightsDetails.map((light) => (
                     <label
@@ -35,7 +35,7 @@ const LightsDetails: React.FC<LightsDetailsProps> = ({ formData, handleChange })
                             name={light.name}
                             checked={formData[light.name]}
                             onChange={handleChange}
-                            className="mr-2"
+                            className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2"
                         />
                         {light.label}
                     </label>

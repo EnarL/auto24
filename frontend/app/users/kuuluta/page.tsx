@@ -13,7 +13,9 @@ import Seats from "@/app/components/Seats";
 import ComfortFeatures from "@/app/components/ComfortFeatures";
 import SportFeatures from "@/app/components/SportFeatures";
 import AdditionalFeatures from "@/app/components/AdditionalFeatures";
+import {useRouter} from "next/navigation";
 const CarDetailsForm: React.FC = () => {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         phone: '',
         name: 'Enar Leini',
@@ -123,39 +125,40 @@ const CarDetailsForm: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log(formData);
+        router.push('lisa_pildid');
     };
 
     return (
 
         <form onSubmit={handleSubmit} className="">
-            <div className="h-[60px] w-full text-[14px] flex justify-evenly items-center mt-4 mb-4">
-            <span className="flex items-center">
-                <span
-                    className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-lime-600 text-white font-bold mr-2">
-                    1
+            <div className="h-[60px] w-full text-[14px] flex justify-start items-center mt-4 mb-4">
+                <span className="flex items-center ml-[50px]">
+
+                        <span
+                            className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-lime-600 text-white font-bold mr-2">
+                            1
+                        </span>
+                        <span>Sõiduki sisestamine</span>
                 </span>
-                <span>Sõiduki sisestamine</span>
-            </span>
-                <span className="flex items-center">
-                <span
-                    className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white font-bold mr-2">
-                    2
+                <span className="flex items-center ml-16">
+                    <span
+                        className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white font-bold mr-2">
+                        2
+                    </span>
+                    <span>Piltide lisamine</span>
                 </span>
-                <span>Piltide lisamine</span>
-            </span>
-                <span className="flex  items-center">
-                <span
-                    className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white  font-bold mr-2">
-                    3
+                <span className="flex items-center ml-16">
+                    <span
+                        className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white font-bold mr-2">
+                        3
+                    </span>
+                    <span>Teenuste tellimine</span>
                 </span>
-                <span>Teenuste tellimine</span>
-            </span>
             </div>
-
-
 
             <ContactDetails formData={formData} handleChange={handleChange}/>
             <VehicleDetails formData={formData} handleChange={handleChange}/>
+            <h1 className="text-xl mb-2">Varustus</h1>
             <SafetyEquipment formData={formData} handleChange={handleChange}/>
             <LightsDetails formData={formData} handleChange={handleChange}/>
             <Tires formData={formData} handleChange={handleChange}/>
@@ -167,9 +170,13 @@ const CarDetailsForm: React.FC = () => {
             <SportFeatures formData={formData} handleChange={handleChange}/>
             <AdditionalFeatures formData={formData} handleChange={handleChange}/>
 
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+                Submit
+            </button>
+
         </form>
     )
-        ;
+
 };
 
 export default CarDetailsForm;
