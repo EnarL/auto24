@@ -15,9 +15,9 @@ const LoginPage: React.FC = () => {
             const response = await fetch('http://localhost:8080/users/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
-                body: new URLSearchParams({
+                body: JSON.stringify({
                     username: username,
                     password: password,
                 }),
@@ -48,7 +48,6 @@ const LoginPage: React.FC = () => {
                     <h2 className="text-2xl mb-6 text-center">Logi sisse</h2>
                     <form onSubmit={handleLogin}>
                         <div className="mb-4">
-
                             <input
                                 type="text"
                                 id="username"
@@ -60,7 +59,6 @@ const LoginPage: React.FC = () => {
                             />
                         </div>
                         <div className="">
-
                             <input
                                 type="password"
                                 id="password"
@@ -75,10 +73,8 @@ const LoginPage: React.FC = () => {
                             <div className="flex items-center">
                                 <input type="checkbox"/>
                                 <p className="ml-2">Mäleta mind</p>
-
                             </div>
                             <p className="flex justify-end">Unustasin parooli</p>
-
                         </div>
                         {error && <p className="text-red-500 mb-4">{error}</p>}
                         <button

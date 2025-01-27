@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection }) => {
             <section className="w-[250px] border-2 border-gray-100 rounded-md">
                 <h2 className="border-gray-100 border-b-2 p-2 text-[#06c] font-semibold">MINU TEATED</h2>
                 <div className="break-words from-white to-gray-50 opacity-80 bg-gradient-to-t p-2">
-                    <a href="#" className={`block ${getLinkClass('Saabunud')}`}>Saabunud</a>
+                    <a href="kuuluta" className={`block ${getLinkClass('Saabunud')}`}>Saabunud</a>
                     <a href="#" className={`block ${getLinkClass('Saadetud')}`}>Saadetud</a>
                 </div>
             </section>
