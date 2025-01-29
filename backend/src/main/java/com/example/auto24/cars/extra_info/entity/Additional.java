@@ -32,5 +32,5 @@ public class Additional {
     private boolean invavarustus;
     private boolean neljarattaPooramine;
     private boolean arvelKuiN1Kaubik;
-    private String muudLisad; // Additional field for other extras, separated by semicolon
+    private String muudLisad;
 }

@@ -1,6 +1,5 @@
 package com.example.auto24.cars.extra_info.entity;
 
-
 import lombok.Data;
 
 @Data
@@ -11,4 +10,8 @@ public class TiresAndWheels {
     private boolean ilukilbid;
     private boolean tagavararatas;
     private boolean rehvirõhuKontrollsüsteem;
+    private boolean autogaKaasaSuverehvid;
+    private boolean autogaKaasaTalverehvid;
+    private boolean autogaKaasaValuveljed;
+    private boolean autogaKaasaIlukilbid;
 }
