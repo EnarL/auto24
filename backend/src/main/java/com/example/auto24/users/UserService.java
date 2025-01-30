@@ -5,11 +5,13 @@ import com.example.auto24.email.EmailService;
 import com.example.auto24.jwt.AuthService;
 import com.example.auto24.jwt.JWTUtil;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,7 +68,7 @@ public class UserService {
         emailService.sendConfirmationEmail(user, token);
     }
 
-    public String login(UserLoginRequest request) {
+    public ResponseEntity<Map<String, String>> login(UserLoginRequest request) {
         return authService.login(request);
     }
 

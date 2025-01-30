@@ -1,9 +1,12 @@
 package com.example.auto24.cars;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public record CarDTO(
-        String brand,
-        String model,
-        String price,
-        int year,
-        int mileage
-) { }
+        List<String> imageKeys,
+        String ownerId,
+        LocalDateTime createdAt,
+        LocalDateTime expirationDate) {
+
+}

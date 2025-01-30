@@ -2,6 +2,7 @@ package com.example.auto24.cars;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,19 @@ public class CarController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCar(@RequestBody CarRegisterRequest request, HttpServletRequest jwt) {
-        carService.saveCar(request, jwt);
+    public ResponseEntity<?> createCar(HttpServletRequest jwt) {
+        carService.saveCar(jwt);
         return ResponseEntity.ok("Car created successfully");
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createCarListing(@RequestHeader("Authorization") String authorizationHeader,
+                                                   @RequestBody CarDetailsDTO carDetailsDTO) {
+        String userId = carService.extractUserIdFromToken(authorizationHeader);
+
+        carService.createCarListing(carDetailsDTO, userId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Car listing created successfully");
     }
 
     @DeleteMapping("/{id}")

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -31,9 +32,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
-        String token = userService.login(request);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody UserLoginRequest request) {
+        return userService.login(request);
     }
 
     @DeleteMapping("/{userId}")

@@ -40,11 +40,12 @@ public class CarDetailsController {
             updatedCarDetails.setVehicleType(carDetailsDetails.getVehicleType());
             updatedCarDetails.setBodyType(carDetailsDetails.getBodyType());
             updatedCarDetails.setBodyTypeDetail(carDetailsDetails.getBodyTypeDetail());
+            updatedCarDetails.setModel(carDetailsDetails.getModel());
             updatedCarDetails.setModelName(carDetailsDetails.getModelName());
             updatedCarDetails.setModelGeneration(carDetailsDetails.getModelGeneration());
             updatedCarDetails.setModelTrim(carDetailsDetails.getModelTrim());
-            updatedCarDetails.setFirstRegistrationMonth(carDetailsDetails.getFirstRegistrationMonth());
-            updatedCarDetails.setFirstRegistrationYear(carDetailsDetails.getFirstRegistrationYear());
+            updatedCarDetails.setPrice(carDetailsDetails.getPrice());
+            updatedCarDetails.setFirstRegistrationDate(carDetailsDetails.getFirstRegistrationDate());
             updatedCarDetails.setIncludesRegistrationFee(carDetailsDetails.isIncludesRegistrationFee());
             updatedCarDetails.setDiscountPrice(carDetailsDetails.isDiscountPrice());
             updatedCarDetails.setExportPrice(carDetailsDetails.isExportPrice());
@@ -60,6 +61,7 @@ public class CarDetailsController {
             updatedCarDetails.setEngineDetails(carDetailsDetails.getEngineDetails());
             updatedCarDetails.setEnginePowerKW(carDetailsDetails.getEnginePowerKW());
             updatedCarDetails.setEnginePowerHP(carDetailsDetails.getEnginePowerHP());
+            updatedCarDetails.setFuelType(carDetailsDetails.getFuelType());
             updatedCarDetails.setFuelTankCapacity(carDetailsDetails.getFuelTankCapacity());
             updatedCarDetails.setFuelConsumptionHighway(carDetailsDetails.getFuelConsumptionHighway());
             updatedCarDetails.setFuelConsumptionCity(carDetailsDetails.getFuelConsumptionCity());

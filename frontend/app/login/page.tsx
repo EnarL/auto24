@@ -24,6 +24,9 @@ const LoginPage: React.FC = () => {
             });
 
             if (response.ok) {
+                const data = await response.json();
+                const token = data.token; // Assuming the token is in the response body
+                localStorage.setItem('jwtToken', token);
                 console.log('Successfully logged in');
                 setError('');
                 router.push('users/minu/');
