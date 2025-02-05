@@ -72,14 +72,30 @@ public class UserService {
         return authService.login(request);
     }
 
-    public void deleteUser(String UserId) {
-        userRepository.findById(UserId)
+    public void deleteUser(String userId) {
+        userRepository.findById(userId)
                 .ifPresentOrElse(user -> {
-                    carService.deleteCarsByUserId(UserId);
+                    carService.deleteCarsByUserId(userId);
                     userRepository.deleteById(user.getId());
                 }, () -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
                 });
+    }
+    public String extractUserIdFromToken(String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization header is missing or invalid");
+        }
+
+        String token = authorizationHeader.substring(7);
+        return jwtUtil.extractUserId(token);
+    }
+    public String extractRoleFromToken(String authorizationHeader){
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
+        {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "");
+        }
+        String token = authorizationHeader.substring(7);
+        return jwtUtil.extractUserRole(token);
     }
 
     public void changePassword(String userId, ChangePasswordRequest request) {
@@ -102,5 +118,12 @@ public class UserService {
         Users user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token"));
         user.setActive(true);
         userRepository.save(user);
+    }
+
+    public void assignAdminRoleToUser(String userId) {
+        Users user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        user.setRole(Role.valueOf("ADMIN"));
+        userRepository.save(user);
+
     }
 }

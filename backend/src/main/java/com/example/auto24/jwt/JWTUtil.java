@@ -55,6 +55,9 @@ public class JWTUtil {
     public String extractUserId(String token) {
         return extractClaim(token, claims -> claims.get("userId", String.class));
     }
+    public String extractUserRole(String Token){
+        return extractClaim(Token, claims -> claims.get("role", String.class));
+    }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
         final Claims claims = extractAllClaims(token);

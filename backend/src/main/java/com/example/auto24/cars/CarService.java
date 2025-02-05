@@ -1,11 +1,12 @@
 package com.example.auto24.cars;
 
+import com.example.auto24.cars.extra_info.CarExtraInfo;
+import com.example.auto24.cars.extra_info.CarExtraInfoDTO;
+import com.example.auto24.cars.extra_info.CarExtraInfoRepository;
 import com.example.auto24.jwt.JWTUtil;
 import com.example.auto24.users.UserRepository;
 import com.example.auto24.users.Users;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,12 +24,14 @@ public class CarService {
     private final JWTUtil jwtUtil;
     private final CarDTOMapper carDTOMapper;
     private final CarDetailsRepository carDetailsRepository;
-    public CarService(UserRepository userRepository, CarRepository carRepository, JWTUtil jwtUtil, CarDTOMapper carDTOMapper, CarDetailsRepository carDetailsRepository) {
+    private final CarExtraInfoRepository carExtraInfoRepository;
+    public CarService(UserRepository userRepository, CarRepository carRepository, JWTUtil jwtUtil, CarDTOMapper carDTOMapper, CarDetailsRepository carDetailsRepository, CarExtraInfoRepository carExtraInfoRepository) {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.jwtUtil = jwtUtil;
         this.carDTOMapper = carDTOMapper;
         this.carDetailsRepository = carDetailsRepository;
+        this.carExtraInfoRepository = carExtraInfoRepository;
     }
 
     public List<CarDTO> getAllCars() {
@@ -40,35 +43,6 @@ public class CarService {
                 map(carDTOMapper).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
     }
-    public void saveCar(HttpServletRequest jwt) {
-        String authorizationHeader = jwt.getHeader("Authorization");
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization header is missing or invalid");
-        }
-
-        String token = authorizationHeader.substring(7);
-        String userId = jwtUtil.extractUserId(token);
-
-        if (userId == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token: userId is null");
-        }
-
-
-        Users owner = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
-        LocalDateTime expirationDate = LocalDateTime.now().plusMonths(1);
-
-        Car car = Car.builder()
-
-                .ownerId(userId)
-                .expirationDate(expirationDate)
-                .build();
-
-        Car savedCar = carRepository.save(car);
-        owner.getCarIds().add(savedCar.getId());
-        userRepository.save(owner);
-    }
-
     public void deleteCar(String id) {
         Car car = carRepository.findById(id).orElse(null);
         if (car != null) {
@@ -87,30 +61,34 @@ public class CarService {
             carRepository.deleteById(car.getId());
         }
     }
-    // Method to extract userId from the JWT token
     public String extractUserIdFromToken(String authorizationHeader) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization header is missing or invalid");
         }
 
-        String token = authorizationHeader.substring(7); // Remove "Bearer " prefix
-        return jwtUtil.extractUserId(token); // This is where you extract the userId from the token
+        String token = authorizationHeader.substring(7);
+        return jwtUtil.extractUserId(token);
     }
 
-    public void createCarListing(CarDetailsDTO carDetailsDTO, String userId) {
-        // Step 1: Create the Car entity
+    public void createCarListing(String authorizationHeader, CarListingRequest carListingRequest) {
+        String userId = extractUserIdFromToken(authorizationHeader);
+        Car savedCar = createAndSaveCar(userId);
+        createAndSaveCarDetails(savedCar.getId(), carListingRequest.carDetailsDTO());
+        createAndSaveCarExtraInfo(savedCar.getId(), carListingRequest.carExtraInfoDTO());
+    }
+
+    private Car createAndSaveCar(String userId) {
         Car car = Car.builder()
-                .ownerId(userId) // Set the user ID automatically from token
+                .ownerId(userId)
                 .createdAt(LocalDateTime.now())
-                .expirationDate(LocalDateTime.now().plusMonths(1))  // Set expiration date to 1 month from now
+                .expirationDate(LocalDateTime.now().plusMonths(1))
                 .build();
+        return carRepository.save(car);
+    }
 
-        // Save the car to the database
-        Car savedCar = carRepository.save(car);
-
-        // Step 2: Create the CarDetails entity using the carId
+    private void createAndSaveCarDetails(String carId, CarDetailsDTO carDetailsDTO) {
         CarDetails carDetails = new CarDetails();
-        carDetails.setCarId(savedCar.getId());
+        carDetails.setCarId(carId);
         carDetails.setVehicleType(carDetailsDTO.vehicleType());
         carDetails.setBodyType(carDetailsDTO.bodyType());
         carDetails.setBodyTypeDetail(carDetailsDTO.bodyTypeDetail());
@@ -172,6 +150,23 @@ public class CarService {
         carDetails.setDescription(carDetailsDTO.description());
 
         carDetailsRepository.save(carDetails);
+    }
+
+    private void createAndSaveCarExtraInfo(String carId, CarExtraInfoDTO carExtraInfoDTO) {
+        CarExtraInfo carExtraInfo = new CarExtraInfo();
+        carExtraInfo.setCarId(carId);
+        carExtraInfo.setSafetyAndSecurity(carExtraInfoDTO.safetyAndSecurity());
+        carExtraInfo.setLights(carExtraInfoDTO.lights());
+        carExtraInfo.setTiresAndWheels(carExtraInfoDTO.tiresAndWheels());
+        carExtraInfo.setSteering(carExtraInfoDTO.steering());
+        carExtraInfo.setSeats(carExtraInfoDTO.seats());
+        carExtraInfo.setInteriorFeatures(carExtraInfoDTO.interiorFeatures());
+        carExtraInfo.setSportFeatures(carExtraInfoDTO.sportFeatures());
+        carExtraInfo.setComfortFeatures(carExtraInfoDTO.comfortFeatures());
+        carExtraInfo.setAudioVideoCommunication(carExtraInfoDTO.audioVideoCommunication());
+        carExtraInfo.setAdditional(carExtraInfoDTO.additional());
+
+        carExtraInfoRepository.save(carExtraInfo);
     }
 
 

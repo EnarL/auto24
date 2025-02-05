@@ -2,8 +2,10 @@ package com.example.auto24.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +16,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // admin request to get all users
     @GetMapping
     public List<UsersDTO> getAllUsers() {
         return userService.getAllUsers();
@@ -37,12 +38,32 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable String userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable String userId, @RequestHeader("Authorization") String authorizationHeader) throws AccessDeniedException {
+        if (authorizationHeader == null){
+            return ResponseEntity.badRequest().body("Missing token");
+        }
+        String tokenUserId = userService.extractUserIdFromToken(authorizationHeader);
+        String role = userService.extractRoleFromToken(authorizationHeader);
+
+
+        if (!tokenUserId.equals(userId) && !role.equals("ADMIN")){
+            throw new AccessDeniedException("You are not authorized");
+        }
         userService.deleteUser(userId);
         return ResponseEntity.ok("User deleted successfully");
     }
     @PostMapping("/{userId}/change-password")
-    public ResponseEntity<?> changePassword(@PathVariable("userId") String userId, @RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<?> changePassword(@PathVariable("userId") String userId, @RequestBody ChangePasswordRequest request, @RequestHeader("Authorization") String authorizationHeader) throws AccessDeniedException {
+        if (authorizationHeader == null){
+            return ResponseEntity.badRequest().body("Missing token");
+        }
+        String tokenUserId = userService.extractUserIdFromToken(authorizationHeader);
+        String role = userService.extractRoleFromToken(authorizationHeader);
+
+
+        if (!tokenUserId.equals(userId) && !role.equals("ADMIN")){
+            throw new AccessDeniedException("You are not authorized");
+        }
         userService.changePassword(userId, request);
         return ResponseEntity.ok("Password changed successfully");
     }
@@ -54,6 +75,12 @@ public class UserController {
     public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
         userService.confirmEmail(token);
         return ResponseEntity.ok("Email confirmed");
+    }
+    @PutMapping("/createAdmin")
+    public ResponseEntity<String> assignAdminRoleToUser(String userId) {
+        userService.assignAdminRoleToUser(userId);
+        return ResponseEntity.ok("Admin role assigned to user");
+
     }
 
 }
