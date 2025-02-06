@@ -13,7 +13,7 @@ public class CarDetailsDTOMapper implements Function<CarDetails, CarDetailsDTO> 
                 carDetails.getBodyType(),
                 carDetails.getBodyTypeDetail(),
                 carDetails.getModel(),
-                carDetails.getModelName(),
+                carDetails.getMake(),
                 carDetails.getModelGeneration(),
                 carDetails.getModelTrim(),
                 carDetails.getFirstRegistrationDate(),

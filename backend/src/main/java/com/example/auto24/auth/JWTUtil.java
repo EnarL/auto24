@@ -1,4 +1,4 @@
-package com.example.auto24.jwt;
+package com.example.auto24.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

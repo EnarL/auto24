@@ -16,13 +16,13 @@ public class CarDetails {
     private String bodyType;               // e.g., Hatchback, Coupe
     private String bodyTypeDetail;         // Additional body details if any
     private String model;                  // e.g., BMW
-    private String modelName;              // e.g., 3 Series
+    private String make;              // e.g., 3 Series
     private String modelGeneration;        // e.g., F30
     private String modelTrim;              // e.g., Sport, Luxury
     private String firstRegistrationDate;  // First registration date (e.g., 2017-06-15)
 
     // Pricing
-    private int price;                     // Car price in currency units (e.g., 25000)
+    private double price;                     // Car price in currency units (e.g., 25000)
     private boolean includesRegistrationFee = false; // Does the price include registration fee?
     private boolean discountPrice = false;        // Is there a discount applied?
     private boolean exportPrice = false;          // Is the price for export?

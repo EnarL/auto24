@@ -1,6 +1,6 @@
 package com.example.auto24.config;
 
-import com.example.auto24.jwt.JWTAuthenticationFilter;
+import com.example.auto24.auth.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,19 +40,16 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/register", "/users/login", "/users/confirm").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login", "/auth/confirm").permitAll()
                         .requestMatchers("/users/createAdmin", "/users").hasRole("ADMIN")
-                        .anyRequest().hasRole("USER")
+                        .anyRequest().hasAnyRole("USER", "ADMIN")
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
-
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
-
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

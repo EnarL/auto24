@@ -12,25 +12,40 @@ import java.util.Optional;
 @RequestMapping("/car-details")
 public class CarDetailsController {
 
-    @Autowired
-    private CarDetailsRepository carDetailsRepository;
+    private final CarDetailsRepository carDetailsRepository;
+    private final CarDetailsService carDetailsService;
 
+    public CarDetailsController(CarDetailsRepository carDetailsRepository, CarDetailsService carDetailsService) {
+        this.carDetailsRepository = carDetailsRepository;
+        this.carDetailsService = carDetailsService;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<CarDetailsDTO>> searchCars(@RequestBody CarDetailsDTO carDetailsDTO) {
+        List<CarDetailsDTO> cars = carDetailsService.searchCars(carDetailsDTO);
+        return ResponseEntity.ok(cars);
+    }
+//admin
     @GetMapping
     public List<CarDetails> getAllCarDetails() {
         return carDetailsRepository.findAll();
     }
 
+    // maybe create like getAllCarDetialsByOwner
+
+ //move the logic to service layer
     @GetMapping("/{id}")
     public ResponseEntity<CarDetails> getCarDetailsById(@PathVariable String id) {
         Optional<CarDetails> carDetails = carDetailsRepository.findById(id);
         return carDetails.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    //this should be with DTO and move the logic to service layer
     @PostMapping
     public CarDetails createCarDetails(@RequestBody CarDetails carDetails) {
         return carDetailsRepository.save(carDetails);
     }
-
+//use mapping here to make this more clean
     @PutMapping("/{id}")
     public ResponseEntity<CarDetails> updateCarDetails(@PathVariable String id, @RequestBody CarDetails carDetailsDetails) {
         Optional<CarDetails> carDetails = carDetailsRepository.findById(id);
@@ -41,7 +56,7 @@ public class CarDetailsController {
             updatedCarDetails.setBodyType(carDetailsDetails.getBodyType());
             updatedCarDetails.setBodyTypeDetail(carDetailsDetails.getBodyTypeDetail());
             updatedCarDetails.setModel(carDetailsDetails.getModel());
-            updatedCarDetails.setModelName(carDetailsDetails.getModelName());
+            updatedCarDetails.setMake(carDetailsDetails.getMake());
             updatedCarDetails.setModelGeneration(carDetailsDetails.getModelGeneration());
             updatedCarDetails.setModelTrim(carDetailsDetails.getModelTrim());
             updatedCarDetails.setPrice(carDetailsDetails.getPrice());
@@ -101,7 +116,7 @@ public class CarDetailsController {
             return ResponseEntity.notFound().build();
         }
     }
-
+//
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCarDetails(@PathVariable String id) {
         Optional<CarDetails> carDetails = carDetailsRepository.findById(id);

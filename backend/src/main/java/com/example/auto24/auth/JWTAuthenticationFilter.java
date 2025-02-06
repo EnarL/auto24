@@ -1,4 +1,4 @@
-package com.example.auto24.jwt;
+package com.example.auto24.auth;
 
 import com.example.auto24.config.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
