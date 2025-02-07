@@ -70,13 +70,19 @@ public class CarService {
         carDetailsService.createAndSaveCarDetails(savedCar.getId(), carListingRequest.carDetailsDTO());
         carExtraInfoService.createAndSaveCarExtraInfo(savedCar.getId(), carListingRequest.carExtraInfoDTO());
     }
-    private Car createAndSaveCar(String userId) {
+    public Car createAndSaveCar(String userId) {
         Car car = Car.builder()
                 .ownerId(userId)
                 .createdAt(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusMonths(1))
                 .build();
         return carRepository.save(car);
+    }
+    public void extendCarExpirationDate(String carId, int months) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
+        car.setExpirationDate(car.getExpirationDate().plusMonths(months));
+        carRepository.save(car);
     }
     public List<CarDTO> getAllCarsByOwenrId(String authorizationHeader) {
         String userId = extractUserIdFromToken(authorizationHeader);

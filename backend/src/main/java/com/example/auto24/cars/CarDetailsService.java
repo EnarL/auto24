@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -144,4 +145,86 @@ public class CarDetailsService {
 
         carDetailsRepository.save(carDetails);
     }
+    public List<CarDetails> getAllCarDetails() {
+        return carDetailsRepository.findAll();
+    }
+
+    public Optional<CarDetails> getCarDetailsById(String id) {
+        return carDetailsRepository.findById(id);
+    }
+
+    public CarDetails createCarDetails(CarDetails carDetails) {
+        return carDetailsRepository.save(carDetails);
+    }
+
+    public Optional<CarDetails> updateCarDetails(String id, CarDetails carDetailsDetails) {
+        return carDetailsRepository.findById(id).map(carDetails -> {
+            carDetails.setCarId(carDetailsDetails.getCarId());
+            carDetails.setVehicleType(carDetailsDetails.getVehicleType());
+            carDetails.setBodyType(carDetailsDetails.getBodyType());
+            carDetails.setBodyTypeDetail(carDetailsDetails.getBodyTypeDetail());
+            carDetails.setModel(carDetailsDetails.getModel());
+            carDetails.setMake(carDetailsDetails.getMake());
+            carDetails.setModelGeneration(carDetailsDetails.getModelGeneration());
+            carDetails.setModelTrim(carDetailsDetails.getModelTrim());
+            carDetails.setPrice(carDetailsDetails.getPrice());
+            carDetails.setFirstRegistrationDate(carDetailsDetails.getFirstRegistrationDate());
+            carDetails.setIncludesRegistrationFee(carDetailsDetails.isIncludesRegistrationFee());
+            carDetails.setDiscountPrice(carDetailsDetails.isDiscountPrice());
+            carDetails.setExportPrice(carDetailsDetails.isExportPrice());
+            carDetails.setOdometerReading(carDetailsDetails.getOdometerReading());
+            carDetails.setHasServiceBook(carDetailsDetails.isHasServiceBook());
+            carDetails.setVinCode(carDetailsDetails.getVinCode());
+            carDetails.setRegistrationNumber(carDetailsDetails.getRegistrationNumber());
+            carDetails.setTransmission(carDetailsDetails.getTransmission());
+            carDetails.setDriveType(carDetailsDetails.getDriveType());
+            carDetails.setEngineCapacityLiters(carDetailsDetails.getEngineCapacityLiters());
+            carDetails.setEngineCapacityCubicCentimeters(carDetailsDetails.getEngineCapacityCubicCentimeters());
+            carDetails.setEngineConfiguration(carDetailsDetails.getEngineConfiguration());
+            carDetails.setEngineDetails(carDetailsDetails.getEngineDetails());
+            carDetails.setEnginePowerKW(carDetailsDetails.getEnginePowerKW());
+            carDetails.setEnginePowerHP(carDetailsDetails.getEnginePowerHP());
+            carDetails.setFuelType(carDetailsDetails.getFuelType());
+            carDetails.setFuelTankCapacity(carDetailsDetails.getFuelTankCapacity());
+            carDetails.setFuelConsumptionHighway(carDetailsDetails.getFuelConsumptionHighway());
+            carDetails.setFuelConsumptionCity(carDetailsDetails.getFuelConsumptionCity());
+            carDetails.setFuelConsumptionCombined(carDetailsDetails.getFuelConsumptionCombined());
+            carDetails.setFuelConsumptionStandard(carDetailsDetails.getFuelConsumptionStandard());
+            carDetails.setCo2Emissions(carDetailsDetails.getCo2Emissions());
+            carDetails.setSeatingCapacity(carDetailsDetails.getSeatingCapacity());
+            carDetails.setNumberOfDoors(carDetailsDetails.getNumberOfDoors());
+            carDetails.setHasWarranty(carDetailsDetails.isHasWarranty());
+            carDetails.setAccidentDamaged(carDetailsDetails.isAccidentDamaged());
+            carDetails.setColor(carDetailsDetails.getColor());
+            carDetails.setMetallicColor(carDetailsDetails.isMetallicColor());
+            carDetails.setColorDetail(carDetailsDetails.getColorDetail());
+            carDetails.setCurbWeight(carDetailsDetails.getCurbWeight());
+            carDetails.setGrossWeight(carDetailsDetails.getGrossWeight());
+            carDetails.setPayloadCapacity(carDetailsDetails.getPayloadCapacity());
+            carDetails.setBrakedTrailerWeight(carDetailsDetails.getBrakedTrailerWeight());
+            carDetails.setUnbrakedTrailerWeight(carDetailsDetails.getUnbrakedTrailerWeight());
+            carDetails.setWheelbase(carDetailsDetails.getWheelbase());
+            carDetails.setLength(carDetailsDetails.getLength());
+            carDetails.setWidth(carDetailsDetails.getWidth());
+            carDetails.setHeight(carDetailsDetails.getHeight());
+            carDetails.setAcceleration0To100(carDetailsDetails.getAcceleration0To100());
+            carDetails.setTopSpeed(carDetailsDetails.getTopSpeed());
+            carDetails.setLocationCountry(carDetailsDetails.getLocationCountry());
+            carDetails.setLocationCounty(carDetailsDetails.getLocationCounty());
+            carDetails.setImportedFromCountry(carDetailsDetails.getImportedFromCountry());
+            carDetails.setRegisteredInCountry(carDetailsDetails.isRegisteredInCountry());
+            carDetails.setInspectionValidUntil(carDetailsDetails.getInspectionValidUntil());
+            carDetails.setReserved(carDetailsDetails.isReserved());
+            carDetails.setReservationUntilDate(carDetailsDetails.getReservationUntilDate());
+            carDetails.setExchangePossible(carDetailsDetails.isExchangePossible());
+            carDetails.setExchangeDetails(carDetailsDetails.getExchangeDetails());
+            carDetails.setDescription(carDetailsDetails.getDescription());
+            return carDetailsRepository.save(carDetails);
+        });
+    }
+
+    public void deleteCarDetails(String id) {
+        carDetailsRepository.findById(id).ifPresent(carDetailsRepository::delete);
+    }
+
 }

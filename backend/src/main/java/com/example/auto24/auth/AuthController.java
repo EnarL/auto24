@@ -42,4 +42,16 @@ public class AuthController {
         authService.confirmEmail(token);
         return ResponseEntity.ok("Email confirmed");
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
+        authService.requestPasswordReset(email);
+        return ResponseEntity.ok("Password reset link sent to your email");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        authService.resetPassword(token, newPassword);
+        return ResponseEntity.ok("Password has been reset successfully");
+    }
 }
