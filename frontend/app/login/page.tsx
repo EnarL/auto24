@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/users/login', {
+            const response = await fetch('http://localhost:8080/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -21,15 +21,13 @@ const LoginPage: React.FC = () => {
                     username: username,
                     password: password,
                 }),
+                credentials: 'include', // Include cookies in the request
             });
 
             if (response.ok) {
-                const data = await response.json();
-                const token = data.token; // Assuming the token is in the response body
-                localStorage.setItem('jwtToken', token);
-                console.log('Successfully logged in');
                 setError('');
-                router.push('users/minu/');
+                console.log('Successfully logged in');
+                router.push('users/minu/'); // Redirect after successful login
             } else {
                 const errorMessage = await response.text();
                 setError(errorMessage);
@@ -61,7 +59,7 @@ const LoginPage: React.FC = () => {
                                 required
                             />
                         </div>
-                        <div className="">
+                        <div className="mb-4">
                             <input
                                 type="password"
                                 id="password"
@@ -74,7 +72,7 @@ const LoginPage: React.FC = () => {
                         </div>
                         <div className="flex justify-between items-center mt-2 mb-2 text-[12px]">
                             <div className="flex items-center">
-                                <input type="checkbox"/>
+                                <input type="checkbox" />
                                 <p className="ml-2">Mäleta mind</p>
                             </div>
                             <p className="flex justify-end">Unustasin parooli</p>

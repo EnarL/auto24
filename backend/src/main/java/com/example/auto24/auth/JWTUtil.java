@@ -38,7 +38,18 @@ public class JWTUtil {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 30 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 minutes
+                .signWith(getKey())
+                .compact();
+    }
+    public String generateRefreshToken(String userId, String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)) // 1 week
                 .signWith(getKey())
                 .compact();
     }
@@ -54,9 +65,6 @@ public class JWTUtil {
 
     public String extractUserId(String token) {
         return extractClaim(token, claims -> claims.get("userId", String.class));
-    }
-    public String extractUserRole(String Token){
-        return extractClaim(Token, claims -> claims.get("role", String.class));
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {

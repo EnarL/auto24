@@ -84,7 +84,7 @@ public class CarService {
         car.setExpirationDate(car.getExpirationDate().plusMonths(months));
         carRepository.save(car);
     }
-    public List<CarDTO> getAllCarsByOwenrId(String authorizationHeader) {
+    public List<CarDTO> getAllCarsByOwnerId(String authorizationHeader) {
         String userId = extractUserIdFromToken(authorizationHeader);
         List<Car> cars = carRepository.findByOwnerId(userId);
         return cars.stream().map(carDTOMapper).collect(Collectors.toList());

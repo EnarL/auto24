@@ -35,7 +35,7 @@ public class EmailService implements EmailSender {
         }
     }
 
-    public void sendConfirmationEmail(Users user, String token) {
+    public void sendConfirmationEmail(Users user, String token) throws MessagingException {
         String confirmationUrl = "http://localhost:8080/auth/confirm?token=" + token;
         String emailContent = "<html><body>"
                 + "<h1>Welcome to Auto24, " + user.getFirstname() + "!</h1>"
@@ -65,5 +65,24 @@ public class EmailService implements EmailSender {
         helper.setFrom("noreply@example.com");
 
         mailSender.send(mimeMessage);
+    }
+    @Async
+    public void sendNewsLetterEmail(Users user) throws MessagingException {
+        String subject = "Auto24 Newsletter";
+        String message = "<html><body>"
+                + "<h1>Auto24 Newsletter</h1>"
+                + "<p>Dear " + user.getFirstname() + ",</p>"
+                + "<p>Check out our latest offers and news!</p>"
+                + "<p>Best regards,<br>Auto24 Team</p>"
+                + "</body></html>";
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        helper.setText(message, true);
+        helper.setTo(user.getEmail());
+        helper.setSubject(subject);
+        helper.setFrom("noreply@example.com");
+        mailSender.send(mimeMessage);
+
     }
 }
