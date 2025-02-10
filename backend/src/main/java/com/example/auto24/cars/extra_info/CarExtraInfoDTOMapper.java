@@ -1,7 +1,9 @@
 package com.example.auto24.cars.extra_info;
 
-import java.util.function.Function;
+import org.springframework.stereotype.Service;
 
+import java.util.function.Function;
+@Service
 public class CarExtraInfoDTOMapper implements Function<CarExtraInfo, CarExtraInfoDTO> {
     @Override
     public CarExtraInfoDTO apply(CarExtraInfo carExtraInfo) {

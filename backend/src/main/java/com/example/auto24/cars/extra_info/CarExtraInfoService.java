@@ -2,10 +2,13 @@ package com.example.auto24.cars.extra_info;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CarExtraInfoService {
 
     private final CarExtraInfoRepository carExtraInfoRepository;
+    private final CarExtraInfoDTOMapper carExtraInfoDTOMapper = new CarExtraInfoDTOMapper();
 
     public CarExtraInfoService(CarExtraInfoRepository carExtraInfoRepository) {
         this.carExtraInfoRepository = carExtraInfoRepository;
@@ -26,4 +29,11 @@ public class CarExtraInfoService {
         carExtraInfo.setAdditional(carExtraInfoDTO.additional());
         carExtraInfoRepository.save(carExtraInfo);
     }
+
+    public Optional<CarExtraInfoDTO> getCarExtraInfoByCarId(String id) {
+        Optional<CarExtraInfo> carExtraInfoOpt = carExtraInfoRepository.findByCarId(id);
+
+        return carExtraInfoOpt.map(carExtraInfoDTOMapper::apply);
+    }
+
 }

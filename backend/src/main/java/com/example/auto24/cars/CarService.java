@@ -1,6 +1,6 @@
 package com.example.auto24.cars;
 
-import com.example.auto24.auth.JWTUtil;
+import com.example.auto24.cars.extra_info.CarExtraInfoDTO;
 import com.example.auto24.cars.extra_info.CarExtraInfoService;
 import com.example.auto24.users.UserPrincipal;
 import com.example.auto24.users.UserRepository;
@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,15 +21,13 @@ public class CarService {
 
     private final UserRepository userRepository;
     private final CarRepository carRepository;
-    private final JWTUtil jwtUtil;
     private final CarDTOMapper carDTOMapper;
     private final CarDetailsService carDetailsService;
     private final CarExtraInfoService carExtraInfoService;
 
-    public CarService(UserRepository userRepository, CarRepository carRepository, JWTUtil jwtUtil, CarDTOMapper carDTOMapper, CarDetailsService carDetailsService, CarExtraInfoService carExtraInfoService) {
+    public CarService(UserRepository userRepository, CarRepository carRepository, CarDTOMapper carDTOMapper, CarDetailsService carDetailsService, CarExtraInfoService carExtraInfoService) {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
-        this.jwtUtil = jwtUtil;
         this.carDTOMapper = carDTOMapper;
         this.carDetailsService = carDetailsService;
         this.carExtraInfoService = carExtraInfoService;
@@ -73,12 +72,9 @@ public class CarService {
 
     private void updateUserCarIds(String userId, String carId) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-
         user.getCarIds().add(carId);
-
         userRepository.save(user);
     }
-
 
     public Car createAndSaveCar(String userId) {
         Car car = Car.builder()
@@ -106,4 +102,16 @@ public class CarService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<CarListingResponse> getCarListingById(String id) {
+        Optional<CarDetailsDTO> carDetailsOpt = carDetailsService.getCarDetailsById(id);
+        Optional<CarExtraInfoDTO> carExtraInfoOpt = carExtraInfoService.getCarExtraInfoByCarId(id);
+
+        if (carDetailsOpt.isEmpty() || carExtraInfoOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        CarDetailsDTO carDetailsDTO = carDetailsOpt.get();
+        CarExtraInfoDTO carExtraInfoDTO = carExtraInfoOpt.get();
+        return Optional.of(new CarListingResponse(carDetailsDTO, carExtraInfoDTO));
+    }
 }

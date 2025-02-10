@@ -12,13 +12,19 @@ import java.util.Optional;
 public class CarDetailsController {
 
     private final CarDetailsService carDetailsService;
+    private final CarDetailsDTOMapper carDetailsDTOMapper;
 
-    public CarDetailsController(CarDetailsService carDetailsService) {
+    public CarDetailsController(CarDetailsService carDetailsService, CarDetailsDTOMapper carDetailsDTOMapper) {
         this.carDetailsService = carDetailsService;
+        this.carDetailsDTOMapper = carDetailsDTOMapper;
     }
     @GetMapping("/preview")
     public List<CarPreviewDTO> getAllCarDetailsPreview() {
         return carDetailsService.getAllCarsPreview();
+    }
+    @GetMapping("/preview/{id}")
+    public ResponseEntity<CarPreviewDTO> getCarDetailsPreviewById(@PathVariable String id) {
+        return ResponseEntity.of(carDetailsService.getCarDetailsPreviewById(id));
     }
     @GetMapping("/search")
     public ResponseEntity<List<CarDetailsDTO>> searchCars(@RequestBody CarDetailsDTO carDetailsDTO) {
@@ -32,10 +38,12 @@ public class CarDetailsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CarDetails> getCarDetailsById(@PathVariable String id) {
-        Optional<CarDetails> carDetails = carDetailsService.getCarDetailsById(id);
-        return carDetails.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<CarDetailsDTO> getCarDetailsById(@PathVariable String id) {
+        // Directly return the result of the service method
+        return ResponseEntity.of(carDetailsService.getCarDetailsById(id));
     }
+
+
 
     @PostMapping
     public CarDetails createCarDetails(@RequestBody CarDetails carDetails) {

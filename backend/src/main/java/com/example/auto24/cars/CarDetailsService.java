@@ -153,9 +153,12 @@ public class CarDetailsService {
         return carDetailsRepository.findAll();
     }
 
-    public Optional<CarDetails> getCarDetailsById(String id) {
-        return carDetailsRepository.findById(id);
+    public Optional<CarDetailsDTO> getCarDetailsById(String id) {
+        return carDetailsRepository.findByCarId(id)
+                .map(carDetailsDTOMapper::apply); // If found, map to DTO, else return empty Optional
     }
+
+
 
     public CarDetails createCarDetails(CarDetails carDetails) {
         return carDetailsRepository.save(carDetails);
@@ -256,4 +259,7 @@ public class CarDetailsService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<CarPreviewDTO> getCarDetailsPreviewById(String id) {
+        return carRepository.findPreviewById(id);
+    }
 }

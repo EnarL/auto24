@@ -55,23 +55,20 @@ const CarGrid: React.FC<CarGridProps> = ({ columns, rows, carCount }) => {
             <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
                 {cars.slice(0, carCount).map((car, index) => (
                     <Link href={`/cars/${car.id}`} key={index}>
-                        <div className="flex flex-col border-2 border-gray-100">
+                        <div className="flex flex-col border-2 border-gray-100 h-full">
                             <div className="flex">
                                 {carImages[car.id]?.length > 0 ? (
-                                    carImages[car.id].map((imageUrl, imgIndex) => (
-                                        <S3Image
-                                            key={imgIndex}
-                                            src={imageUrl}
-                                            alt={`Car ${car.title} - Image ${imgIndex + 1}`}
-                                            className="object-cover w-full h-full"
-                                        />
-                                    ))
+                                    <S3Image
+                                        src={carImages[car.id][0]}
+                                        alt={`Car ${car.title} - Image 1`}
+                                        className="object-cover w-full h-32"  // Fixed height, width full to container
+                                    />
                                 ) : (
                                     <p>No images available</p>
                                 )}
                             </div>
-                            <div className="border-2 border-gray-100 p-2">
-                                <div>{car.title}</div>
+                            <div className="flex flex-col p-2 flex-grow">
+                                <div className="font-bold">{car.title}</div>
                                 <div>{car.price} EUR</div>
                                 <div>{car.firstRegistrationDate}</div>
                             </div>
