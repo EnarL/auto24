@@ -9,6 +9,7 @@ import Sublogos from "./components/sublogos";
 import React from "react";
 import Banner from "@/app/components/banner";
 import FooterSection from "@/app/components/footersection";
+import {AuthUserProvider} from "@/app/context/AuthUserContext";
 
 export const metadata: Metadata = {
     title: "Avaleht - auto24.ee",
@@ -23,23 +24,25 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className="display flex flex-col">
-        <Header className="w-full hidden md:block"></Header>
-        <div className="mx-auto flex flex-col w-full max-w-custom">
-            <div>
-                <Banner className="hidden lg:block"></Banner>
-                <div className="flex items-center w-full ">
-                    <Logo className="flex-grow logo-details overall-margin-left mr-4"></Logo>
-                    <Sublogos></Sublogos>
-                </div>
-                <TopBar></TopBar>
-                <Kuuluta></Kuuluta >
-                <div className=" w-[1000px] overall-margin-left">
-                    {children}
+        <AuthUserProvider>
+            <Header className="w-full hidden md:block"></Header>
+            <div className="mx-auto flex flex-col w-full max-w-custom">
+                <div>
+                    <Banner className="hidden lg:block"></Banner>
+                    <div className="flex items-center w-full ">
+                        <Logo className="flex-grow logo-details overall-margin-left mr-4"></Logo>
+                        <Sublogos></Sublogos>
+                    </div>
+                    <TopBar></TopBar>
+                    <Kuuluta></Kuuluta>
+                    <div className=" w-[1000px] overall-margin-left">
+                        {children}
+                    </div>
                 </div>
             </div>
-        </div>
-        <Foobar></Foobar>
-        <FooterSection></FooterSection>
+            <Foobar></Foobar>
+            <FooterSection></FooterSection>
+        </AuthUserProvider>
         </body>
         </html>
     );

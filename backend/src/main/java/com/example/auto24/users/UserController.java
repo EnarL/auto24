@@ -1,5 +1,7 @@
 package com.example.auto24.users;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -34,6 +36,11 @@ public class UserController {
         userService.assignAdminRoleToUser(userId);
         return ResponseEntity.ok("Admin role assigned to user");
 
+    }
+    @GetMapping("/me")
+    public ResponseEntity<UsersDTO> getCurrentUser(HttpServletRequest request) {
+        UsersDTO userProfile = userService.getUserProfile(request);
+        return ResponseEntity.ok(userProfile);
     }
 
 }

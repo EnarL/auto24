@@ -1,15 +1,11 @@
 package com.example.auto24.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,70 +15,67 @@ import java.util.function.Function;
 @Service
 public class JWTUtil {
 
-    private String secretkey = "";
+    private static final String SECRET_KEY = "YOUR_LONG_STATIC_SECRET_KEY_HERE"; // Replace with a secure key from env/config
 
-    public JWTUtil() {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+    // Generate an access token
+    public String generateToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, username, 15 * 60 * 1000); // 15 minutes
     }
 
-    public String generateToken(String userId, String username) {
+    // Generate a refresh token
+    public String generateRefreshToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", userId);
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 minutes
-                .signWith(getKey())
-                .compact();
+        return createToken(claims, username, 7 * 24 * 60 * 60 * 1000); // 1 week
     }
-    public String generateRefreshToken(String userId, String username) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", userId);
+
+    // Helper method to create a token
+    private String createToken(Map<String, Object> claims, String subject, long expirationTime) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(username)
+                .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)) // 1 week
-                .signWith(getKey())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(getKey(), SignatureAlgorithm.HS256) // Sign with the key
                 .compact();
     }
 
+    // Get the key from the SECRET_KEY
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes()); // Directly use the bytes of the secret key
     }
 
+    // Extract username from the token
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    // Extract user ID from the token
     public String extractUserId(String token) {
         return extractClaim(token, claims -> claims.get("userId", String.class));
     }
 
+    // Generic method to extract a claim from the token
     private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
         final Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
     }
 
+    // Extract all claims from the token
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith(getKey())
+                .setSigningKey(getKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public boolean validateToken(String token) {
+        try {
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {
@@ -92,7 +85,5 @@ public class JWTUtil {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
 }
-
-
-
