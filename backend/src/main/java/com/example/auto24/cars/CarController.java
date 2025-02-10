@@ -1,6 +1,5 @@
 package com.example.auto24.cars;
 
-import com.example.auto24.cars.extra_info.*;
 import com.example.auto24.users.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +16,9 @@ import static org.springframework.http.ResponseEntity.ok;
 public class CarController {
 
     private final CarService carService;
-    private final CarDetailsService carDetailsService;
-    private final CarExtraInfoService carExtraInfoService;
 
-    public CarController(CarService carService, CarDetailsService carDetailsService, CarExtraInfoService carExtraInfoService) {
+    public CarController(CarService carService) {
         this.carService = carService;
-        this.carDetailsService = carDetailsService;
-        this.carExtraInfoService = carExtraInfoService;
     }
 
     //lisa mingi preview endpoint, kus saab näha kõiki autosid, aga ainult nende pealkirju ja hindu

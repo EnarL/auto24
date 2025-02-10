@@ -12,11 +12,9 @@ import java.util.Optional;
 public class CarDetailsController {
 
     private final CarDetailsService carDetailsService;
-    private final CarDetailsDTOMapper carDetailsDTOMapper;
 
-    public CarDetailsController(CarDetailsService carDetailsService, CarDetailsDTOMapper carDetailsDTOMapper) {
+    public CarDetailsController(CarDetailsService carDetailsService) {
         this.carDetailsService = carDetailsService;
-        this.carDetailsDTOMapper = carDetailsDTOMapper;
     }
     @GetMapping("/preview")
     public List<CarPreviewDTO> getAllCarDetailsPreview() {

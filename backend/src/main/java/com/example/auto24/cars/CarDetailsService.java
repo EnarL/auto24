@@ -3,6 +3,7 @@ package com.example.auto24.cars;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -237,7 +238,7 @@ public class CarDetailsService {
                 .map(car -> {
                     Optional<CarDetails> carDetailsOptional = carDetailsRepository.findByCarId(car.getId());
 
-                    if (!carDetailsOptional.isPresent()) {
+                    if (carDetailsOptional.isEmpty()) {
                         System.out.println("CarDetails not found for carId: " + car.getId());
                         return null;
                     }
@@ -255,7 +256,7 @@ public class CarDetailsService {
                             imageKeys
                     );
                 })
-                .filter(carPreviewDTO -> carPreviewDTO != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

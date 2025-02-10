@@ -16,7 +16,7 @@ interface CarGridProps {
     carCount: number;
 }
 
-const CarGrid: React.FC<CarGridProps> = ({ columns, rows, carCount }) => {
+const CarGrid: React.FC<CarGridProps> = ({ columns, carCount }) => {
     const [cars, setCars] = useState<CarPreviewDTO[]>([]);  // State to hold car data
     const [carImages, setCarImages] = useState<Record<string, string[]>>({});  // Store car ID -> images map
 
@@ -51,7 +51,7 @@ const CarGrid: React.FC<CarGridProps> = ({ columns, rows, carCount }) => {
 
     return (
         <>
-            <h1 className="text-1xl font-extralight font-thin opacity-65">VALIK KUULUTUSI</h1>
+            <h1 className="text-1xl font-extralight opacity-65">VALIK KUULUTUSI</h1>
             <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
                 {cars.slice(0, carCount).map((car, index) => (
                     <Link href={`/cars/${car.id}`} key={index}>

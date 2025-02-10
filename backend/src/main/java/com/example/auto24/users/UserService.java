@@ -1,19 +1,12 @@
 package com.example.auto24.users;
 
-import com.example.auto24.auth.JWTUtil;
 import com.example.auto24.auth.emailverificationToken.EmailVerificationToken;
 import com.example.auto24.auth.emailverificationToken.EmailVerificationTokenRepository;
 import com.example.auto24.cars.CarService;
-import com.example.auto24.config.MyUserDetailsService;
 import com.example.auto24.email.EmailService;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,9 +26,8 @@ public class UserService {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final EmailService emailService;
     private final UsersToDTO usersToDTO;
-    private final JWTUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, UsersDTOMapper usersDTOMapper, CarService carService, PasswordEncoder encoder, EmailVerificationTokenRepository emailVerificationTokenRepository, EmailService emailService, UsersToDTO usersToDTO, JWTUtil jwtUtil) {
+    public UserService(UserRepository userRepository, UsersDTOMapper usersDTOMapper, CarService carService, PasswordEncoder encoder, EmailVerificationTokenRepository emailVerificationTokenRepository, EmailService emailService, UsersToDTO usersToDTO) {
         this.userRepository = userRepository;
         this.usersDTOMapper = usersDTOMapper;
         this.carService = carService;
@@ -43,7 +35,6 @@ public class UserService {
         this.emailVerificationTokenRepository = emailVerificationTokenRepository;
         this.emailService = emailService;
         this.usersToDTO = usersToDTO;
-        this.jwtUtil = jwtUtil;
     }
     public List<UsersDTO> getAllUsers() {
         return userRepository.findAll().

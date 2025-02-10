@@ -39,7 +39,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
         if (accessToken != null && jwtUtil.validateToken(accessToken)) {
             String username = jwtUtil.extractUserName(accessToken);
-            String userId = jwtUtil.extractUserId(accessToken);
 
             Users user = userRepository.findByUsername(username);
             if (user != null) {
