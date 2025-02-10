@@ -2,9 +2,11 @@ package com.example.auto24.cars;
 
 import com.example.auto24.auth.JWTUtil;
 import com.example.auto24.cars.extra_info.CarExtraInfoService;
+import com.example.auto24.users.UserPrincipal;
 import com.example.auto24.users.UserRepository;
 import com.example.auto24.users.Users;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -57,22 +59,31 @@ public class CarService {
             carRepository.deleteById(car.getId());
         }
     }
-    public String extractUserIdFromToken(String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization header is missing or invalid");
-        }
-        String token = authorizationHeader.substring(7);
-        return jwtUtil.extractUserId(token);
-    }
-    public void createCarListing(String authorizationHeader, CarListingRequest carListingRequest) {
-        String userId = extractUserIdFromToken(authorizationHeader);
+
+    public void createCarListing(UserPrincipal userDetails, CarListingRequest carListingRequest) {
+        String userId = userDetails.getUserId();
         Car savedCar = createAndSaveCar(userId);
+
         carDetailsService.createAndSaveCarDetails(savedCar.getId(), carListingRequest.carDetailsDTO());
+
         carExtraInfoService.createAndSaveCarExtraInfo(savedCar.getId(), carListingRequest.carExtraInfoDTO());
+        updateUserCarIds(userId, savedCar.getId());
     }
+
+
+    private void updateUserCarIds(String userId, String carId) {
+        Users user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.getCarIds().add(carId);
+
+        userRepository.save(user);
+    }
+
+
     public Car createAndSaveCar(String userId) {
         Car car = Car.builder()
                 .ownerId(userId)
+                .imageKeys(List.of())
                 .createdAt(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusMonths(1))
                 .build();
@@ -84,9 +95,15 @@ public class CarService {
         car.setExpirationDate(car.getExpirationDate().plusMonths(months));
         carRepository.save(car);
     }
-    public List<CarDTO> getAllCarsByOwnerId(String authorizationHeader) {
-        String userId = extractUserIdFromToken(authorizationHeader);
+    public List<CarDTO> getAllCarsByOwnerId() {
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userId = userPrincipal.getUserId();
+
         List<Car> cars = carRepository.findByOwnerId(userId);
-        return cars.stream().map(carDTOMapper).collect(Collectors.toList());
+
+        return cars.stream()
+                .map(carDTOMapper)
+                .collect(Collectors.toList());
     }
+
 }

@@ -41,9 +41,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/register", "/auth/login", "/auth/confirm", "/users/me", "/auth/forgot-password", "/auth/reset-password", "/auth/logout").permitAll()  // 🔹 Fixed `/users/me`
+                        .requestMatchers("/auth/register", "/auth/login", "/auth/confirm", "/cars", "/users/me", "/auth/forgot-password", "/auth/reset-password", "/auth/logout", "/cars/CarsByUser", "/cars").permitAll()
                         .requestMatchers("/users/createAdmin", "/users").hasRole("ADMIN")
-                        .anyRequest().hasAnyRole("USER", "ADMIN")
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -54,7 +54,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());  // 🔹 Reusing the `passwordEncoder()` bean
+        provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userDetailsService);
         return provider;
     }

@@ -38,9 +38,10 @@ public class UserController {
 
     }
     @GetMapping("/me")
-    public ResponseEntity<UsersDTO> getCurrentUser(HttpServletRequest request) {
-        UsersDTO userProfile = userService.getUserProfile(request);
+    public ResponseEntity<UsersDTO> getCurrentUser() {
+        UsersDTO userProfile = userService.getUserProfile();
         return ResponseEntity.ok(userProfile);
     }
+
 
 }

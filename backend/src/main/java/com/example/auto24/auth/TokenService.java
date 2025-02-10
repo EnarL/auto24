@@ -26,7 +26,7 @@ public class TokenService {
     }
 
     public void clearTokens(HttpServletResponse response) {
-        addCookie(response, "accessToken", "", 0, false, "Strict");
+        addCookie(response, "accessToken", "", 0, true, "Strict");
         addCookie(response, "refreshToken", "", 0, true, "Strict");
     }
 

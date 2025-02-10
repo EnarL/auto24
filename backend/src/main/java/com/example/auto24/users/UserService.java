@@ -118,17 +118,9 @@ public class UserService {
             throw new RuntimeException("Failed to send confirmation email", e);
         }
     }
-    public UsersDTO getUserProfile(HttpServletRequest request) {
-        // Extract the access token from the request
-        String accessToken = extractAccessToken(request);
-
-        // Validate the token and extract the username
-        if (accessToken == null || !jwtUtil.validateToken(accessToken)) {
-            throw new IllegalArgumentException("Invalid or missing access token.");
-        }
-
-        // Extract username from the token
-        String username = jwtUtil.extractUserName(accessToken);
+    public UsersDTO getUserProfile() {
+        // Get the username from the security context (set by the JWT filter)
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         // Fetch the user from the repository
         Users user = userRepository.findByUsername(username);
@@ -139,21 +131,6 @@ public class UserService {
         return usersToDTO.map(user);
     }
 
-    private String extractAccessToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        String accessToken = null;
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("accessToken".equals(cookie.getName())) {
-                    accessToken = cookie.getValue();
-                    break;
-                }
-            }
-        }
-
-        return accessToken;
-    }
 
 
 

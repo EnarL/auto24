@@ -1,6 +1,5 @@
 package com.example.auto24.cars;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,11 +9,16 @@ import java.util.stream.Collectors;
 @Service
 public class CarDetailsService {
 
-    @Autowired
-    private CarDetailsRepository carDetailsRepository;
+    private final CarDetailsRepository carDetailsRepository;
 
-    @Autowired
-    private CarDetailsDTOMapper carDetailsDTOMapper;
+    private final CarDetailsDTOMapper carDetailsDTOMapper;
+    private final CarRepository carRepository;
+
+    public CarDetailsService(CarDetailsRepository carDetailsRepository, CarDetailsDTOMapper carDetailsDTOMapper, CarRepository carRepository) {
+        this.carDetailsRepository = carDetailsRepository;
+        this.carDetailsDTOMapper = carDetailsDTOMapper;
+        this.carRepository = carRepository;
+    }
 
     public List<CarDetailsDTO> searchCars(CarDetailsDTO carDetailsDTO) {
         return carDetailsRepository.findAll().stream()
@@ -222,9 +226,34 @@ public class CarDetailsService {
             return carDetailsRepository.save(carDetails);
         });
     }
-
     public void deleteCarDetails(String id) {
         carDetailsRepository.findById(id).ifPresent(carDetailsRepository::delete);
+    }
+    public List<CarPreviewDTO> getAllCarsPreview() {
+        return carRepository.findAll().stream()
+                .map(car -> {
+                    Optional<CarDetails> carDetailsOptional = carDetailsRepository.findByCarId(car.getId());
+
+                    if (!carDetailsOptional.isPresent()) {
+                        System.out.println("CarDetails not found for carId: " + car.getId());
+                        return null;
+                    }
+
+                    CarDetails carDetails = carDetailsOptional.get();
+
+                    List<String> imageKeys = car.getImageKeys();
+
+                    return new CarPreviewDTO(
+                            car.getId(), // car ID
+                            carDetails.getMake() + " " + carDetails.getModel() +
+                                    (carDetails.getModelTrim() != null ? " " + carDetails.getModelTrim() : ""),
+                            carDetails.getPrice(),
+                            carDetails.getFirstRegistrationDate().substring(0, 4),
+                            imageKeys
+                    );
+                })
+                .filter(carPreviewDTO -> carPreviewDTO != null)
+                .collect(Collectors.toList());
     }
 
 }

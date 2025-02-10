@@ -2,76 +2,75 @@ package com.example.auto24.aws;
 
 import com.example.auto24.cars.Car;
 import com.example.auto24.cars.CarRepository;
-import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
+import com.example.auto24.users.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URL;
 import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/productImages")
 @RestController
 public class ImageController {
-    @Autowired
-    private ImageService service;
 
-    @Autowired
-    private CarRepository carRepository;
+    private final ImageService service;
+    private final CarRepository carRepository;
 
-    @Autowired
-    private Dotenv dotenv;
-
-    @GetMapping("/check-env")
-    public String checkEnv() {
-        String accessKey = dotenv.get("AWS_ACCESS_KEY_ID");
-        String secretKey = dotenv.get("AWS_SECRET_ACCESS_KEY");
-        String region = dotenv.get("AWS_REGION");
-        String bucketName = dotenv.get("AWS_BUCKET_NAME");
-
-        // Log the values to check if they are correctly loaded
-        System.out.println("AWS_ACCESS_KEY_ID: " + accessKey);
-        System.out.println("AWS_SECRET_ACCESS_KEY: " + secretKey);
-        System.out.println("AWS_REGION: " + region);
-        System.out.println("AWS_BUCKET_NAME: " + bucketName);
-
-        return "Environment variables are loaded. Check the logs for details.";
+    public ImageController(ImageService service, CarRepository carRepository) {
+        this.service = service;
+        this.carRepository = carRepository;
     }
 
+    // ✅ 1️⃣ Upload Images (Find the Car Using the Authenticated User)
     @PostMapping("/upload")
-    public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") List<MultipartFile> files, @RequestParam("carId") String carId) {
-        List<String> fileKeys = service.uploadFiles(files, carId);
+    public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") List<MultipartFile> files,
+                                                    @RequestParam("id") String id,
+                                                    @AuthenticationPrincipal UserPrincipal userDetails) {
+        Car car = carRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Car not found"));
 
-        Car car = carRepository.findById(carId).orElseThrow(() -> new IllegalArgumentException("Car not found"));
+        if (!car.getOwnerId().equals(userDetails.getUserId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+        List<String> fileKeys = service.uploadFiles(files, id);
         car.getImageKeys().addAll(fileKeys);
         carRepository.save(car);
 
         return ResponseEntity.ok(fileKeys);
     }
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<String> downloadFile(@PathVariable String fileName) {
-        URL url = service.generatePresignedUrl(fileName);
-        return ResponseEntity.ok(url.toString());
-    }
 
+    @GetMapping("/getCarImages/{id}")
+    public ResponseEntity<List<String>> getCarImages(@PathVariable String id) {
+        Car car = carRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Car not found"));
 
-
-    @DeleteMapping("/delete/{fileName}")
-    public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
-        return new ResponseEntity<>(service.deleteFile(fileName), HttpStatus.OK);
-    }
-
-    @GetMapping("/downloadAll")
-    public ResponseEntity<List<ByteArrayResource>> downloadAllFiles() {
-        List<byte[]> filesData = service.downloadAllFiles();
-        List<ByteArrayResource> resources = filesData.stream()
-                .map(ByteArrayResource::new)
+        // Generate presigned URLs for car images
+        List<String> presignedUrls = car.getImageKeys().stream()
+                .map(service::generatePresignedUrl)
                 .toList();
-        return ResponseEntity
-                .ok()
-                .body(resources);
+
+        return ResponseEntity.ok(presignedUrls);
+    }
+
+    @DeleteMapping("/delete/{id}/{fileKey}")
+    public ResponseEntity<String> deleteFile(@PathVariable String id, @PathVariable String fileKey,
+                                             @AuthenticationPrincipal UserPrincipal userDetails) {
+        Car car = carRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Car not found"));
+
+        // 🔒 Ensure user owns this car
+        if (!car.getOwnerId().equals(userDetails.getUserId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized to delete this image.");
+        }
+
+        service.deleteFile(fileKey);
+        car.getImageKeys().remove(fileKey);
+        carRepository.save(car);
+
+        return ResponseEntity.ok("Image deleted successfully.");
     }
 }

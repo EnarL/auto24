@@ -1,10 +1,14 @@
 package com.example.auto24.cars;
 
+import com.example.auto24.users.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/cars")
@@ -24,30 +28,32 @@ public class CarController {
     }
     //current USER or ADMIN
     @GetMapping("/CarsByUser")
-    public List<CarDTO> getAllCarsByOwnerId(@RequestHeader("Authorization") String authorizationHeader){
-        return carService.getAllCarsByOwnerId(authorizationHeader);
+    public List<CarDTO> getAllCarsByOwnerId() {;
+        return carService.getAllCarsByOwnerId();
     }
     //Owner of car or ADMIN
-    @GetMapping("/{carId}")
-    public CarDTO getCarById(@PathVariable String carId) {
-        return carService.getCarById(carId);
+    @GetMapping("/{id}")
+    public ResponseEntity<CarDTO> getCarById(@PathVariable String id) {
+        return ResponseEntity.ok(carService.getCarById(id));
     }
     //User or if not user, then create user first and then create car
     @PostMapping("/create")
-    public ResponseEntity<String> createCarListing(@RequestHeader("Authorization") String authorizationHeader,
+    public ResponseEntity<String> createCarListing(@AuthenticationPrincipal UserPrincipal userDetails,
                                                    @RequestBody CarListingRequest carListingRequest) {
-        carService.createCarListing(authorizationHeader, carListingRequest);
+        carService.createCarListing(userDetails, carListingRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("Car listing created successfully");
     }
-    @PutMapping("/{carId}/extendExpiration")
-    public ResponseEntity<String> extendCarExpirationDate(@PathVariable String carId, @RequestParam int months) {
-        carService.extendCarExpirationDate(carId, months);
-        return ResponseEntity.ok("Car expiration date extended successfully");
+
+
+    @PutMapping("/{id}/extendExpiration")
+    public ResponseEntity<String> extendCarExpirationDate(@PathVariable String id, @RequestParam int months) {
+        carService.extendCarExpirationDate(id, months);
+        return ok("Car expiration date extended successfully");
     }
     //Owner of car or ADMIN
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCar(@PathVariable String id) {
         carService.deleteCar(id);
-        return ResponseEntity.ok("Car deleted successfully");
+        return ok("Car deleted successfully");
     }
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/car-details")
+
 public class CarDetailsController {
 
     private final CarDetailsService carDetailsService;
@@ -15,7 +16,10 @@ public class CarDetailsController {
     public CarDetailsController(CarDetailsService carDetailsService) {
         this.carDetailsService = carDetailsService;
     }
-
+    @GetMapping("/preview")
+    public List<CarPreviewDTO> getAllCarDetailsPreview() {
+        return carDetailsService.getAllCarsPreview();
+    }
     @GetMapping("/search")
     public ResponseEntity<List<CarDetailsDTO>> searchCars(@RequestBody CarDetailsDTO carDetailsDTO) {
         List<CarDetailsDTO> cars = carDetailsService.searchCars(carDetailsDTO);
