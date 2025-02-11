@@ -4,11 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/car-details")
-
 public class CarDetailsController {
 
     private final CarDetailsService carDetailsService;
@@ -16,18 +14,20 @@ public class CarDetailsController {
     public CarDetailsController(CarDetailsService carDetailsService) {
         this.carDetailsService = carDetailsService;
     }
+
     @GetMapping("/preview")
     public List<CarPreviewDTO> getAllCarDetailsPreview() {
         return carDetailsService.getAllCarsPreview();
     }
+
     @GetMapping("/preview/{id}")
     public ResponseEntity<CarPreviewDTO> getCarDetailsPreviewById(@PathVariable String id) {
         return ResponseEntity.of(carDetailsService.getCarDetailsPreviewById(id));
     }
+
     @GetMapping("/search")
     public ResponseEntity<List<CarDetailsDTO>> searchCars(@RequestBody CarDetailsDTO carDetailsDTO) {
-        List<CarDetailsDTO> cars = carDetailsService.searchCars(carDetailsDTO);
-        return ResponseEntity.ok(cars);
+        return ResponseEntity.ok(carDetailsService.searchCars(carDetailsDTO));
     }
 
     @GetMapping
@@ -37,25 +37,21 @@ public class CarDetailsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CarDetailsDTO> getCarDetailsById(@PathVariable String id) {
-        // Directly return the result of the service method
         return ResponseEntity.of(carDetailsService.getCarDetailsById(id));
     }
 
-
-
     @PostMapping
-    public CarDetails createCarDetails(@RequestBody CarDetails carDetails) {
-        return carDetailsService.createCarDetails(carDetails);
+    public ResponseEntity<String> createCarDetails(@RequestBody CarDetails carDetails) {
+        carDetailsService.createCarDetails(carDetails);
+        return ResponseEntity.status(201).body("Car details created successfully");
     }
-
     @PutMapping("/{id}")
-    public ResponseEntity<CarDetails> updateCarDetails(@PathVariable String id, @RequestBody CarDetails carDetailsDetails) {
-        Optional<CarDetails> updatedCarDetails = carDetailsService.updateCarDetails(id, carDetailsDetails);
-        return updatedCarDetails.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<String> updateCarDetails(@PathVariable String id, @RequestBody CarDetails carDetailsDetails) {
+        carDetailsService.updateCarDetails(id, carDetailsDetails);
+        return ResponseEntity.ok("Car details updated successfully");
     }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCarDetails(@PathVariable String id) {
+    public ResponseEntity<String> deleteCarDetails(@PathVariable String id) {
         carDetailsService.deleteCarDetails(id);
         return ResponseEntity.noContent().build();
     }

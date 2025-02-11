@@ -21,7 +21,6 @@ public class CarController {
         this.carService = carService;
     }
 
-    //lisa mingi preview endpoint, kus saab näha kõiki autosid, aga ainult nende pealkirju ja hindu
     //ADMIN
     @GetMapping
     public List<CarDTO> getAllCars() {
@@ -46,15 +45,11 @@ public class CarController {
     }
     @GetMapping("/carlisting/{id}")
     public ResponseEntity<CarListingResponse> getCarListing(@PathVariable String id) {
-        Optional<CarListingResponse> carListingResponseOpt = carService.getCarListingById(id);
-
-        // Return 404 if the response is not present (i.e., either CarDetails or CarExtraInfo is missing)
-        return carListingResponseOpt
-                .map(ResponseEntity::ok) // If present, return OK with the response
-                .orElseGet(() -> ResponseEntity.notFound().build()); // Otherwise, return a 404 Not Found
+        Optional<CarListingResponse> carListingResponse = carService.getCarListingById(id);
+        return carListingResponse
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
 
     @PutMapping("/{id}/extendExpiration")
     public ResponseEntity<String> extendCarExpirationDate(@PathVariable String id, @RequestParam int months) {
@@ -63,8 +58,9 @@ public class CarController {
     }
     //Owner of car or ADMIN
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCar(@PathVariable String id) {
+    public ResponseEntity<String> deleteCar(@PathVariable String id) {
         carService.deleteCar(id);
-        return ok("Car deleted successfully");
+        return ResponseEntity.noContent().build();
     }
+
 }

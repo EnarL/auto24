@@ -46,9 +46,9 @@ public class Users {
 
     private boolean newsletter = false;
     private List<String> carIds = new ArrayList<>();
-    private boolean active = false; // Default to false
-    private boolean agreedToTerms = false; // Default to false
-    private Role role = Role.USER; // Default to USER
+    private boolean active = false;
+    private boolean agreedToTerms = false;
+    private Role role = Role.USER;
 
     @CreatedDate
     private LocalDateTime createdAt;

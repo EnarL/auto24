@@ -2,11 +2,9 @@ package com.example.auto24.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,17 +40,12 @@ public class JWTUtil {
 
     // Get the key from the SECRET_KEY
     private SecretKey getKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes()); // Directly use the bytes of the secret key
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
     // Extract username from the token
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
-
-    // Extract user ID from the token
-    public String extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get("userId", String.class));
     }
 
     // Generic method to extract a claim from the token

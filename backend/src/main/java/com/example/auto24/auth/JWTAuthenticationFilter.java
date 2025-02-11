@@ -1,7 +1,7 @@
 package com.example.auto24.auth;
 
 import com.example.auto24.users.UserPrincipal;
-import com.example.auto24.users.UserRepository;  // Assuming you have a UserRepository to fetch user details
+import com.example.auto24.users.UserRepository;
 import com.example.auto24.users.Users;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -44,7 +44,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             if (user != null) {
                 UserPrincipal userPrincipal = new UserPrincipal(user);
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userPrincipal, null, new ArrayList<>()));
-
             }
         }
 

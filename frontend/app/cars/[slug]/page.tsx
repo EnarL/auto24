@@ -1,81 +1,22 @@
-"use client";
-import React, { useEffect, useState } from "react";
+"use client"
+import React from "react";
 import { useParams } from "next/navigation";
-import S3Image from "@/app/components/S3Image";
-interface CarDetailsDTO {
-    vehicleType: string;
-    bodyType: string;
-    bodyTypeDetail: string;
-    model: string;
-    make: string;
-    modelGeneration: string;
-    modelTrim: string;
-    firstRegistrationDate: string;
-    price: number;
-    odometerReading: number;
-    fuelType: string;
-    engineDetails: string;
-    enginePowerHP: number;
-    transmission: string;
-    locationCountry: string;
-    locationCounty: string;
-    description: string;
-}
+import useCarDetails from "@/app/hooks/useCarDetails";
+import CarInfo from "@/app/components/CarDetails/CarInfo";
+import CarImages from "@/app/components/CarDetails/CarImages";
+import CarExtraInfo from "@/app/components/CarDetails/CarExtraInfo";
+
 const CarDetails: React.FC = () => {
-    const { slug } = useParams(); // Get the slug (car ID) from the URL
-    const [car, setCar] = useState<CarDetailsDTO | null>(null);
-    const [images, setImages] = useState<string[]>([]); // Initialize as empty array
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { slug } = useParams(); // Get the slug from URL params
+    if (typeof slug !== "string") {
+        return <p>Invalid car slug or car not found</p>; // Handle slug validation
+    }
 
-    useEffect(() => {
-        if (!slug) {
-            console.error("Slug is missing, cannot fetch data.");
-            return;
-        }
-
-        const fetchCarDetails = async () => {
-            try {
-                // Fetch car details
-                const carResponse = await fetch(
-                    `http://localhost:8080/cars/carlisting/${slug}`
-                );
-                if (carResponse.ok) {
-                    const carData = await carResponse.json();
-                    setCar(carData.carDetailsDTO); // Ensure correct property access
-                } else {
-                    console.error("Failed to fetch car details");
-                }
-
-                const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${slug}`);
-                if (imageResponse.ok) {
-                    const imageData: string[] = await imageResponse.json();
-                    console.log("Fetched Images:", imageData); // Debugging
-
-                    if (Array.isArray(imageData)) {
-                        setImages(imageData);
-                    } else {
-                        console.error("Unexpected image response format:", imageData);
-                        setImages([]);
-                    }
-                }
-
-             else {
-                    console.error("Failed to fetch images for car");
-                }
-            } catch (error) {
-                console.error("Error fetching car details:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchCarDetails();
-    }, [slug]);
+    const { car, carExtraInfo, images, isLoading } = useCarDetails(slug);
 
     if (isLoading) {
         return <p>Loading...</p>;
     }
-
     if (!car) {
         return <p>Car not found</p>;
     }
@@ -95,51 +36,12 @@ const CarDetails: React.FC = () => {
             </header>
 
             <div className="grid grid-cols-2 gap-10 mt-5">
-                <div>
-                    {/* Basic Car Details */}
-                    <p>
-                        <strong>Price:</strong> {car.price} EUR
-                    </p>
-                    <p>
-                        <strong>Vehicle Type:</strong> {car.vehicleType}
-                    </p>
-                    <p>
-                        <strong>Fuel Type:</strong> {car.fuelType}
-                    </p>
-                    <p>
-                        <strong>Engine Details:</strong> {car.engineDetails}
-                    </p>
-                    <p>
-                        <strong>Engine Power:</strong> {car.enginePowerHP} HP
-                    </p>
-                    <p>
-                        <strong>Transmission:</strong> {car.transmission}
-                    </p>
-                    <p>
-                        <strong>Location:</strong> {car.locationCounty}, {car.locationCountry}
-                    </p>
-                    <p>
-                        <strong>Description:</strong> {car.description}
-                    </p>
-                </div>
+                <CarInfo car={car} />
 
-                <div>
-                    <div className="grid grid-rows-2 gap-4">
-                        {images.length > 0 ? (
-                            images.map((imageUrl, index) => (
-                                <div key={index}>
-                                    <S3Image
-                                        src={imageUrl}
-                                        alt={`${car.make} ${car.model} image ${index + 1}`}
-                                    />
-                                </div>
-                            ))
-                        ) : (
-                            <p>No images available for this car.</p>
-                        )}
-                    </div>
-                </div>
+                <CarImages images={images} car={car} />
             </div>
+
+            <CarExtraInfo carExtraInfo={carExtraInfo} />
         </div>
     );
 };

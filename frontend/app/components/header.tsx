@@ -3,10 +3,11 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthUser } from '@/app/context/AuthUserContext';  // Import context
 import Cookies from 'js-cookie';
+import Link from "next/link";
 
 const Header: React.FC<{ className?: string }> = ({ className }) => {
     const router = useRouter();
-    const { isLoggedIn, username, setIsLoggedIn, setUsername } = useAuthUser();
+    const { isLoggedIn, username, firstname, lastname, setIsLoggedIn, setUsername, setFirstname, setLastname } = useAuthUser();
 
     // Fetch user data when logged in
     useEffect(() => {
@@ -20,7 +21,9 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
 
                     if (response.ok) {
                         const data = await response.json();
-                        setUsername(data.username); // Assuming the API returns the username in the response
+                        setUsername(data.username),
+                        setFirstname(data.firstname),
+                        setLastname(data.lastname);
                     } else {
                         console.error('Failed to fetch user data');
                     }
@@ -31,7 +34,7 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
         };
 
         fetchUserData();
-    }, [isLoggedIn, setUsername]); // Re-run this effect when `isLoggedIn` changes
+    }, [isLoggedIn, setUsername, setFirstname, setLastname]);
 
     const handleLogout = async () => {
         const accessToken = Cookies.get('accessToken');
@@ -39,7 +42,7 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
         try {
             const response = await fetch('http://localhost:8080/auth/logout', {
                 method: 'POST',
-                credentials: 'include', // Include cookies in the request
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -48,11 +51,12 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
 
             if (response.ok) {
                 console.log('Successfully logged out');
-                // Clear cookies
                 Cookies.remove('accessToken');
                 Cookies.remove('refreshToken');
                 setIsLoggedIn(false);
                 setUsername("");
+                setFirstname("")
+                setLastname("")
                 router.push('/login');
             } else {
                 console.error('Failed to log out');
@@ -64,17 +68,21 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
 
     return (
         <header className={`bg-gray-100 p-2 opacity-80 mb-1 ${className}`}>
-            <div className="mx-auto flex flex-col text-[12px] w-full max-w-custom">
+            <div className="mx-auto flex flex-row items-center justify-between text-[12px] w-full max-w-custom">
                 {isLoggedIn ? (
-                    <>
-                        <span>Welcome, {username || 'User'}</span> {/* Greet the user by their username */}
-                        <a href="#" onClick={handleLogout} className="hover:text-blue-600">Logi välja</a> {/* Logout link */}
-                    </>
+                    <div className="flex flex-row items-center space-x-2">
+                        <Link href="/users/change_data" className="hover:text-blue-600">
+                            {firstname} {lastname} / {username}
+                        </Link>
+                        <a href="#" onClick={handleLogout} className="hover:text-blue-600">Logi välja</a>
+                    </div>
                 ) : (
                     <a href="/login" className="hover:text-blue-600">Logi sisse</a>
                 )}
             </div>
         </header>
+
+
     );
 };
 
