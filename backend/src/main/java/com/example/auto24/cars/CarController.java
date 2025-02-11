@@ -28,7 +28,7 @@ public class CarController {
     }
     //current USER or ADMIN
     @GetMapping("/CarsByUser")
-    public List<CarDTO> getAllCarsByOwnerId() {;
+    public List<CarDTO> getAllCarsByOwnerId() {
         return carService.getAllCarsByOwnerId();
     }
     //Owner of car or ADMIN

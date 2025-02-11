@@ -1,8 +1,13 @@
 package com.example.auto24.cars;
 
+import com.example.auto24.users.UserPrincipal;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -20,9 +25,18 @@ public class CarDetailsController {
         return carDetailsService.getAllCarsPreview();
     }
 
-    @GetMapping("/preview/{id}")
-    public ResponseEntity<CarPreviewDTO> getCarDetailsPreviewById(@PathVariable String id) {
-        return ResponseEntity.of(carDetailsService.getCarDetailsPreviewById(id));
+    @GetMapping("user/preview")
+    public ResponseEntity<List<CarPreviewDTO>> getCarDetailsPreview() {
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userId = userPrincipal != null ? userPrincipal.getUserId() : null;
+
+        if (userId != null) {
+            // Fetch car previews based on the logged-in user's ID
+            List<CarPreviewDTO> carPreviews = carDetailsService.getCarPreviewsForUser(userId);
+            return ResponseEntity.ok(carPreviews);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
+        }
     }
 
     @GetMapping("/search")

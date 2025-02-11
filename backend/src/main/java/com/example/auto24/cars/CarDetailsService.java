@@ -2,10 +2,7 @@ package com.example.auto24.cars;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -13,7 +10,6 @@ import java.util.stream.Collectors;
 public class CarDetailsService {
 
     private final CarDetailsRepository carDetailsRepository;
-
     private final CarDetailsDTOMapper carDetailsDTOMapper;
     private final CarRepository carRepository;
     private final CarDetailsUpdateMapper carDetailsUpdateMapper;
@@ -95,8 +91,12 @@ public class CarDetailsService {
                 ? carDetails.getFirstRegistrationDate().substring(0, 4)
                 : "";
     }
+    public List<CarPreviewDTO> getCarPreviewsForUser(String ownerId) {
+        List<Car> cars = carRepository.findByOwnerId(ownerId);
 
-    public Optional<CarPreviewDTO> getCarDetailsPreviewById(String id) {
-        return carRepository.findPreviewById(id);
+        return cars.stream()
+                .map(this::createCarPreviewDTO)
+                .collect(Collectors.toList());
     }
+
 }
