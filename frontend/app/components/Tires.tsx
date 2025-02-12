@@ -1,4 +1,5 @@
 import React from 'react';
+import { tiresFeatures } from '../data/labels';
 
 interface TiresProps {
     formData: any;
@@ -6,25 +7,11 @@ interface TiresProps {
 }
 
 const Tires: React.FC<TiresProps> = ({ formData, handleChange }) => {
-    // List of tire-related feature options
-    const tireFeatures = [
-        { name: "summerTires", label: "Suverehvid" },
-        { name: "winterTires", label: "Talverehvid" },
-        { name: "alloyWheels", label: "Valuveljed" },
-        { name: "hubcaps", label: "Ilukilbid" },
-        { name: "spareTire", label: "Tagavararatas" },
-        { name: "tirePressureMonitoring", label: "Rehvirõhu kontrollsüsteem" },
-        { name: "summerTiresIncluded", label: "Autoga antakse kaasa suverehvid" },
-        { name: "winterTiresIncluded", label: "Autoga antakse kaasa talverehvid" },
-        { name: "alloyWheelsIncluded", label: "Autoga antakse kaasa valuveljed" },
-        { name: "hubcapsIncluded", label: "Autoga antakse kaasa ilukilbid" }
-    ];
-
     return (
         <div>
             <h2 className="text-[16px] mb-2 mt-2">REHVID JA VELJED</h2>
             <div className="grid grid-cols-2 text-[12px]">
-                {tireFeatures.map((item) => (
+                {tiresFeatures.map((item) => (
                     <label
                         key={item.name}
                         className="flex items-center bg-gray-50 p-2 border-b border-gray-200"

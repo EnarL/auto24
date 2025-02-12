@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { interiorFeatures as features } from '../data/labels'; // Import the data
 
 interface InteriorFeaturesProps {
     formData: any;
@@ -6,25 +7,20 @@ interface InteriorFeaturesProps {
 }
 
 const InteriorFeatures: React.FC<InteriorFeaturesProps> = ({ formData, handleChange }) => {
-    const [showDecorativeTrimInfo, setShowDecorativeTrimInfo] = useState(false);
+    const [showInfo, setShowInfo] = useState<{ [key: string]: boolean }>({});
 
-    const interiorFeatures = [
-        { name: "decorativeTrim", label: "Iluliistud salongis", showInfo: showDecorativeTrimInfo, setShowInfo: setShowDecorativeTrimInfo },
-        { name: "seatBackPockets", label: "Taskud esiistmete seljatugedes" },
-        { name: "floorMats", label: "Jalamatid" },
-        { name: "underSeatDrawers", label: "Sahtlid esiistmete all" },
-        { name: "trunkMat", label: "Pagasiruumi matt" },
-        { name: "cupHolders", label: "Topsihoidjad" },
-        { name: "leatherGearKnob", label: "Nahkkattega käigukanginupp" },
-        { name: "leatherHandbrake", label: "Nahkkattega käsipidurikang" },
-        { name: "darkHeadliner", label: "Tume laepolster" }
-    ];
+    const toggleInfo = (name: string) => {
+        setShowInfo((prevState) => ({
+            ...prevState,
+            [name]: !prevState[name]
+        }));
+    };
 
     return (
         <div>
             <h2 className="text-[16px] mb-2 mt-2">SISUSTUS</h2>
             <div className="grid grid-cols-2 text-[12px]">
-                {interiorFeatures.map((feature) => (
+                {features.map((feature) => (
                     <div key={feature.name} className="flex flex-col bg-gray-50 p-2 border-b border-gray-200">
                         <label className="flex items-center">
                             <input
@@ -35,17 +31,17 @@ const InteriorFeatures: React.FC<InteriorFeaturesProps> = ({ formData, handleCha
                                 className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2"
                             />
                             {feature.label}
-                            {feature.name === "decorativeTrim" && feature.setShowInfo && (
+                            {feature.name === "decorativeTrim" && (
                                 <button
                                     type="button"
-                                    onClick={() => feature.setShowInfo(!feature.showInfo)}
+                                    onClick={() => toggleInfo(feature.name)}
                                     className="ml-2 text-blue-600"
                                 >
                                     +
                                 </button>
                             )}
                         </label>
-                        {feature.showInfo && (
+                        {showInfo[feature.name] && (
                             <input
                                 type="text"
                                 name={`${feature.name}Info`}

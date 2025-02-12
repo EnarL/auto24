@@ -4,7 +4,7 @@ import {CarExtraInfoDTO} from "@/app/types/types";
 const CarExtraInfo: React.FC<{ carExtraInfo: CarExtraInfoDTO | null }> = ({ carExtraInfo }) => {
     const renderList = (info: Record<string, boolean>) => {
         return Object.entries(info).map(([key, value], index) =>
-            value ? <li key={index}>✓ {key.replace(/([A-Z])/g, ' $1').toUpperCase()}</li> : null
+            value ? <li key={index}>✓ {key.replace(/([A-Z])/g, ' $1')}</li> : null
         );
     };
     return (

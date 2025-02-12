@@ -1,38 +1,11 @@
 import React from 'react';
+import { contactFields } from '../data/labels'; // Import the data
 
 interface ContactDetailsProps {
     formData: any;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-
 const ContactDetails: React.FC<ContactDetailsProps> = ({ formData, handleChange }) => {
-    const contactFields = [
-        {
-            name: "phone",
-            label: "Telefon",
-            type: "text",
-            placeholder: "XXX XXXX",
-            required: true,
-            readOnly: false
-        },
-        {
-            name: "name",
-            label: "Nimi",
-            type: "text",
-            placeholder: "",
-            required: false,
-            readOnly: true
-        },
-        {
-            name: "email",
-            label: "Meiliaadress",
-            type: "email",
-            placeholder: "",
-            required: false,
-            readOnly: true
-        }
-    ];
-
     return (
         <div>
             <h1 className="text-xl mb-2">Kontaktandmed kuulutuse juurde</h1>
@@ -40,7 +13,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = ({ formData, handleChange 
                 {contactFields.map((field) => (
                     <div key={field.name} className="flex items-center gap-4 text-[12px]">
                         <label
-                            className="bg-gray-100 px-1 py-1 text-right w-[250px] font-bold "
+                            className="bg-gray-100 px-1 py-1 text-right w-[250px] font-bold"
                         >
                             {field.label} {field.required && <span className="text-red-600">*</span>}
                         </label>

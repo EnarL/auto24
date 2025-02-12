@@ -9,7 +9,8 @@ import Sublogos from "./components/sublogos";
 import React from "react";
 import Banner from "@/app/components/banner";
 import FooterSection from "@/app/components/footersection";
-import {AuthUserProvider} from "@/app/context/AuthUserContext";
+import { AuthUserProvider } from "@/app/context/AuthUserContext";
+import AuthWrapper from "@/app/components/AuthWrapper"; // Import AuthWrapper
 
 export const metadata: Metadata = {
     title: "Avaleht - auto24.ee",
@@ -18,30 +19,32 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
                                        children,
-                                   }: Readonly<{
+                                   }: {
     children: React.ReactNode;
-}>) {
+}) {
     return (
         <html lang="en">
         <body className="display flex flex-col">
         <AuthUserProvider>
-            <Header className="w-full hidden md:block"></Header>
-            <div className="mx-auto flex flex-col w-full max-w-custom">
-                <div>
-                    <Banner className="hidden lg:block"></Banner>
-                    <div className="flex items-center w-full ">
-                        <Logo className="flex-grow logo-details overall-margin-left mr-4"></Logo>
-                        <Sublogos></Sublogos>
-                    </div>
-                    <TopBar></TopBar>
-                    <Kuuluta></Kuuluta>
-                    <div className=" w-[1000px] overall-margin-left">
-                        {children}
+            <AuthWrapper>
+                <Header className="w-full hidden md:block" />
+                <div className="mx-auto flex flex-col w-full max-w-custom">
+                    <div>
+                        <Banner className="hidden lg:block" />
+                        <div className="flex items-center w-full">
+                            <Logo className="flex-grow logo-details overall-margin-left mr-4" />
+                            <Sublogos />
+                        </div>
+                        <TopBar />
+                        <Kuuluta />
+                        <div className="w-[1000px] overall-margin-left">
+                            {children}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <Foobar></Foobar>
-            <FooterSection></FooterSection>
+                <Foobar />
+                <FooterSection />
+            </AuthWrapper>
         </AuthUserProvider>
         </body>
         </html>

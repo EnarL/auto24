@@ -1,4 +1,5 @@
 import React from 'react';
+import { steeringFeatures } from '../data/labels';
 
 interface SteeringProps {
     formData: any;
@@ -6,17 +7,6 @@ interface SteeringProps {
 }
 
 const Steering: React.FC<SteeringProps> = ({ formData, handleChange }) => {
-    // List of steering feature options
-    const steeringFeatures = [
-        { name: "adjustableSteeringColumn", label: "Reguleeritav roolisammas" },
-        { name: "multifunctionSteeringWheel", label: "Multifunktsionaalne rool" },
-        { name: "leatherSteeringWheel", label: "Nahkkattega rool" },
-        { name: "sportSteeringWheel", label: "Sportrool" },
-        { name: "heatedSteeringWheel", label: "Soojendusega rool" },
-        { name: "paddleShifters", label: "Käiguvahetus roolilt" },
-        { name: "rightHandDrive", label: "Parempoolne rool (vasakpoolne liiklus)" },
-    ];
-
     return (
         <div>
             <h2 className="text-[16px] mb-2 mt-2">ROOL</h2>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { sportsFeatures } from '../data/labels';
 
 interface SportFeaturesProps {
     formData: any;
@@ -6,20 +7,11 @@ interface SportFeaturesProps {
 }
 
 const SportFeatures: React.FC<SportFeaturesProps> = ({ formData, handleChange }) => {
-    // List of sport feature options
-    const sportFeatures = [
-        { name: "rearSpoiler", label: "Tagaspoiler" },
-        { name: "frontSpoiler", label: "Esispoiler" },
-        { name: "spoilerKit", label: "Spoileriring" },
-        { name: "sportSuspension", label: "Sportvedrustus" },
-        { name: "sportExhaust", label: "Sportsummuti" },
-    ];
-
     return (
         <div>
             <h2 className="text-[16px] mb-2 mt-2">SPORTVARUSTUS</h2>
             <div className="grid grid-cols-2 text-[12px]">
-                {sportFeatures.map((item) => (
+                {sportsFeatures.map((item) => (
                     <label
                         key={item.name}
                         className="flex items-center bg-gray-50 p-2 border-b border-gray-200"

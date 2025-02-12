@@ -1,68 +1,74 @@
-"use client"
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuthUser } from '@/app/context/AuthUserContext';  // Import context
-import Cookies from 'js-cookie';
+"use client";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthUser } from "@/app/context/AuthUserContext"; // Import context
 import Link from "next/link";
 
 const Header: React.FC<{ className?: string }> = ({ className }) => {
     const router = useRouter();
-    const { isLoggedIn, username, firstname, lastname, setIsLoggedIn, setUsername, setFirstname, setLastname } = useAuthUser();
+    const {
+        isLoggedIn,
+        username,
+        firstname,
+        lastname,
+        setIsLoggedIn,
+        setUsername,
+        setFirstname,
+        setLastname,
+    } = useAuthUser();
 
-    // Fetch user data when logged in
     useEffect(() => {
+        // This effect will run when the component mounts
         const fetchUserData = async () => {
-            if (isLoggedIn) {
-                try {
-                    const response = await fetch('http://localhost:8080/users/me', {
-                        method: 'GET',
-                        credentials: 'include', // Include cookies with the request
-                    });
+            try {
+                const response = await fetch("http://localhost:8080/users/me", {
+                    method: "GET",
+                    credentials: "include", // Include cookies in the request (accessToken sent automatically)
+                });
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        setUsername(data.username),
-                        setFirstname(data.firstname),
-                        setLastname(data.lastname);
-                    } else {
-                        console.error('Failed to fetch user data');
-                    }
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUsername(data.username);
+                    setFirstname(data.firstname);
+                    setLastname(data.lastname);
+                    setIsLoggedIn(true);
+                } else {
+                    // If the token is invalid or expired
+                    console.error("Failed to fetch user data");
+                    setIsLoggedIn(false);
+                    router.push("/login"); // Redirect to login page if not authenticated
                 }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                setIsLoggedIn(false);
+                router.push("/login"); // Redirect to login page on error
             }
         };
 
-        fetchUserData();
-    }, [isLoggedIn, setUsername, setFirstname, setLastname]);
+        // Only fetch user data if the user is logged in
+        if (isLoggedIn) {
+            fetchUserData();
+        }
+    }, [isLoggedIn, setIsLoggedIn, setUsername, setFirstname, setLastname, router]);
 
     const handleLogout = async () => {
-        const accessToken = Cookies.get('accessToken');
-        const refreshToken = Cookies.get('refreshToken');
         try {
-            const response = await fetch('http://localhost:8080/auth/logout', {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ accessToken, refreshToken }),
+            const response = await fetch("http://localhost:8080/auth/logout", {
+                method: "POST",
+                credentials: "include", // Include cookies in the request
             });
 
             if (response.ok) {
-                console.log('Successfully logged out');
-                Cookies.remove('accessToken');
-                Cookies.remove('refreshToken');
                 setIsLoggedIn(false);
                 setUsername("");
-                setFirstname("")
-                setLastname("")
-                router.push('/login');
+                setFirstname("");
+                setLastname("");
+                router.push("/login");
             } else {
-                console.error('Failed to log out');
+                console.error("Failed to log out");
             }
         } catch (error) {
-            console.error('Error during logout:', error);
+            console.error("Error during logout:", error);
         }
     };
 
@@ -74,15 +80,17 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
                         <Link href="/users/change_data" className="hover:text-blue-600">
                             {firstname} {lastname} / {username}
                         </Link>
-                        <a href="#" onClick={handleLogout} className="hover:text-blue-600">Logi välja</a>
+                        <a href="#" onClick={handleLogout} className="hover:text-blue-600">
+                            Logi välja
+                        </a>
                     </div>
                 ) : (
-                    <a href="/login" className="hover:text-blue-600">Logi sisse</a>
+                    <a href="/login" className="hover:text-blue-600">
+                        Logi sisse
+                    </a>
                 )}
             </div>
         </header>
-
-
     );
 };
 

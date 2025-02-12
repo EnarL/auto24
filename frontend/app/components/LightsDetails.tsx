@@ -1,4 +1,5 @@
 import React from 'react';
+import { lightsDetails } from '../data/labels'; // Import the array from external file
 
 interface LightsDetailsProps {
     formData: any;
@@ -6,21 +7,6 @@ interface LightsDetailsProps {
 }
 
 const LightsDetails: React.FC<LightsDetailsProps> = ({ formData, handleChange }) => {
-    // List of light details
-    const lightsDetails = [
-        { name: "xenon", label: "Xenon" },
-        { name: "laser", label: "Laser" },
-        { name: "led", label: "LED" },
-        { name: "headlightWashers", label: "Esitulede pesurid" },
-        { name: "corneringLights", label: "Kurvituled" },
-        { name: "daytimeRunningLights", label: "Päevasõidutulede automaatne lülitus" },
-        { name: "highBeamAssist", label: "Kaugtulede ümberlülitamise assistent" },
-        { name: "fogLights", label: "Udutuled" },
-        { name: "headlightLeveling", label: "Tulede korrektor" },
-        { name: "additionalLights", label: "Lisatuled" },
-        { name: "lightingPackage", label: "Valgustuspakett" }
-    ];
-
     return (
         <div>
             <h2 className="text-[16px] mb-2 mt-2">TULED</h2>

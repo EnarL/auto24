@@ -1,4 +1,5 @@
 import React from 'react';
+import { SafetyEquipmentFeatures } from '../data/labels'; // Import the array from the external file
 
 interface SafetyEquipmentProps {
     formData: any;
@@ -6,43 +7,11 @@ interface SafetyEquipmentProps {
 }
 
 const SafetyEquipment: React.FC<SafetyEquipmentProps> = ({ formData, handleChange }) => {
-    // List of safety equipment
-    const safetyEquipment = [
-        { name: "powerSteering", label: "Roolivõimendi" },
-        { name: "centralLocking", label: "Kesklukustus" },
-        { name: "absBrakes", label: "ABS pidurid" },
-        { name: "electronicParkingBrake", label: "Elektrooniline seisupidur" },
-        { name: "airbag", label: "Turvapadi" },
-        { name: "curtainAirbags", label: "Turvakardinad" },
-        { name: "passengerAirbagDeactivation", label: "Kõrvalistuja turvapadja väljalülitamise võimalus" },
-        { name: "driverFatigueDetection", label: "Juhi väsimuse tuvastamise süsteem" },
-        { name: "alarm", label: "Signalisatsioon" },
-        { name: "immobilizer", label: "Immobilisaator" },
-        { name: "stabilityControl", label: "Stabiilsuskontroll" },
-        { name: "brakeForceControl", label: "Pidurdusjõukontroll" },
-        { name: "tractionControl", label: "Veojõukontroll" },
-        { name: "laneKeepingAssist", label: "Sõiduraja hoidmise abisüsteem" },
-        { name: "laneChangeAssist", label: "Sõiduraja vahetamise abisüsteem" },
-        { name: "trafficSignRecognition", label: "Liiklusmärkide tuvastus ja kuvamine" },
-        { name: "nightVisionAssist", label: "Öise nägemise assistent" },
-        { name: "blindSpotWarning", label: "Pimenurga hoiatus" },
-        { name: "collisionPreventionBrake", label: "Kokkupõrget ennetav pidurisüsteem" },
-        { name: "pedestrianSafetyHood", label: "Jalakäija ohutusfunktsiooniga kapott" },
-        { name: "automaticBrakingSystem", label: "Automaatpidurdussüsteem" },
-        { name: "additionalBrakeLight", label: "Lisapidurituli" },
-        { name: "rainSensor", label: "Vihmasensor" },
-        { name: "isofix", label: "ISOFIX lasteistme kinnitus" },
-        { name: "integratedChildSeat", label: "Integreeritud lapseiste" },
-        { name: "seatbeltPretensioners", label: "Turvavööde eelpingutid esiistmetel" },
-        { name: "autoHold", label: "Automaatne paigalseismise funktsioon / mägistardi abi" },
-        { name: "hillBrake", label: "Mägipidur" }
-    ];
-
     return (
         <div>
             <h2 className="text-[16px] mb-2 mt-2">TURVA- JA OHUTUSVARUSTUS</h2>
             <div className="grid grid-cols-2 text-[12px]">
-                {safetyEquipment.map((item) => (
+                {SafetyEquipmentFeatures.map((item) => (
                     <label
                         key={item.name}
                         className="flex items-center bg-gray-50 p-2 border-b border-gray-200"

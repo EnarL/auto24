@@ -1,3 +1,5 @@
+import {double} from "aws-sdk/clients/glue";
+
 export interface CarDetailsDTO {
     vehicleType: string;
     bodyType: string;
@@ -67,3 +69,4 @@ export interface CarExtraInfoDTO {
     seats: Record<string, boolean>;
     comfortFeatures: Record<string, boolean>;
 }
+

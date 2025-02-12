@@ -2,10 +2,9 @@ package com.example.auto24.auth;
 
 import com.example.auto24.auth.emailverificationToken.EmailVerificationService;
 import com.example.auto24.auth.prtoken.PasswordResetService;
-import com.example.auto24.users.ChangePasswordRequest;
-import com.example.auto24.users.UserLoginRequest;
-import com.example.auto24.users.UserRegistrationRequest;
-import com.example.auto24.users.UserService;
+import com.example.auto24.users.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,14 +21,16 @@ public class AuthController {
     private final UserService userService;
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
+    private final UserRepository userRepository;
 
-    public AuthController(AuthService authService, PasswordResetService passwordResetService, EmailVerificationService emailVerificationService, UserService userService, JWTUtil jwtUtil, TokenService tokenService) {
+    public AuthController(AuthService authService, PasswordResetService passwordResetService, EmailVerificationService emailVerificationService, UserService userService, JWTUtil jwtUtil, TokenService tokenService, UserRepository userRepository) {
         this.authService = authService;
         this.passwordResetService = passwordResetService;
         this.emailVerificationService = emailVerificationService;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.tokenService = tokenService;
+        this.userRepository = userRepository;
     }
 
     // ALL
@@ -91,6 +92,31 @@ public class AuthController {
         tokenService.addCookie(response, "accessToken", newAccessToken, 900, true, "Strict");
 
         return ResponseEntity.ok("Access token refreshed.");
+    }
+
+    @GetMapping("/check-session")
+    public String checkSession(HttpServletRequest request) {
+        // Extract the access token from cookies
+        String accessToken = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("accessToken".equals(cookie.getName())) {
+                    accessToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (accessToken != null && jwtUtil.validateToken(accessToken)) {
+            String username = jwtUtil.extractUserName(accessToken);
+            Users user = userRepository.findByUsername(username);
+
+            if (user != null) {
+                return "User is logged in with username: " + username;
+            }
+        }
+        return "User is not logged in";
     }
 
 }
