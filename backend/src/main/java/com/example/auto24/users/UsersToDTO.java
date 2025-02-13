@@ -10,6 +10,8 @@ public class UsersToDTO {
                 users.getFirstname(),
                 users.getLastname(),
                 users.getEmail(),
+                users.getPhoneNumber(),
+                users.isNewsletter(),
                 users.getCarIds()
         );
     }

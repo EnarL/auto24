@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AdditionalDetailsFeatures } from '../data/labels'; // Import the data
+import { AdditionalDetailsFeatures } from '@/app/data/labels';
 
 interface AdditionalFeaturesProps {
     formData: any;

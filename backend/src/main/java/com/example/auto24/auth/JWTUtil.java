@@ -13,7 +13,7 @@ import java.util.function.Function;
 @Service
 public class JWTUtil {
 
-    private static final String SECRET_KEY = "YOUR_LONG_STATIC_SECRET_KEY_HERE"; // Replace with a secure key from env/config
+    private static final String SECRET_KEY = "YOUR_LONG_STATIC_SECRET_KEY_HERE";
 
     // Generate an access token
     public String generateToken(String username) {

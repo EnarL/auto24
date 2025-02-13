@@ -1,36 +1,52 @@
 "use client"
 import React, { useState } from 'react';
 import Sidebar from "@/app/components/Sidebar";
+import {useAuthUser} from "@/app/context/AuthUserContext";
+
 
 const ChangePasswordPage: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [firstname, setFirstName] = useState('');
-    const [lastname, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [newsletter, setNewsletter] = useState(false);
+    const {
+        username,
+        firstname,
+        lastname,
+        email,
+        newsletter,
+        phoneNumber,
+        setUsername,
+        setFirstname,
+        setLastname,
+        setEmail,
+        setNewsletter,
+        setPhoneNumber
+    } = useAuthUser();
     const [terms, setTerms] = useState(true);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/users/register', {
-                method: 'POST',
+            const response = await fetch('http://localhost:8080/users/update', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+
                 },
                 body: JSON.stringify({
                     username: username,
-                    password: password,
+                    firstname: firstname,
+                    lastname: lastname,
                     email: email,
+                    phoneNumber: phoneNumber,
                     newsletter: newsletter,
-                    terms: terms,
+
+
                 }),
+                credentials: 'include'
             });
 
             if (response.ok) {
-                setSuccess('Successfully registered');
+                setSuccess('Successfully updated user data');
                 setError('');
             } else {
                 const errorMessage = await response.text();
@@ -52,57 +68,61 @@ const ChangePasswordPage: React.FC = () => {
                 <p className="italic pl-2 text-[12px]">Tärniga (*) tähistatud väljad on kohustuslikud!</p>
                 <form className="w-[500px] ml-[25%] mt-6 flex flex-col" onSubmit={handleRegister}>
                     <div className="mb-2 flex items-center">
-                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="email">Meiliaadress
-                            *</label>
+                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="username">Kasutajanimi *</label>
                         <input
                             type="text"
-                            id="eesnimi"
+                            id="username"
                             className="border border-gray-300 w-[300px]"
-                            value={firstname}
-                            onChange={(e) => setFirstName(e.target.value)}
-                            required
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+
                         />
                     </div>
                     <div className="mb-2 flex items-center">
-                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="eesnimi">Eesnimi
-                            *</label>
+                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="email">Meiliaadress *</label>
                         <input
                             type="text"
-                            id="eesnimi"
+                            id="email"
+                            className="border border-gray-300 w-[300px]"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+
+                        />
+                    </div>
+                    <div className="mb-2 flex items-center">
+                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="firstname">Eesnimi *</label>
+                        <input
+                            type="text"
+                            id="firstname"
                             className="border border-gray-300 w-[300px]"
                             value={firstname}
-                            onChange={(e) => setFirstName(e.target.value)}
-                            required
+                            onChange={(e) => setFirstname(e.target.value)}
+
                         />
                     </div>
                     <div className="mb-4 flex items-center">
-                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="perekonnanimi">Perekonnanimi
-                            *</label>
+                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="lastname">Perekonnanimi *</label>
                         <input
                             type="text"
-                            id="perekonnanimi"
+                            id="lastname"
                             className="border border-gray-300 w-[300px]"
                             value={lastname}
-                            onChange={(e) => setLastName(e.target.value)}
-                            required
+                            onChange={(e) => setLastname(e.target.value)}
+
                         />
                     </div>
                     <div className="mb-4 flex items-center">
-                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="Telefon">
-                            Telefon
-                        </label>
+                        <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="Telefon">Telefon</label>
                         <input
                             type="text"
-                            id="perekonnanimi"
+                            id="telefon"
                             className="border border-gray-300 w-[300px]"
-                            value={lastname}
-                            onChange={(e) => setLastName(e.target.value)}
-                            required
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
                         />
                     </div>
                     <div className="mb-4 flex items-center">
-                        <label className="block mx-auto text-gray-700 text-[12px]" htmlFor="newsletter">Soovin saada
-                            auto24.ee uudiskirja e-postiga *</label>
+                        <label className="block mx-auto text-gray-700 text-[12px]" htmlFor="newsletter">Soovin saada auto24.ee uudiskirja e-postiga *</label>
                         <input
                             type="checkbox"
                             id="newsletter"
@@ -111,11 +131,8 @@ const ChangePasswordPage: React.FC = () => {
                             onChange={(e) => setNewsletter(e.target.checked)}
                         />
                     </div>
-
                     <div className="mb-4 flex items-center">
-                        <label className="block mx-auto text-gray-700 text-[12px]" htmlFor="terms">Nõustun <a
-                            href="https://www.auto24.ee/users/kasutustingimused.php"
-                            className="underline hover:text-blue-600">andmekaitse-ja kasutusetingimustega</a> *</label>
+                        <label className="block mx-auto text-gray-700 text-[12px]" htmlFor="terms">Nõustun <a href="https://www.auto24.ee/users/kasutustingimused.php" className="underline hover:text-blue-600">andmekaitse-ja kasutusetingimustega</a> *</label>
                         <input
                             type="checkbox"
                             id="terms"
@@ -124,7 +141,6 @@ const ChangePasswordPage: React.FC = () => {
                             onChange={(e) => setTerms(e.target.checked)}
                         />
                     </div>
-
                     {error && <p className="text-red-500 mb-4">{error}</p>}
                     {success && <p className="text-green-500 mb-4">{success}</p>}
                     <button

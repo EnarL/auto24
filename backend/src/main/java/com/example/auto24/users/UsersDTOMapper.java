@@ -13,6 +13,8 @@ public class UsersDTOMapper implements Function<Users,UsersDTO> {
                 users.getFirstname(),
                 users.getLastname(),
                 users.getEmail(),
+                users.getPhoneNumber(),
+                users.isNewsletter(),
                 users.getCarIds()
         );
     }

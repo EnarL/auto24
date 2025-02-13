@@ -1,5 +1,5 @@
 import React from 'react';
-import { tiresFeatures } from '../data/labels';
+import { tiresFeatures } from '@/app/data/labels';
 
 interface TiresProps {
     formData: any;

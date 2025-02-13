@@ -1,5 +1,5 @@
 import React from 'react';
-import { contactFields } from '../data/labels'; // Import the data
+import { contactFields } from '@/app/data/labels';
 
 interface ContactDetailsProps {
     formData: any;

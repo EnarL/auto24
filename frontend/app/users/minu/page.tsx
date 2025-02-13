@@ -16,12 +16,11 @@ interface CarPreview {
 }
 
 const MinuPage: React.FC = () => {
-    const { isLoggedIn, username } = useAuthUser(); // Get the logged-in user details from context
-    const [userCars, setUserCars] = useState<CarPreview[]>([]); // Store user's car previews
-    const [loading, setLoading] = useState<boolean>(true); // Loading state
-    const [carImages, setCarImages] = useState<Record<string, string[]>>({}); // Store images for each car
+    const { isLoggedIn, username } = useAuthUser();
+    const [userCars, setUserCars] = useState<CarPreview[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [carImages, setCarImages] = useState<Record<string, string[]>>({});
 
-    // Function to fetch car images for each car
     const fetchCarImages = async (slug: string) => {
         try {
             const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${slug}`);
@@ -97,7 +96,7 @@ const MinuPage: React.FC = () => {
     };
 
     const handleEditCar = (carId: string) => {
-        window.location.href = `/edit-car/${carId}`;
+        window.location.href = `/edit/${carId}`;
     };
 
     return (

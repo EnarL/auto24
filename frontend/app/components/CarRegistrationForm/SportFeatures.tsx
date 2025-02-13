@@ -1,17 +1,17 @@
 import React from 'react';
-import { steeringFeatures } from '../data/labels';
+import { sportsFeatures } from '@/app/data/labels';
 
-interface SteeringProps {
+interface SportFeaturesProps {
     formData: any;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Steering: React.FC<SteeringProps> = ({ formData, handleChange }) => {
+const SportFeatures: React.FC<SportFeaturesProps> = ({ formData, handleChange }) => {
     return (
         <div>
-            <h2 className="text-[16px] mb-2 mt-2">ROOL</h2>
+            <h2 className="text-[16px] mb-2 mt-2">SPORTVARUSTUS</h2>
             <div className="grid grid-cols-2 text-[12px]">
-                {steeringFeatures.map((item) => (
+                {sportsFeatures.map((item) => (
                     <label
                         key={item.name}
                         className="flex items-center bg-gray-50 p-2 border-b border-gray-200"
@@ -31,4 +31,4 @@ const Steering: React.FC<SteeringProps> = ({ formData, handleChange }) => {
     );
 };
 
-export default Steering;
+export default SportFeatures;

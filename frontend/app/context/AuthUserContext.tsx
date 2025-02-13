@@ -1,17 +1,24 @@
-"use client"; // Mark this file as a Client Component
-
+"use client";
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 interface AuthUserContextType {
     isLoggedIn: boolean;
     username: string;
     firstname: string;
     lastname: string;
+    email: string;
+    newsletter: boolean;
+    phoneNumber: string;
+    loading: boolean;
     setIsLoggedIn: (isLoggedIn: boolean) => void;
     setUsername: (username: string) => void;
     setFirstname: (firstname: string) => void;
     setLastname: (lastname: string) => void;
+    setNewsletter: (newsletter: boolean) => void;
+    setPhoneNumber: (phoneNumber: string) => void;
+    setEmail: (email: string) => void;
+    updateUserData: () => void;
 }
 
 const AuthUserContext = createContext<AuthUserContextType | undefined>(undefined);
@@ -21,21 +28,46 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [username, setUsername] = useState('');
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
+    const [email, setEmail] = useState('');
+    const [newsletter, setNewsletter] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/users/me", {
+                method: "GET",
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUsername(data.username);
+                setFirstname(data.firstname);
+                setLastname(data.lastname);
+                setEmail(data.email);
+                setNewsletter(data.newsletter);
+                setPhoneNumber(data.phoneNumber);
+                setIsLoggedIn(true);
+            } else {
+                // If the token is invalid or expired
+                console.error("Failed to fetch user data");
+                setIsLoggedIn(false);
+                router.push("/login"); // Redirect to login page if not authenticated
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            setIsLoggedIn(false);
+            router.push("/login"); // Redirect to login page on error
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const accessToken = Cookies.get('accessToken');
-        const refreshToken = Cookies.get('refreshToken');
-        const storedUsername = Cookies.get('username');
-        const storedFirstname = Cookies.get('firstname');
-        const storedLastname = Cookies.get('lastname');
-
-        if (accessToken && refreshToken) {
-            setIsLoggedIn(true);
-            if (storedUsername) setUsername(storedUsername);
-            if (storedFirstname) setFirstname(storedFirstname);
-            if (storedLastname) setLastname(storedLastname);
-        }
-    }, []); // Empty dependency array to run only once on component mount
+        fetchUserData();
+    }, [router]);
 
     return (
         <AuthUserContext.Provider
@@ -44,10 +76,18 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 username,
                 firstname,
                 lastname,
+                email,
+                newsletter,
+                phoneNumber,
+                loading,
                 setIsLoggedIn,
                 setUsername,
                 setFirstname,
                 setLastname,
+                setEmail,
+                setNewsletter,
+                setPhoneNumber,
+                updateUserData: fetchUserData,
             }}
         >
             {children}

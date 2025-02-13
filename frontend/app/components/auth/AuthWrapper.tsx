@@ -1,5 +1,4 @@
-"use client"; // This must be a Client Component
-
+"use client";
 import useAuth from "@/app/api/check-session";
 
 const AuthWrapper = ({ children }: { children: React.ReactNode }) => {

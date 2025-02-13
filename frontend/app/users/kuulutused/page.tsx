@@ -1,4 +1,3 @@
-// frontend/app/users/kaubad_varuosad/page.tsx
 "use client"
 
 import React from 'react';

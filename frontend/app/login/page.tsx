@@ -7,7 +7,7 @@ const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { setIsLoggedIn, setUsername: setAuthUsername, setFirstname, setLastname } = useAuthUser();
+    const { setIsLoggedIn, updateUserData } = useAuthUser();
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -23,16 +23,16 @@ const LoginPage: React.FC = () => {
                     username: username,
                     password: password,
                 }),
-                credentials: 'include', // Ensure cookies are sent with the request
+                credentials: 'include'
             });
 
             if (response.ok) {
-                setError(''); // Clear any previous error
-
+                setError('');
                 setIsLoggedIn(true);
+                updateUserData(); // Fetch user data after login
                 router.push('/users/minu/');
             } else {
-                const errorMessage = await response.text();
+                const errorMessage = "sorry, wrong credentials"
                 setError(errorMessage);
             }
         } catch (error) {

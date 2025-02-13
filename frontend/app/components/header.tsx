@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
-import { useAuthUser } from "@/app/context/AuthUserContext"; // Import context
+import { useAuthUser } from "@/app/context/AuthUserContext";
 import Link from "next/link";
 
 const Header: React.FC<{ className?: string }> = ({ className }) => {
@@ -11,45 +11,12 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
         username,
         firstname,
         lastname,
+        loading,
         setIsLoggedIn,
         setUsername,
         setFirstname,
         setLastname,
     } = useAuthUser();
-
-    useEffect(() => {
-        // This effect will run when the component mounts
-        const fetchUserData = async () => {
-            try {
-                const response = await fetch("http://localhost:8080/users/me", {
-                    method: "GET",
-                    credentials: "include", // Include cookies in the request (accessToken sent automatically)
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setUsername(data.username);
-                    setFirstname(data.firstname);
-                    setLastname(data.lastname);
-                    setIsLoggedIn(true);
-                } else {
-                    // If the token is invalid or expired
-                    console.error("Failed to fetch user data");
-                    setIsLoggedIn(false);
-                    router.push("/login"); // Redirect to login page if not authenticated
-                }
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                setIsLoggedIn(false);
-                router.push("/login"); // Redirect to login page on error
-            }
-        };
-
-        // Only fetch user data if the user is logged in
-        if (isLoggedIn) {
-            fetchUserData();
-        }
-    }, [isLoggedIn, setIsLoggedIn, setUsername, setFirstname, setLastname, router]);
 
     const handleLogout = async () => {
         try {
@@ -71,6 +38,8 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
             console.error("Error during logout:", error);
         }
     };
+
+
 
     return (
         <header className={`bg-gray-100 p-2 opacity-80 mb-1 ${className}`}>

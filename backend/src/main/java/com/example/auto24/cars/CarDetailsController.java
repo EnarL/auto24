@@ -31,7 +31,6 @@ public class CarDetailsController {
         String userId = userPrincipal != null ? userPrincipal.getUserId() : null;
 
         if (userId != null) {
-            // Fetch car previews based on the logged-in user's ID
             List<CarPreviewDTO> carPreviews = carDetailsService.getCarPreviewsForUser(userId);
             return ResponseEntity.ok(carPreviews);
         } else {
@@ -44,21 +43,21 @@ public class CarDetailsController {
         return ResponseEntity.ok(carDetailsService.searchCars(carDetailsDTO));
     }
 
-    @GetMapping
-    public List<CarDetails> getAllCarDetails() {
-        return carDetailsService.getAllCarDetails();
-    }
+//    @GetMapping
+//    public List<CarDetails> getAllCarDetails() {
+//        return carDetailsService.getAllCarDetails();
+//    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CarDetailsDTO> getCarDetailsById(@PathVariable String id) {
-        return ResponseEntity.of(carDetailsService.getCarDetailsById(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<String> createCarDetails(@RequestBody CarDetails carDetails) {
-        carDetailsService.createCarDetails(carDetails);
-        return ResponseEntity.status(201).body("Car details created successfully");
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<CarDetailsDTO> getCarDetailsById(@PathVariable String id) {
+//        return ResponseEntity.of(carDetailsService.getCarDetailsById(id));
+//    }
+//
+//    @PostMapping
+//    public ResponseEntity<String> createCarDetails(@RequestBody CarDetails carDetails) {
+//        carDetailsService.createCarDetails(carDetails);
+//        return ResponseEntity.status(201).body("Car details created successfully");
+//    }
     @PutMapping("/{id}")
     public ResponseEntity<String> updateCarDetails(@PathVariable String id, @RequestBody CarDetails carDetailsDetails) {
         carDetailsService.updateCarDetails(id, carDetailsDetails);

@@ -1,5 +1,6 @@
 package com.example.auto24.users;
 
+import org.hibernate.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -34,6 +35,12 @@ public class UserController {
         userService.assignAdminRoleToUser(userId);
         return ResponseEntity.ok("Admin role assigned to user");
 
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateUser(@RequestBody UpdateUserDataRequest userDataRequest) {
+        userService.updateUser(userDataRequest);
+        return ResponseEntity.ok("User updated successfully");
     }
     @GetMapping("/me")
     public ResponseEntity<UsersDTO> getCurrentUser() {

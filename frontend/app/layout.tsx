@@ -10,7 +10,7 @@ import React from "react";
 import Banner from "@/app/components/banner";
 import FooterSection from "@/app/components/footersection";
 import { AuthUserProvider } from "@/app/context/AuthUserContext";
-import AuthWrapper from "@/app/components/AuthWrapper"; // Import AuthWrapper
+import ClientOnlyLayout from "@/app/ClientOnlyLayout"; // Import the client-side wrapper
 
 export const metadata: Metadata = {
     title: "Avaleht - auto24.ee",
@@ -26,7 +26,7 @@ export default function RootLayout({
         <html lang="en">
         <body className="display flex flex-col">
         <AuthUserProvider>
-            <AuthWrapper>
+            <ClientOnlyLayout>
                 <Header className="w-full hidden md:block" />
                 <div className="mx-auto flex flex-col w-full max-w-custom">
                     <div>
@@ -44,7 +44,7 @@ export default function RootLayout({
                 </div>
                 <Foobar />
                 <FooterSection />
-            </AuthWrapper>
+            </ClientOnlyLayout>
         </AuthUserProvider>
         </body>
         </html>

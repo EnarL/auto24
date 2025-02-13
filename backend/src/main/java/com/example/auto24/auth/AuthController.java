@@ -96,7 +96,6 @@ public class AuthController {
 
     @GetMapping("/check-session")
     public String checkSession(HttpServletRequest request) {
-        // Extract the access token from cookies
         String accessToken = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {

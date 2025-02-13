@@ -19,11 +19,15 @@ import java.util.ArrayList;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
-    @Autowired
-    private JWTUtil jwtUtil;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final JWTUtil jwtUtil;
+
+    private final UserRepository userRepository;
+
+    public JWTAuthenticationFilter(JWTUtil jwtUtil, UserRepository userRepository) {
+        this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

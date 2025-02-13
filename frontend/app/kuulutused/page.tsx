@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
-import MenuBar from '../components/menubar';
-import CarGrid from '../components/kuulutused';
+import MenuBar from '@/app/components/menubar';
+import CarGrid from '@/app/components/kuulutused';
 
 const vehicleTypes = [
     'Sõiduauto',

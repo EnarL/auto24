@@ -1,5 +1,5 @@
 import React from 'react';
-import { vehicleFields } from '../data/labels'; // Import the vehicle fields data
+import { vehicleFields } from '@/app/data/labels';
 
 interface VehicleDetailsProps {
     formData: any;

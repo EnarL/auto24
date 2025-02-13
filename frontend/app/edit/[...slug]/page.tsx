@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ContactDetails from "@/app/components/CarRegistrationForm/ContactDetails";
 import VehicleDetails from "@/app/components/CarRegistrationForm/VehicleDetails";
@@ -14,11 +15,18 @@ import ComfortFeatures from "@/app/components/CarRegistrationForm/ComfortFeature
 import SportFeatures from "@/app/components/CarRegistrationForm/SportFeatures";
 import AdditionalFeatures from "@/app/components/CarRegistrationForm/AdditionalFeatures";
 import { useRouter } from "next/navigation";
+import { useParams } from 'next/navigation';
 import { CarDetailsDTO, CarExtraInfoDTO } from "@/app/types/types";
+
+interface CarListingResponse {
+    carDetailsDTO: CarDetailsDTO;
+    carExtraInfoDTO: CarExtraInfoDTO;
+}
 
 const CarDetailsForm: React.FC = () => {
     const router = useRouter();
-    const [carDetails, setCarDetails] = useState<CarDetailsDTO>({
+    const { slug } = useParams();
+    const [formData, setFormData] = useState<CarDetailsDTO & CarExtraInfoDTO>({
         vehicleType: '',
         bodyType: '',
         bodyTypeDetail: '',
@@ -78,25 +86,6 @@ const CarDetailsForm: React.FC = () => {
         exchangePossible: false,
         exchangeDetails: '',
         description: '',
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value, type } = e.target;
-        if (type === 'checkbox') {
-            const { checked } = e.target as HTMLInputElement;
-            setCarDetails({
-                ...carDetails,
-                [name]: checked,
-            });
-        } else {
-            setCarDetails({
-                ...carDetails,
-                [name]: value || '',
-            });
-        }
-    };
-
-    const [carExtraInfo, setCarExtraInfo] = useState<CarExtraInfoDTO>({
         safetyAndSecurity: {},
         lights: {},
         tiresAndWheels: {},
@@ -109,27 +98,45 @@ const CarDetailsForm: React.FC = () => {
         interiorFeatures: {},
     });
 
-    const handleExtraInfoChange = (e: React.ChangeEvent<HTMLInputElement>, category: keyof CarExtraInfoDTO) => {
-        const { name, type } = e.target;
-        const checked = (e.target as HTMLInputElement).checked;
+    useEffect(() => {
+        const fetchCarListing = async () => {
+            try {
+                const response = await axios.get<CarListingResponse>(`http://localhost:8080/cars/carlisting/${slug}`, { withCredentials: true });
+                if (response.status === 200) {
+                    const { carDetailsDTO, carExtraInfoDTO } = response.data;
+                    setFormData({ ...carDetailsDTO, ...carExtraInfoDTO });
+                } else {
+                    alert('Failed to fetch car listing data');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while fetching the car listing data');
+            }
+        };
 
-        setCarExtraInfo((prevState) => ({
-            ...prevState,
-            [category]: {
-                ...prevState[category],
-                [name]: type === 'checkbox' ? checked : prevState[category][name] || false,
-            },
-        }));
+        fetchCarListing();
+    }, [slug]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value, type } = e.target;
+        if (type === 'checkbox') {
+            const { checked } = e.target as HTMLInputElement;
+            setFormData({
+                ...formData,
+                [name]: checked,
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const carListingRequest = {
-            carDetailsDTO: carDetails,
-            carExtraInfoDTO: carExtraInfo,
-        };
         try {
-            const response = await axios.post('http://localhost:8080/cars/create', carListingRequest, {
+            const response = await axios.post('http://localhost:8080/cars/carlisting', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -170,19 +177,18 @@ const CarDetailsForm: React.FC = () => {
                 </span>
             </div>
 
-            <ContactDetails formData={carDetails} handleChange={handleChange} />
-            <VehicleDetails formData={carDetails} handleChange={handleChange} />
+            <VehicleDetails formData={formData} handleChange={handleChange} />
             <h1 className="text-xl mb-2">Varustus</h1>
-            <SafetyEquipment formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'safetyAndSecurity')} />
-            <LightsDetails formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'lights')} />
-            <Tires formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'tiresAndWheels')} />
-            <Steering formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'steering')} />
-            <AudioVideoCommunication formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'audioVideoCommunication')} />
-            <InteriorFeatures formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'interiorFeatures')} />
-            <Seats formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'seats')} />
-            <ComfortFeatures formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'comfortFeatures')} />
-            <SportFeatures formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'sportFeatures')} />
-            <AdditionalFeatures formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'additionalFeatures')} />
+            <SafetyEquipment formData={formData} handleChange={handleChange} />
+            <LightsDetails formData={formData} handleChange={handleChange} />
+            <Tires formData={formData} handleChange={handleChange} />
+            <Steering formData={formData} handleChange={handleChange} />
+            <AudioVideoCommunication formData={formData} handleChange={handleChange} />
+            <InteriorFeatures formData={formData} handleChange={handleChange} />
+            <Seats formData={formData} handleChange={handleChange} />
+            <ComfortFeatures formData={formData} handleChange={handleChange} />
+            <SportFeatures formData={formData} handleChange={handleChange} />
+            <AdditionalFeatures formData={formData} handleChange={handleChange} />
 
             <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
                 Submit

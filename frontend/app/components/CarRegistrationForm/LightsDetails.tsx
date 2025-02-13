@@ -1,5 +1,5 @@
 import React from 'react';
-import { lightsDetails } from '../data/labels'; // Import the array from external file
+import { lightsDetails } from '@/app/data/labels';
 
 interface LightsDetailsProps {
     formData: any;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { comfortfeatures } from '../data/labels'; // Import features data
+import { comfortfeatures } from '@/app/data/labels'; // Import features data
 
 interface FeaturesProps {
     formData: any;

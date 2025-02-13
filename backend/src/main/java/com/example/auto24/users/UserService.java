@@ -26,8 +26,9 @@ public class UserService {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final EmailService emailService;
     private final UsersToDTO usersToDTO;
+    private final UserDataUpdateMapper userDataUpdateMapper;
 
-    public UserService(UserRepository userRepository, UsersDTOMapper usersDTOMapper, CarService carService, PasswordEncoder encoder, EmailVerificationTokenRepository emailVerificationTokenRepository, EmailService emailService, UsersToDTO usersToDTO) {
+    public UserService(UserRepository userRepository, UsersDTOMapper usersDTOMapper, CarService carService, PasswordEncoder encoder, EmailVerificationTokenRepository emailVerificationTokenRepository, EmailService emailService, UsersToDTO usersToDTO, UserDataUpdateMapper userDataUpdateMapper) {
         this.userRepository = userRepository;
         this.usersDTOMapper = usersDTOMapper;
         this.carService = carService;
@@ -35,6 +36,7 @@ public class UserService {
         this.emailVerificationTokenRepository = emailVerificationTokenRepository;
         this.emailService = emailService;
         this.usersToDTO = usersToDTO;
+        this.userDataUpdateMapper = userDataUpdateMapper;
     }
     public List<UsersDTO> getAllUsers() {
         return userRepository.findAll().
@@ -57,7 +59,7 @@ public class UserService {
     }
     public void assignAdminRoleToUser(String userId) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        user.setRole(Role.valueOf("ADMIN"));
+        user.setRole(Role.ADMIN);
         userRepository.save(user);
     }
     public void changePassword(String userId, ChangePasswordRequest request) {
@@ -110,10 +112,7 @@ public class UserService {
         }
     }
     public UsersDTO getUserProfile() {
-        // Get the username from the security context (set by the JWT filter)
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        // Fetch the user from the repository
         Users user = userRepository.findByUsername(username);
         if (user == null) {
             throw new IllegalArgumentException("User not found for username: " + username);
@@ -122,10 +121,14 @@ public class UserService {
         return usersToDTO.map(user);
     }
 
+    public void updateUser(UpdateUserDataRequest updateUserDataRequest) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-
-
-
-
-
+        Users user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for username: " + username);
+        }
+        userDataUpdateMapper.updateUserDetailsFromDto(updateUserDataRequest, user);
+        userRepository.save(user);
+    }
 }
