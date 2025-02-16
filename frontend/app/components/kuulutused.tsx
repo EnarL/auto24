@@ -1,54 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import S3Image from "@/app/components/S3Image"; // Assuming you have an S3Image component for handling image rendering
-
-interface CarPreviewDTO {
-    id: string;
-    title: string;
-    price: number;
-    firstRegistrationDate: string;
-    imageKeys?: string[];  // Optional to handle cases when imageKeys is not present
-}
+import S3Image from "@/app/components/S3Image";
+import useCarPreview from "@/app/hooks/useCarPreview";
 
 interface CarGridProps {
     columns: number;
-    rows: number;
     carCount: number;
 }
 
 const CarGrid: React.FC<CarGridProps> = ({ columns, carCount }) => {
-    const [cars, setCars] = useState<CarPreviewDTO[]>([]);  // State to hold car data
-    const [carImages, setCarImages] = useState<Record<string, string[]>>({});  // Store car ID -> images map
+    const { cars, carImages, loading, error } = useCarPreview(); // Use the custom hook
 
-    useEffect(() => {
-        const fetchCarDetails = async () => {
-            const response = await fetch('http://localhost:8080/car-details/preview');
-            if (response.ok) {
-                const carDetails: CarPreviewDTO[] = await response.json();
-                setCars(carDetails);
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-                for (const car of carDetails) {
-                    if (car.id) {
-                        const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${car.id}`);
-                        if (imageResponse.ok) {
-                            const imageUrls: string[] = await imageResponse.json();
-                            setCarImages((prevImages) => ({
-                                ...prevImages,
-                                [car.id]: imageUrls,
-                            }));
-                        } else {
-                            console.error(`Failed to fetch images for car ${car.id}`);
-                        }
-                    }
-                }
-            } else {
-                console.error('Failed to fetch car details');
-            }
-        };
-
-        fetchCarDetails();
-    }, []);
-
+    if (error) {
+        return <div className="text-red-500">{error}</div>;
+    }
     return (
         <>
             <h1 className="text-1xl font-extralight opacity-65">VALIK KUULUTUSI</h1>
@@ -61,7 +30,7 @@ const CarGrid: React.FC<CarGridProps> = ({ columns, carCount }) => {
                                     <S3Image
                                         src={carImages[car.id][0]}
                                         alt={`Car ${car.title} - Image 1`}
-                                        className="object-cover w-full h-32"  // Fixed height, width full to container
+                                        className="object-cover w-full h-32"
                                     />
                                 ) : (
                                     <p>No images available</p>

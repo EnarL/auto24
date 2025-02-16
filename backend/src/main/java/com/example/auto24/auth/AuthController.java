@@ -39,6 +39,7 @@ public class AuthController {
         userService.register(request);
         return ResponseEntity.ok("User registered successfully");
     }
+
     // ALL
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> loginUser(@Valid @RequestBody UserLoginRequest request, HttpServletResponse response) {
@@ -51,12 +52,7 @@ public class AuthController {
         authService.logout(response);
         return ResponseEntity.ok("User logged out successfully");
     }
-    // cur user or ADMIN
-    @PostMapping("/{userId}/change-password")
-    public ResponseEntity<?> changePassword(@PathVariable("userId") String userId, @RequestBody ChangePasswordRequest request) {
-        userService.changePassword(userId, request);
-        return ResponseEntity.ok("Password changed successfully");
-    }
+
     // cur user or ADMIN
     @GetMapping("/confirm")
     public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
@@ -78,10 +74,11 @@ public class AuthController {
 
     // cur user or ADMIN
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        passwordResetService.resetPassword(token, newPassword);
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(token, request);
         return ResponseEntity.ok("Password has been reset successfully");
     }
+
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
         if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
@@ -93,7 +90,6 @@ public class AuthController {
 
         return ResponseEntity.ok("Access token refreshed.");
     }
-
     @GetMapping("/check-session")
     public String checkSession(HttpServletRequest request) {
         String accessToken = null;
@@ -106,11 +102,9 @@ public class AuthController {
                 }
             }
         }
-
         if (accessToken != null && jwtUtil.validateToken(accessToken)) {
             String username = jwtUtil.extractUserName(accessToken);
             Users user = userRepository.findByUsername(username);
-
             if (user != null) {
                 return "User is logged in with username: " + username;
             }

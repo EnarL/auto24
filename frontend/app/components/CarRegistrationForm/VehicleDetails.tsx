@@ -5,7 +5,6 @@ interface VehicleDetailsProps {
     formData: any;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
-
 const VehicleDetails: React.FC<VehicleDetailsProps> = ({ formData, handleChange }) => {
     return (
         <div>

@@ -1,6 +1,7 @@
 package com.example.auto24.auth.prtoken;
 
 import com.example.auto24.email.EmailService;
+import com.example.auto24.users.ResetPasswordRequest;
 import com.example.auto24.users.UserRepository;
 import com.example.auto24.users.Users;
 import org.springframework.http.HttpStatus;
@@ -45,15 +46,18 @@ public class PasswordResetService {
         }
     }
     @Transactional
-    public void resetPassword(String token, String newPassword) {
+    public void resetPassword(String token, ResetPasswordRequest request) {
         PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
 
         if (resetToken.isTokenExpired()) {
             throw new RuntimeException("Token has expired");
         }
+        if (!request.newPassword().equals(request.confirmationPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
         Users user = userRepository.findByEmail(resetToken.getEmail());
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
         passwordResetTokenRepository.delete(resetToken);
     }

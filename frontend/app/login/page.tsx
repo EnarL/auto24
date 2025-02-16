@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
             if (response.ok) {
                 setError('');
                 setIsLoggedIn(true);
-                updateUserData(); // Fetch user data after login
+                updateUserData();
                 router.push('/users/minu/');
             } else {
                 const errorMessage = "sorry, wrong credentials"
@@ -75,10 +75,16 @@ const LoginPage: React.FC = () => {
                         </div>
                         <div className="flex justify-between items-center mt-2 mb-2 text-[12px]">
                             <div className="flex items-center">
-                                <input type="checkbox" />
+                                <input type="checkbox"/>
                                 <p className="ml-2">Mäleta mind</p>
                             </div>
-                            <p className="flex justify-end">Unustasin parooli</p>
+                            <p
+                                className="flex justify-end text-blue-500 cursor-pointer hover:underline"
+                                onClick={() => router.push('/forgot_password')}
+                            >
+                                Unustasin parooli
+                            </p>
+
                         </div>
                         {error && <p className="text-red-500 mb-4">{error}</p>}
                         <button

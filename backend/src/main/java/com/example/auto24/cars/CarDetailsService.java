@@ -65,32 +65,44 @@ public class CarDetailsService {
     }
 
     private CarPreviewDTO createCarPreviewDTO(Car car) {
+        // Fetch CarDetails from the repository using car ID
         Optional<CarDetails> carDetailsOptional = carDetailsRepository.findByCarId(car.getId());
+
+        // If CarDetails is not found, return null
         if (carDetailsOptional.isEmpty()) {
             return null;
         }
+
+        // Convert the CarDetails entity to CarDetailsDTO using your apply method
         CarDetails carDetails = carDetailsOptional.get();
+        CarDetailsDTO carDetailsDTO = carDetailsDTOMapper.apply(carDetails);  // Using your apply method for conversion
+
+        // Get image keys or default to an empty list if null
         List<String> imageKeys = car.getImageKeys() != null ? car.getImageKeys() : new ArrayList<>();
 
+        // Create and return the CarPreviewDTO using the CarDetailsDTO
         return new CarPreviewDTO(
-                car.getId(),
-                createCarTitle(carDetails),
-                carDetails.getPrice(),
-                extractYearFromFirstRegistrationDate(carDetails),
-                imageKeys
+                car.getId(),                                             // Car ID
+                createCarTitle(carDetailsDTO),                            // Car title (make, model, trim)
+                carDetailsDTO.price(),                                    // Price from the DTO
+                extractYearFromFirstRegistrationDate(carDetailsDTO),     // Year from first registration date from the DTO
+                imageKeys                                                 // List of image keys
         );
     }
 
-    private String createCarTitle(CarDetails carDetails) {
-        String modelTrim = carDetails.getModelTrim() != null ? " " + carDetails.getModelTrim() : "";
-        return carDetails.getMake() + " " + carDetails.getModel() + modelTrim;
+
+
+    private String createCarTitle(CarDetailsDTO carDetailsDTO) {
+        String modelTrim = carDetailsDTO.modelTrim() != null ? " " + carDetailsDTO.modelTrim() : "";
+        return carDetailsDTO.make() + " " + carDetailsDTO.model() + modelTrim;
     }
 
-    private String extractYearFromFirstRegistrationDate(CarDetails carDetails) {
-        return carDetails.getFirstRegistrationDate() != null
-                ? carDetails.getFirstRegistrationDate().substring(0, 4)
+    private String extractYearFromFirstRegistrationDate(CarDetailsDTO carDetailsDTO) {
+        return carDetailsDTO.firstRegistrationDate() != null
+                ? carDetailsDTO.firstRegistrationDate().substring(0, 4)
                 : "";
     }
+
     public List<CarPreviewDTO> getCarPreviewsForUser(String ownerId) {
         List<Car> cars = carRepository.findByOwnerId(ownerId);
 
@@ -98,5 +110,29 @@ public class CarDetailsService {
                 .map(this::createCarPreviewDTO)
                 .collect(Collectors.toList());
     }
+    private CarPreviewDTO mapToCarPreview(CarDetailsDTO carDetailsDTO) {
+        // Assuming you have a way to fetch Car entity by ID (carDetailsDTO.getId())
+        // If you have a separate repository or service for fetching Car entity, you would use it here.
+        Optional<Car> carOptional = carRepository.findById(carDetailsDTO.id());
+
+        if (carOptional.isEmpty()) {
+            return null; // Return null if no Car entity is found
+        }
+
+        Car car = carOptional.get();
+
+        // Assuming car.getImageKeys() returns a list of image keys for the car
+        List<String> imageKeys = car.getImageKeys() != null ? car.getImageKeys() : new ArrayList<>();
+
+        // Map CarDetailsDTO to CarPreviewDTO
+        return new CarPreviewDTO(
+                carDetailsDTO.id(),                                     // Car ID
+                createCarTitle(carDetailsDTO),                           // Generate title from the CarDetailsDTO
+                carDetailsDTO.price(),                                   // Price
+                extractYearFromFirstRegistrationDate(carDetailsDTO),     // Extract the year of first registration
+                imageKeys                                               // Image keys
+        );
+    }
+
 
 }

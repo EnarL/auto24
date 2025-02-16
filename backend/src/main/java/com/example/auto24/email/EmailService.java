@@ -48,7 +48,7 @@ public class EmailService implements EmailSender {
 
     public void sendPasswordResetEmail(String to, String token) throws MessagingException {
         String subject = "Password Reset Request";
-        String resetUrl = "http://localhost:8080/auth/reset-password?token=" + token;
+        String resetUrl = "http://localhost:3000/reset_password?token=" + token;
         String message = "<html><body>"
                 + "<h1>Password Reset Request</h1>"
                 + "<p>Click the link below to reset your password:</p>"

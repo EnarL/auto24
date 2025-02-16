@@ -36,6 +36,7 @@ public class CarController {
     public ResponseEntity<CarDTO> getCarById(@PathVariable String id) {
         return ResponseEntity.ok(carService.getCarById(id));
     }
+
     //User or if not user, then create user first and then create car
     @PostMapping("/create")
     public ResponseEntity<String> createCarListing(@AuthenticationPrincipal UserPrincipal userDetails,

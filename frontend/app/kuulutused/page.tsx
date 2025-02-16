@@ -44,7 +44,7 @@ const Page: React.FC = () => {
                                 ))}
                             </div>
                             <div className="pt-6">
-                                <CarGrid columns={5} rows={4} carCount={20}/>
+                                <CarGrid columns={5} carCount={10}/>
                             </div>
                         </div>
 

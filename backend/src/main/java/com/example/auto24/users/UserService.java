@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -25,45 +23,21 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final EmailService emailService;
-    private final UsersToDTO usersToDTO;
     private final UserDataUpdateMapper userDataUpdateMapper;
 
-    public UserService(UserRepository userRepository, UsersDTOMapper usersDTOMapper, CarService carService, PasswordEncoder encoder, EmailVerificationTokenRepository emailVerificationTokenRepository, EmailService emailService, UsersToDTO usersToDTO, UserDataUpdateMapper userDataUpdateMapper) {
+    public UserService(UserRepository userRepository, UsersDTOMapper usersDTOMapper, CarService carService, PasswordEncoder encoder, EmailVerificationTokenRepository emailVerificationTokenRepository, EmailService emailService, UserDataUpdateMapper userDataUpdateMapper) {
         this.userRepository = userRepository;
         this.usersDTOMapper = usersDTOMapper;
         this.carService = carService;
         this.encoder = encoder;
         this.emailVerificationTokenRepository = emailVerificationTokenRepository;
         this.emailService = emailService;
-        this.usersToDTO = usersToDTO;
         this.userDataUpdateMapper = userDataUpdateMapper;
     }
-    public List<UsersDTO> getAllUsers() {
-        return userRepository.findAll().
-                stream().map(usersDTOMapper).
-                collect(Collectors.toList());
-    }
-    public UsersDTO getUserById(String UserId) {
-        return userRepository.findById(UserId).
-                map(usersDTOMapper).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-    }
-    public void deleteUser(String userId) {
-        userRepository.findById(userId)
-                .ifPresentOrElse(user -> {
-                    carService.deleteCarsByUserId(userId);
-                    userRepository.deleteById(user.getId());
-                }, () -> {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-                });
-    }
-    public void assignAdminRoleToUser(String userId) {
-        Users user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        user.setRole(Role.ADMIN);
-        userRepository.save(user);
-    }
-    public void changePassword(String userId, ChangePasswordRequest request) {
-        Users user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+    public void changePassword( ChangePasswordRequest request) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByUsername(username);
 
         if (!encoder.matches(request.currentPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current password is incorrect");
@@ -117,8 +91,7 @@ public class UserService {
         if (user == null) {
             throw new IllegalArgumentException("User not found for username: " + username);
         }
-
-        return usersToDTO.map(user);
+        return usersDTOMapper.apply(user);
     }
 
     public void updateUser(UpdateUserDataRequest updateUserDataRequest) {
@@ -130,5 +103,15 @@ public class UserService {
         }
         userDataUpdateMapper.updateUserDetailsFromDto(updateUserDataRequest, user);
         userRepository.save(user);
+    }
+
+    public void deleteUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for username: " + username);
+        }
+        userRepository.delete(user);
+        carService.deleteCarsByUserId(user.getId());
     }
 }

@@ -9,6 +9,7 @@ public class CarDetailsDTOMapper implements Function<CarDetails, CarDetailsDTO> 
     @Override
     public CarDetailsDTO apply(CarDetails carDetails) {
         return new CarDetailsDTO(
+                carDetails.getCarId(),
                 carDetails.getVehicleType(),
                 carDetails.getBodyType(),
                 carDetails.getBodyTypeDetail(),

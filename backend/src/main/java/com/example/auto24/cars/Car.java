@@ -25,5 +25,6 @@ public class Car {
     @CreatedDate
     private LocalDateTime createdAt;
     private LocalDateTime expirationDate;
+    private boolean isActive;
 
 }

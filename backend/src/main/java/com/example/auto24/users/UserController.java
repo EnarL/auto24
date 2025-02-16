@@ -1,9 +1,7 @@
 package com.example.auto24.users;
 
-import org.hibernate.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -13,30 +11,13 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    //admin
-    @GetMapping
-    public List<UsersDTO> getAllUsers() {
-        return userService.getAllUsers();
-    }
-    //admin or the current user
-    @GetMapping("/{userId}")
-    public UsersDTO getUserById(@PathVariable("userId") String userId) {
-        return userService.getUserById(userId);
-    }
-    //current user or ADMIN
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
+    //methods for logged in user.
+
+    @DeleteMapping("")
+    public ResponseEntity<?> deleteUser() {
+        userService.deleteUser();
         return ResponseEntity.ok("User deleted successfully");
     }
-    //ADMIN
-    @PutMapping("/assignAdmin/{userId}")
-    public ResponseEntity<String> assignAdminRoleToUser(@PathVariable String userId) {
-        userService.assignAdminRoleToUser(userId);
-        return ResponseEntity.ok("Admin role assigned to user");
-
-    }
-
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserDataRequest userDataRequest) {
         userService.updateUser(userDataRequest);
@@ -46,6 +27,11 @@ public class UserController {
     public ResponseEntity<UsersDTO> getCurrentUser() {
         UsersDTO userProfile = userService.getUserProfile();
         return ResponseEntity.ok(userProfile);
+    }
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
+        userService.changePassword(request);
+        return ResponseEntity.ok("Password changed successfully");
     }
 
 

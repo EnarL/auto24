@@ -20,7 +20,6 @@ interface AuthUserContextType {
     setEmail: (email: string) => void;
     updateUserData: () => void;
 }
-
 const AuthUserContext = createContext<AuthUserContextType | undefined>(undefined);
 
 export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -40,7 +39,6 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 method: "GET",
                 credentials: "include",
             });
-
             if (response.ok) {
                 const data = await response.json();
                 setUsername(data.username);
@@ -51,15 +49,10 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 setPhoneNumber(data.phoneNumber);
                 setIsLoggedIn(true);
             } else {
-                // If the token is invalid or expired
                 console.error("Failed to fetch user data");
-                setIsLoggedIn(false);
-                router.push("/login"); // Redirect to login page if not authenticated
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
-            setIsLoggedIn(false);
-            router.push("/login"); // Redirect to login page on error
         } finally {
             setLoading(false);
         }

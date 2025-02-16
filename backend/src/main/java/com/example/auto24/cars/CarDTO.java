@@ -1,12 +1,13 @@
 package com.example.auto24.cars;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record CarDTO(
-        List<String> imageKeys,
+        String id,
         String ownerId,
+        String title,
         LocalDateTime createdAt,
-        LocalDateTime expirationDate) {
+        LocalDateTime expirationDate,
+boolean isActive) {
 
 }

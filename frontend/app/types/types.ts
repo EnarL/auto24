@@ -72,12 +72,12 @@ export interface CarExtraInfoDTO {
     interiorFeatures: Record<string, boolean>;
 
 }
-export interface UsersDTO {
+export interface UserDTO {
     username: string;
     firstname: string;
     lastname: string;
     email: string;
-    carIds: string;
-
+    phoneNumber: string;
+    newsletter: boolean;
 }
 
