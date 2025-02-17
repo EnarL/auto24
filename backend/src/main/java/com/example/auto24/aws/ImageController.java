@@ -24,7 +24,6 @@ public class ImageController {
         this.carRepository = carRepository;
     }
 
-    // ✅ 1️⃣ Upload Images (Find the Car Using the Authenticated User)
     @PostMapping("/upload")
     public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") List<MultipartFile> files,
                                                     @RequestParam("id") String id,
@@ -47,8 +46,6 @@ public class ImageController {
     public ResponseEntity<List<String>> getCarImages(@PathVariable String id) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Car not found"));
-
-        // Generate presigned URLs for car images
         List<String> presignedUrls = car.getImageKeys().stream()
                 .map(service::generatePresignedUrl)
                 .toList();
@@ -61,8 +58,6 @@ public class ImageController {
                                              @AuthenticationPrincipal UserPrincipal userDetails) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Car not found"));
-
-        // 🔒 Ensure user owns this car
         if (!car.getOwnerId().equals(userDetails.getUserId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized to delete this image.");
         }

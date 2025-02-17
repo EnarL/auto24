@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/car-details")
@@ -23,6 +23,16 @@ public class CarDetailsController {
     public List<CarPreviewDTO> getAllCarDetailsPreview() {
         return carDetailsService.getAllCarsPreview();
     }
+    @GetMapping("/users")
+    public List<CarDTO> getCarDetailsForUser() {
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userId = userPrincipal != null ? userPrincipal.getUserId() : null;
+        if (userId != null) {
+            return carDetailsService.getCarDetailsForUser(userId);
+        } else {
+            return Collections.emptyList();
+        }
+    }
 
     @GetMapping("user/preview")
     public ResponseEntity<List<CarPreviewDTO>> getCarDetailsPreview() {
@@ -36,40 +46,8 @@ public class CarDetailsController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
         }
     }
-
-//    @GetMapping("/search")
-//    public ResponseEntity<List<CarPreviewDTO>> searchCars(@RequestBody CarDetailsDTO carDetailsDTO) {
-//        List<CarPreviewDTO> carPreviews = carDetailsService.searchCars(carDetailsDTO)
-//                .stream()
-//                .map(this::mapToCarPreview)
-//                .collect(Collectors.toList());
-//        return ResponseEntity.ok(carPreviews);
-//    }
-
-
-//    @GetMapping
-//    public List<CarDetails> getAllCarDetails() {
-//        return carDetailsService.getAllCarDetails();
-//    }
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<CarDetailsDTO> getCarDetailsById(@PathVariable String id) {
-//        return ResponseEntity.of(carDetailsService.getCarDetailsById(id));
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<String> createCarDetails(@RequestBody CarDetails carDetails) {
-//        carDetailsService.createCarDetails(carDetails);
-//        return ResponseEntity.status(201).body("Car details created successfully");
-//    }
-//    @PutMapping("/{id}")
-//    public ResponseEntity<String> updateCarDetails(@PathVariable String id, @RequestBody CarDetails carDetailsDetails) {
-//        carDetailsService.updateCarDetails(id, carDetailsDetails);
-//        return ResponseEntity.ok("Car details updated successfully");
-//    }
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteCarDetails(@PathVariable String id) {
-//        carDetailsService.deleteCarDetails(id);
-//        return ResponseEntity.noContent().build();
-//    }
+    @GetMapping("/search")
+    public List<CarPreviewDTO> searchCars(@RequestParam Map<String, String> searchParams) {
+        return carDetailsService.searchCars(searchParams);
+    }
 }

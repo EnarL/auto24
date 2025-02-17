@@ -6,13 +6,11 @@ import com.example.auto24.users.UserPrincipal;
 import com.example.auto24.users.UserRepository;
 import com.example.auto24.users.Users;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CarService {
@@ -20,26 +18,16 @@ public class CarService {
 
     private final UserRepository userRepository;
     private final CarRepository carRepository;
-    private final CarDTOMapper carDTOMapper;
     private final CarDetailsService carDetailsService;
     private final CarExtraInfoService carExtraInfoService;
 
-    public CarService(UserRepository userRepository, CarRepository carRepository, CarDTOMapper carDTOMapper, CarDetailsService carDetailsService, CarExtraInfoService carExtraInfoService) {
+    public CarService(UserRepository userRepository, CarRepository carRepository, CarDetailsService carDetailsService, CarExtraInfoService carExtraInfoService) {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
-        this.carDTOMapper = carDTOMapper;
         this.carDetailsService = carDetailsService;
         this.carExtraInfoService = carExtraInfoService;
     }
-    public List<CarDTO> getAllCars() {
-        return carRepository.findAll().stream().map(carDTOMapper).collect(Collectors.toList());
-    }
 
-    public CarDTO getCarById(String id) {
-        return carRepository.findById(id).
-                map(carDTOMapper).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
-    }
     public void deleteCar(String id) {
         Car car = carRepository.findById(id).orElse(null);
         if (car != null) {
@@ -90,16 +78,7 @@ public class CarService {
         car.setExpirationDate(car.getExpirationDate().plusMonths(months));
         carRepository.save(car);
     }
-    public List<CarDTO> getAllCarsByOwnerId() {
-        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userId = userPrincipal.getUserId();
 
-        List<Car> cars = carRepository.findByOwnerId(userId);
-
-        return cars.stream()
-                .map(carDTOMapper)
-                .collect(Collectors.toList());
-    }
 
     public Optional<CarListingResponse> getCarListingById(String id) {
         Optional<CarDetailsDTO> carDetailsOpt = carDetailsService.getCarDetailsById(id);

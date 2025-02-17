@@ -45,7 +45,7 @@ public class EmailService implements EmailSender {
                 + "</body></html>";
         send(user.getEmail(), emailContent);
     }
-
+    @Async
     public void sendPasswordResetEmail(String to, String token) throws MessagingException {
         String subject = "Password Reset Request";
         String resetUrl = "http://localhost:3000/reset_password?token=" + token;

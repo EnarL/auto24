@@ -49,6 +49,7 @@ const ChangePasswordPage: React.FC = () => {
                             label={label}
                             value={value}
                             onChange={(e) => setter(e.target.value)}
+
                         />
                     ))}
                     <CheckboxInput

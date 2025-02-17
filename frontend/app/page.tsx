@@ -42,10 +42,11 @@ const Page: React.FC = () => {
                 <main className="">
                     <div className="grid grid-cols-2 gap-[10px] h-[633px]" style={{ gridTemplateColumns: '250px 740px' }}>
                         <div className="col-span-1 w-[250px]">
-                            <MenuBar />
+                            <h1 className="text-[18px] mb-2 font-sans w-[250px] opacity-60">SÕIDUKIKUULUTUSED</h1>
+                            <MenuBar/>
                         </div>
                         <div className="col-span-1 row-span-1">
-                            <div className="grid grid-cols-2 grid-columns w-[740px] row-span-1 h-[250px]">
+                        <div className="grid grid-cols-2 grid-columns w-[740px] row-span-1 h-[250px]">
                                 <SearchSection/>
                                 <PopularBrands columns={columns} otherBrands={otherBrands} onBrandClick={handleBrandClick}/>
                             </div>
@@ -73,7 +74,7 @@ const Page: React.FC = () => {
 
                     </div>
                     <div className="pt-6">
-                        <CarGrid columns={6} rows={5} carCount={30} />
+                        <CarGrid columns={6} carCount={30} />
                     </div>
 
                 </main>
