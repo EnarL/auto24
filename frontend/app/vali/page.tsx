@@ -1,4 +1,6 @@
+"use client"
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const popularCarBrands = [
     'Abarth', 'Acura', 'Aiways', 'Alfa Romeo', 'Alpina', 'Alpine', 'Aston Martin', 'Audi', 'BMW', 'BYD', 'Bentley',
@@ -12,6 +14,12 @@ const popularCarBrands = [
 ];
 
 const Vali: React.FC = () => {
+    const router = useRouter();
+
+    const handleBrandClick = (brand: string) => {
+        router.push(`/cars?make=${brand}`);
+    };
+
     const columns = 7;
     const rows = Math.ceil(popularCarBrands.length / columns);
     const brandColumns = Array.from({ length: columns }, (_, i) =>
@@ -26,7 +34,11 @@ const Vali: React.FC = () => {
                     {brandColumns.map((column, colIndex) => (
                         <div key={colIndex} className="p-1 text-left">
                             {column.map((brand, index) => (
-                                <div key={index} className="p-1">
+                                <div
+                                    key={index}
+                                    className="p-1 cursor-pointer"
+                                    onClick={() => handleBrandClick(brand)}
+                                >
                                     {brand}
                                 </div>
                             ))}

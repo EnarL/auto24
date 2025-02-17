@@ -15,9 +15,8 @@ public class CarDetailsSpecification {
         searchParams.forEach((key, value) -> {
             if (value != null && !value.isEmpty()) {
                 switch (key) {
-                    case "id", "vehicleType", "bodyType", "bodyTypeDetail", "model", "make",
-                         "modelGeneration", "modelTrim", "firstRegistrationDate",
-                         "vinCode", "registrationNumber", "transmission", "driveType",
+                    case "vehicleType", "bodyType", "bodyTypeDetail", "model", "make",
+                         "modelGeneration", "modelTrim", "vinCode", "registrationNumber", "transmission", "driveType",
                          "engineConfiguration", "engineDetails", "fuelType", "color",
                          "colorDetail", "locationCountry", "locationCounty", "importedFromCountry",
                          "inspectionValidUntil", "reservationUntilDate", "exchangeDetails" ->
@@ -36,6 +35,17 @@ public class CarDetailsSpecification {
                             query.addCriteria(Criteria.where(key).gte(min).lte(max));
                         } else {
                             query.addCriteria(Criteria.where(key).lte(Double.parseDouble(value)));
+                        }
+                    }
+                    case "firstRegistrationDate" -> {
+                        if (value.contains("-")) {
+                            String[] range = value.split("-");
+                            int minYear = Integer.parseInt(range[0]);
+                            int maxYear = Integer.parseInt(range[1]);
+                            query.addCriteria(Criteria.where(key).gte(minYear + "-01-01").lte(maxYear + "-12-31"));
+                        } else {
+                            int year = Integer.parseInt(value);
+                            query.addCriteria(Criteria.where(key).gte(year + "-01-01").lte(year + "-12-31"));
                         }
                     }
                     case "includesRegistrationFee", "discountPrice", "exportPrice",

@@ -1,7 +1,6 @@
-"use client";
-
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+"use client"
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import MenuBar from "@/app/components/menubar";
 import S3Image from "@/app/components/S3Image";
 
@@ -18,45 +17,44 @@ interface CarImage {
 }
 
 const BrandPage = () => {
-    const { slug } = useParams();
-    const slugString = Array.isArray(slug) ? slug[0] : slug;
-    const decodedSlug = slugString ? decodeURIComponent(slugString) : '';
+    const searchParams = useSearchParams(); // Get the search params directly from the URL
+    const router = useRouter();
 
     const [carDetails, setCarDetails] = useState<CarDetail[]>([]);
     const [carImages, setCarImages] = useState<CarImage>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [sortOption, setSortOption] = useState<string>('järjesta');
+    const [sortOption, setSortOption] = useState<string>(""); // Sort options
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [searchParams, setSearchParams] = useState<any>({});
     const carsPerPage = 10;
-    const router = useRouter();
 
-    const fetchCarDetails = async (params: any) => {
+    // Extract the 'make' parameter from the URL
+    const make = searchParams.get("make") || "";
+
+    const fetchCarDetails = async () => {
         setLoading(true);
         setError(null);
-        setSearchParams(params);
 
         try {
-            const queryParams = new URLSearchParams({
-                make: decodedSlug || "",
-                ...params,
-            }).toString();
+            const queryParams = new URLSearchParams(searchParams.toString()); // Convert the search params to a query string
+            console.log("Fetching cars with query:", queryParams.toString());
 
-            const response = await fetch(`http://localhost:8080/car-details/search?${queryParams}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
+            const response = await fetch(`http://localhost:8080/car-details/search?${queryParams.toString()}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
             });
 
             if (!response.ok) throw new Error("Failed to fetch car details");
 
             const data: CarDetail[] = await response.json();
+            console.log("Fetched cars:", data);
+
             setCarDetails(data);
 
             // Fetch images concurrently
-            const imageRequests = data.map(car =>
+            const imageRequests = data.map((car) =>
                 fetch(`http://localhost:8080/productImages/getCarImages/${car.id}`)
-                    .then(res => res.ok ? res.json() : [])
+                    .then((res) => (res.ok ? res.json() : []))
                     .catch(() => [])
             );
 
@@ -68,40 +66,27 @@ const BrandPage = () => {
 
             setCarImages(newCarImages);
         } catch (error) {
-            setError('An error occurred while fetching data');
+            console.error("Error fetching cars:", error);
+            setError("An error occurred while fetching data");
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (decodedSlug) fetchCarDetails({});
-    }, [decodedSlug]);
+        fetchCarDetails();
+    }, [searchParams]);
 
-    useEffect(() => {
-        if (carDetails.length === 0) return;
-
-        let sortedCars = [...carDetails];
-        switch (sortOption) {
-            case 'price-asc':
-                sortedCars.sort((a, b) => a.price - b.price);
-                break;
-            case 'price-desc':
-                sortedCars.sort((a, b) => b.price - a.price);
-                break;
-            case 'year-asc':
-                sortedCars.sort((a, b) =>
-                    new Date(a.firstRegistrationDate).getTime() - new Date(b.firstRegistrationDate).getTime()
-                );
-                break;
-            case 'year-desc':
-                sortedCars.sort((a, b) =>
-                    new Date(b.firstRegistrationDate).getTime() - new Date(a.firstRegistrationDate).getTime()
-                );
-                break;
-        }
-        setCarDetails([...sortedCars]);
-    }, [sortOption]);
+    // Sorting logic
+    const sortedCars = [...carDetails].sort((a, b) => {
+        if (sortOption === "price-asc") return a.price - b.price;
+        if (sortOption === "price-desc") return b.price - a.price;
+        if (sortOption === "year-asc")
+            return new Date(a.firstRegistrationDate).getTime() - new Date(b.firstRegistrationDate).getTime();
+        if (sortOption === "year-desc")
+            return new Date(b.firstRegistrationDate).getTime() - new Date(a.firstRegistrationDate).getTime();
+        return 0;
+    });
 
     const handleCarClick = (carId: string) => {
         router.push(`/cars/${carId}`);
@@ -112,25 +97,25 @@ const BrandPage = () => {
         setCurrentPage(newPage);
     };
 
-    const paginatedCars = carDetails.slice((currentPage - 1) * carsPerPage, currentPage * carsPerPage);
+    const paginatedCars = sortedCars.slice((currentPage - 1) * carsPerPage, currentPage * carsPerPage);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
     return (
-        <div className="flex">
+        <div className="flex gap-[10px]">
             <div className="w-[250px]">
-                <MenuBar onSearch={fetchCarDetails} />
+                <MenuBar /> {/* Pass the selected make to MenuBar */}
             </div>
             <div className="flex-grow">
-                <div className="mt-4 ml-2 flex justify-between items-center">
+                <div className="mt-2 flex justify-between items-center">
                     <div>
                         <select
                             value={sortOption}
                             onChange={(e) => setSortOption(e.target.value)}
                             className="mb-4 p-1 border border-gray-300"
                         >
-                            <option value="järjesta">Järjesta</option>
+                            <option value="">Järjesta</option>
                             <option value="price-asc">Hind kasvav</option>
                             <option value="price-desc">Hind kahanev</option>
                             <option value="year-asc">Uuemad eespool</option>
@@ -155,9 +140,9 @@ const BrandPage = () => {
                         </button>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 gap-4 w-full max-w-[1000px]">
+                <div className="grid grid-cols-1 gap-2 w-full max-w-[740px]">
                     {paginatedCars.length === 0 ? (
-                        <div className="text-center text-gray-500 text-lg">No cars available for this brand/make.</div>
+                        <div className="text-center text-gray-500 text-lg">No cars available.</div>
                     ) : (
                         paginatedCars.map((car) => (
                             <div
@@ -169,7 +154,7 @@ const BrandPage = () => {
                                     {carImages[car.id]?.length > 0 ? (
                                         <S3Image
                                             src={carImages[car.id][0]}
-                                            alt={`Car ${car.title} - Image 1`}
+                                            alt={`Car ${car.title}`}
                                             className="w-full h-24"
                                         />
                                     ) : (

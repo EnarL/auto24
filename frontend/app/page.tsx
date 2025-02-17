@@ -33,7 +33,7 @@ const Page: React.FC = () => {
     const columns = splitArrayIntoChunks(carBrands, Math.ceil(carBrands.length / 2));
 
     const handleBrandClick = (brand: string) => {
-        router.push(`/${brand}`);
+        router.push(`/cars?make=${brand}`);
     };
 
     return (
@@ -42,7 +42,7 @@ const Page: React.FC = () => {
                 <main className="">
                     <div className="grid grid-cols-2 gap-[10px] h-[633px]" style={{ gridTemplateColumns: '250px 740px' }}>
                         <div className="col-span-1 w-[250px]">
-                            <h1 className="text-[18px] mb-2 font-sans w-[250px] opacity-60">SÕIDUKIKUULUTUSED</h1>
+                            <h1 className="text-[18px] font-sans w-[250px] opacity-60">SÕIDUKIKUULUTUSED</h1>
                             <MenuBar/>
                         </div>
                         <div className="col-span-1 row-span-1">

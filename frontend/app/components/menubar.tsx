@@ -1,222 +1,239 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-const MenuBar: React.FC<{ onSearch: (params: any) => void }> = ({ onSearch }) => {
-    const { slug } = useParams();
-    const slugString = Array.isArray(slug) ? slug[0] : slug;
-    const decodedSlug = slugString ? decodeURIComponent(slugString) : '';
-    const [isOpen, setIsOpen] = useState(false);
-    const [mark, setMark] = useState('');
-    const [model, setModel] = useState('');
-    const [priceFrom, setPriceFrom] = useState('');
-    const [priceTo, setPriceTo] = useState('');
-    const [yearFrom, setYearFrom] = useState('');
-    const [yearTo, setYearTo] = useState('');
-    const [powerFrom, setPowerFrom] = useState('');
-    const [powerTo, setPowerTo] = useState('');
-    const [mileageFrom, setMileageFrom] = useState('');
-    const [mileageTo, setMileageTo] = useState('');
-    const [fuel, setFuel] = useState('');
-    const [transmission, setTransmission] = useState('');
-    const [driveType, setDriveType] = useState('');
-    const [adAge, setAdAge] = useState('');
-    const [sort, setSort] = useState('');
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+
+const MenuBar: React.FC = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const [filters, setFilters] = useState({
+        make: "",
+        model: "",
+        priceFrom: "",
+        priceTo: "",
+        yearFrom: "",
+        yearTo: "",
+        powerFrom: "",
+        powerTo: "",
+        mileageFrom: "",
+        mileageTo: "",
+        fuelType: "",
+        transmission: "",
+        driveType: "",
+    });
 
     useEffect(() => {
-        setMark(decodedSlug);
-    }, [decodedSlug]);
+        const newFilters: Record<string, string> = {};
+        searchParams.forEach((value, key) => {
+            if (key === "firstRegistrationDate") {
+                const [yearFrom, yearTo] = value.split("-");
+                newFilters["yearFrom"] = yearFrom;
+                newFilters["yearTo"] = yearTo;
+            }
+            else if (key==="price") {
+                const [priceFrom, priceTo] = value.split("-");
+                newFilters["priceFrom"] = priceFrom;
+                newFilters["priceTo"] = priceTo;
+            }
+            else if (key==="enginePowerKW") {
+                const [powerFrom, powerTo] = value.split("-");
+                newFilters["powerFrom"] = powerFrom;
+                newFilters["powerTo"] = powerTo;
+            }
+            else if(key==="odometerReadingKM") {
+                const [mileageFrom, mileageTo] = value.split("-");
+                newFilters["mileageFrom"] = mileageFrom;
+                newFilters["mileageTo"] = mileageTo;
+            }
+            else {
+                newFilters[key] = value;
+            }
+        });
+        setFilters((prev) => ({ ...prev, ...newFilters }));
+    }, [searchParams]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFilters((prev) => ({ ...prev, [name]: value }));
+    };
 
     const handleSearch = () => {
-        onSearch({
-            mark,
-            model,
-            priceFrom,
-            priceTo,
-            yearFrom,
-            yearTo,
-            powerFrom,
-            powerTo,
-            mileageFrom,
-            mileageTo,
-            fuel,
-            transmission,
-            driveType,
-            adAge,
-            sort,
-        });
+        const queryParams = new URLSearchParams(
+            Object.entries(filters)
+                .filter(([_, value]) => value.trim() !== "")
+                .reduce((acc, [key, value]) => {
+                    if (key === "yearFrom" || key === "yearTo") {
+                        acc["firstRegistrationDate"] = `${filters.yearFrom}-${filters.yearTo}`;
+                    } else if (key === "priceFrom" || key === "priceTo") {
+                        acc["price"] = `${filters.priceFrom}-${filters.priceTo}`;
+                    } else if (key === "powerFrom" || key === "powerTo") {
+                        acc["enginePowerKW"] = `${filters.powerFrom}-${filters.powerTo}`;
+                    } else if (key === "mileageFrom" || key === "mileageTo") {
+                        acc["odometerReadingKM"] = `${filters.mileageFrom}-${filters.mileageTo}`;
+                    } else {
+                        acc[key] = value;
+                    }
+                    return acc;
+                }, {} as Record<string, string>)
+        ).toString();
+
+        console.log("Query Params:", queryParams);
+
+        if (queryParams) {
+            router.push(`/cars?${queryParams}`);
+        } else {
+            console.log("No valid filters found.");
+        }
     };
 
     return (
-        <div className="relative inline-block text mt-4">
+        <div className="relative inline-block mt-2">
             <div className="flex items-center">
-                <button
-                    type="button"
-                    className="inline-flex justify-start w-[250px] shadow-sm px-2 py-1 bg-gray-500 font-medium text-white focus:outline-none"
-                >
-                    <FontAwesomeIcon icon={faSearch} className="ml-0 size-5 text-white pr-4" />
+                <p className="inline-flex justify-start w-[250px] shadow-sm px-2 py-1 bg-gray-500 font-medium text-white focus:outline-none">
+                    <FontAwesomeIcon icon={faSearch} className="ml-0 size-5 pt-[1px] text-white pr-4" />
                     Kõik liigid
-                </button>
+                </p>
             </div>
 
-            <form className="w-[250px] text-s text-black bg-[#f4f4f4] p-4">
-                <div className="mb-1.5 border-1 border-gray-500">
-                    <input type="number" placeholder="Keretüüp" className="block text-[12px] w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none" />
-                </div>
-                <div className="mb-1.5">
+            <form className="w-[250px] text-sm text-black bg-[#f4f4f4] p-4 shadow-lg">
+                <input
+                    type="text"
+                    name="make"
+                    placeholder="Mark"
+                    value={filters.make}
+                    onChange={handleInputChange}
+                    className="block w-full text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mb-1.5"
+                />
+
+                <input
+                    type="text"
+                    name="model"
+                    placeholder="Mudel"
+                    value={filters.model}
+                    onChange={handleInputChange}
+                    className="block w-full text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mb-1.5"
+                />
+
+                <label className="block text-[12px] text-gray-700">Aasta</label>
+                <div className="grid grid-cols-2 gap-2 mb-1.5">
                     <input
                         type="text"
-                        placeholder="Mark"
-                        value={mark}
-                        onChange={(e) => setMark(e.target.value)}
-                        className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
+                        name="yearFrom"
+                        placeholder="Alates"
+                        value={filters.yearFrom}
+                        onChange={handleInputChange}
+                        className="text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none"
+                    />
+                    <input
+                        type="text"
+                        name="yearTo"
+                        placeholder="Kuni"
+                        value={filters.yearTo}
+                        onChange={handleInputChange}
+                        className="text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none"
                     />
                 </div>
-                <div className="mb-1.5">
+
+                <label className="block text-[12px] text-gray-700">Hind</label>
+                <div className="grid grid-cols-2 gap-2 mb-1.5">
                     <input
                         type="text"
-                        placeholder="Mudel"
-                        value={model}
-                        onChange={(e) => setModel(e.target.value)}
-                        className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
+                        name="priceFrom"
+                        placeholder="Alates"
+                        value={filters.priceFrom}
+                        onChange={handleInputChange}
+                        className="text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none"
+                    />
+                    <input
+                        type="text"
+                        name="priceTo"
+                        placeholder="Kuni"
+                        value={filters.priceTo}
+                        onChange={handleInputChange}
+                        className="text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none"
                     />
                 </div>
-                <div className="mb-1.5">
-                    <input type="text" placeholder="Muu mudel või täpsustus" className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none" />
+
+                <label className="block text-[12px] text-gray-700">Võimsus (kW)</label>
+                <div className="grid grid-cols-2 gap-2 mb-1.5">
+                    <input
+                        type="text"
+                        name="powerFrom"
+                        placeholder="Alates"
+                        value={filters.powerFrom}
+                        onChange={handleInputChange}
+                        className="text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none"
+                    />
+                    <input
+                        type="text"
+                        name="powerTo"
+                        placeholder="Kuni"
+                        value={filters.powerTo}
+                        onChange={handleInputChange}
+                        className="text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none"
+                    />
                 </div>
-                <div className="mb-1.5">
-                    <label className="block text-gray-700 text-[12px]">Aasta</label>
-                    <div className="grid grid-cols-2 gap-2">
-                        <input
-                            type="text"
-                            placeholder="alates"
-                            value={yearFrom}
-                            onChange={(e) => setYearFrom(e.target.value)}
-                            className="text-[14px] block w-full border-gray-300 border-[1px] px-2 focus:border-blue-600 focus:outline-none"
-                        />
-                        <input
-                            type="text"
-                            placeholder="kuni"
-                            value={yearTo}
-                            onChange={(e) => setYearTo(e.target.value)}
-                            className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
-                        />
-                    </div>
+
+                <label className="block text-[12px] text-gray-700">Läbisõidumõõdiku näit (km)</label>
+                <div className="grid grid-cols-2 gap-2 mb-1.5">
+                    <input
+                        type="text"
+                        name="mileageFrom"
+                        placeholder="Alates"
+                        value={filters.mileageFrom}
+                        onChange={handleInputChange}
+                        className="text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none"
+                    />
+                    <input
+                        type="text"
+                        name="mileageTo"
+                        placeholder="Kuni"
+                        value={filters.mileageTo}
+                        onChange={handleInputChange}
+                        className="text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none"
+                    />
                 </div>
-                <div className="mb-1.5">
-                    <label className="block text-[12px] text-gray-700">Hind</label>
-                    <div className="grid grid-cols-2 gap-2">
-                        <input
-                            type="text"
-                            placeholder="alates"
-                            value={priceFrom}
-                            onChange={(e) => setPriceFrom(e.target.value)}
-                            className="text-[14px] block w-full border-gray-300 border-[1px] px-2 focus:border-blue-600 focus:outline-none"
-                        />
-                        <input
-                            type="text"
-                            placeholder="kuni"
-                            value={priceTo}
-                            onChange={(e) => setPriceTo(e.target.value)}
-                            className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
-                        />
-                    </div>
-                </div>
-                <div className="mb-1.5">
-                    <label className="block text-[12px] text-gray-700">Võimsus (kW)</label>
-                    <div className="grid grid-cols-2 gap-2">
-                        <input
-                            type="text"
-                            placeholder="alates"
-                            value={powerFrom}
-                            onChange={(e) => setPowerFrom(e.target.value)}
-                            className="mt-1 text-[14px] block w-full border-gray-300 border-[1px] px-2 focus:border-blue-600 focus:outline-none"
-                        />
-                        <input
-                            type="text"
-                            placeholder="kuni"
-                            value={powerTo}
-                            onChange={(e) => setPowerTo(e.target.value)}
-                            className="mt-1 text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
-                        />
-                    </div>
-                </div>
-                <div className="mb-1.5">
-                    <label className="block text-[12px] text-gray-700">Läbisõidumõõdiku näit (km)</label>
-                    <div className="grid grid-cols-2 gap-2">
-                        <input
-                            type="text"
-                            placeholder="alates"
-                            value={mileageFrom}
-                            onChange={(e) => setMileageFrom(e.target.value)}
-                            className="mt text-[14px] block w-full border-gray-300 border-[1px] px-2 focus:border-blue-600 focus:outline-none"
-                        />
-                        <input
-                            type="text"
-                            placeholder="kuni"
-                            value={mileageTo}
-                            onChange={(e) => setMileageTo(e.target.value)}
-                            className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
-                        />
-                    </div>
-                </div>
+
                 <div className="mb-1.5">
                     <input
                         type="text"
+                        name="fuelType"
                         placeholder="Kütus"
-                        value={fuel}
-                        onChange={(e) => setFuel(e.target.value)}
+                        value={filters.fuelType}
+                        onChange={handleInputChange}
                         className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
                     />
                 </div>
                 <div className="mb-1.5">
                     <input
                         type="text"
+                        name="transmission"
                         placeholder="Käigukast"
-                        value={transmission}
-                        onChange={(e) => setTransmission(e.target.value)}
+                        value={filters.transmission}
+                        onChange={handleInputChange}
                         className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
                     />
                 </div>
                 <div className="mb-1.5">
                     <input
                         type="text"
+                        name="driveType"
                         placeholder="Vedav sild"
-                        value={driveType}
-                        onChange={(e) => setDriveType(e.target.value)}
+                        value={filters.driveType}
+                        onChange={handleInputChange}
                         className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
                     />
                 </div>
-                <div className="mb-1.5">
-                    <input
-                        type="text"
-                        placeholder="Kuulutuse vanus"
-                        value={adAge}
-                        onChange={(e) => setAdAge(e.target.value)}
-                        className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
-                    />
-                </div>
-                <div className="mb-3">
-                    <input
-                        type="text"
-                        placeholder="Järjesta"
-                        value={sort}
-                        onChange={(e) => setSort(e.target.value)}
-                        className="text-[12px] block w-full border-gray-300 border-[1px] px-2 p-0.5 focus:border-blue-600 focus:outline-none"
-                    />
-                </div>
-                <div>
-                    <button
-                        type="button"
-                        onClick={handleSearch}
-                        className="bg-[#8eb51e] hover:brightness-110 text-white text-lg p-1 justify-center w-[150px] mx-auto block transition duration-300"
-                    >
-                        OTSI
-                    </button>
-                    <p className="text-[12px] mt-2 justify-center mx-auto block w-[75px] opacity-80">täpsem otsing</p>
-                </div>
+                <button
+                    type="button"
+                    onClick={handleSearch}
+                    className="bg-[#8eb51e] hover:brightness-110 text-white text-lg p-1 justify-center w-[150px] mx-auto block transition duration-300"
+                >
+                    OTSI
+                </button>
             </form>
         </div>
     );
