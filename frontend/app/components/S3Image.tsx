@@ -3,7 +3,7 @@ import Image from 'next/image';
 interface S3ImageProps {
     src: string;
     alt: string;
-    className?: string; // Add className as an optional prop
+    className?: string;
 }
 
 const S3Image: React.FC<S3ImageProps> = ({ src, alt, className }) => {

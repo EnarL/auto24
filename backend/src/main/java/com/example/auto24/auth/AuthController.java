@@ -35,7 +35,7 @@ public class AuthController {
     }
 
     // ALL
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody UserLoginRequest request, HttpServletResponse response) {
         authService.login(request, response);
         return ResponseEntity.ok("User logged in successfully");
@@ -74,7 +74,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
+    public ResponseEntity<?> refreshToken(@RequestParam String refreshToken, HttpServletResponse response) {
         tokenService.refreshToken(refreshToken, response);
         return ResponseEntity.ok("Access token refreshed.");
     }

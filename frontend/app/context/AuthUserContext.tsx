@@ -11,6 +11,8 @@ interface AuthUserContextType {
     newsletter: boolean;
     phoneNumber: string;
     loading: boolean;
+    accessToken: string;
+    refreshToken: string;
     setIsLoggedIn: (isLoggedIn: boolean) => void;
     setUsername: (username: string) => void;
     setFirstname: (firstname: string) => void;
@@ -18,6 +20,8 @@ interface AuthUserContextType {
     setNewsletter: (newsletter: boolean) => void;
     setPhoneNumber: (phoneNumber: string) => void;
     setEmail: (email: string) => void;
+    setAccessToken: (accessToken: string) => void;
+    setRefreshToken: (refreshToken: string) => void;
     updateUserData: () => void;
 }
 const AuthUserContext = createContext<AuthUserContextType | undefined>(undefined);
@@ -31,6 +35,8 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [newsletter, setNewsletter] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [loading, setLoading] = useState(true);
+    const [accessToken, setAccessToken] = useState('');
+    const [refreshToken, setRefreshToken] = useState('');
     const router = useRouter();
 
     const fetchUserData = async () => {
@@ -73,6 +79,8 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 newsletter,
                 phoneNumber,
                 loading,
+                accessToken,
+                refreshToken,
                 setIsLoggedIn,
                 setUsername,
                 setFirstname,
@@ -80,6 +88,8 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 setEmail,
                 setNewsletter,
                 setPhoneNumber,
+                setAccessToken,
+                setRefreshToken,
                 updateUserData: fetchUserData,
             }}
         >

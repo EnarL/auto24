@@ -18,7 +18,7 @@ public class JWTUtil {
     // Generate an access token
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username, 15 * 60 * 1000); // 15 minutes
+        return createToken(claims, username, 10 * 60 * 1000); // 10 minutes
     }
 
     // Generate a refresh token

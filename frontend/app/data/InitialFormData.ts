@@ -1,4 +1,3 @@
-// frontend/app/data/initialFormData.ts
 export const initialFormData = {
     vehicleType: '',
     bodyType: '',

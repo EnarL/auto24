@@ -46,7 +46,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             Users user = userRepository.findByUsername(username);
             if (user != null) {
                 UserPrincipal userPrincipal = new UserPrincipal(user);
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userPrincipal, null, new ArrayList<>()));
+                SecurityContextHolder.getContext().setAuthentication(
+                        new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities())
+                );
+
             }
         }
         filterChain.doFilter(request, response);

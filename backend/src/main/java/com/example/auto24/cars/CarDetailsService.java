@@ -131,17 +131,6 @@ public class CarDetailsService {
                 : "";
     }
 
-    public List<CarPreviewDTO> getCarPreviewsForUser() {
-        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
-        Users user = userRepository.findByUsername(userPrincipal.getUsername());
-        String userId = user.getId();
-        List<Car> cars = carRepository.findByOwnerId(userId);
-
-        return cars.stream()
-                .map(this::createCarPreviewDTO)
-                .collect(Collectors.toList());
-    }
-
 
     public List<CarDTO> getCarDetailsForUser() {
         UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
