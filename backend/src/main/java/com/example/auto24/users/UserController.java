@@ -11,28 +11,27 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    //methods for logged in user.
 
     @DeleteMapping("")
     public ResponseEntity<?> deleteUser() {
         userService.deleteUser();
         return ResponseEntity.ok("User deleted successfully");
     }
+
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserDataRequest userDataRequest) {
         userService.updateUser(userDataRequest);
         return ResponseEntity.ok("User updated successfully");
     }
+
     @GetMapping("/me")
     public ResponseEntity<UsersDTO> getCurrentUser() {
-        UsersDTO userProfile = userService.getUserProfile();
-        return ResponseEntity.ok(userProfile);
+        return ResponseEntity.ok(userService.getUserProfile());
     }
+
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
         userService.changePassword(request);
         return ResponseEntity.ok("Password changed successfully");
     }
-
-
 }

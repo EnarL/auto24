@@ -1,16 +1,14 @@
 package com.example.auto24.users;
-
 import com.example.auto24.auth.emailverificationToken.EmailVerificationToken;
 import com.example.auto24.auth.emailverificationToken.EmailVerificationTokenRepository;
 import com.example.auto24.cars.CarService;
 import com.example.auto24.email.EmailService;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.time.Instant;
 import java.util.UUID;
 
@@ -36,9 +34,11 @@ public class UserService {
     }
 
     public void changePassword( ChangePasswordRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByUsername(username);
-
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        Users user = userRepository.findByUsername(userPrincipal.getUsername());
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
         if (!encoder.matches(request.currentPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current password is incorrect");
         }
@@ -50,14 +50,12 @@ public class UserService {
         user.setPassword(encoder.encode(request.newPassword()));
         userRepository.save(user);
     }
-
+    @Transactional
     public void register(UserRegistrationRequest request) {
         if (userRepository.existsByUsernameOrEmail(request.username(), request.email())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with provided credentials already exists");
         }
-
-        Users user = Users.builder()
-                .username(request.username())
+        Users user = Users.builder().username(request.username())
                 .firstname(request.firstname())
                 .lastname(request.lastname())
                 .email(request.email())
@@ -86,30 +84,29 @@ public class UserService {
         }
     }
     public UsersDTO getUserProfile() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByUsername(username);
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        Users user = userRepository.findByUsername(userPrincipal.getUsername());
         if (user == null) {
-            throw new IllegalArgumentException("User not found for username: " + username);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
         return usersDTOMapper.apply(user);
     }
 
     public void updateUser(UpdateUserDataRequest updateUserDataRequest) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Users user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for username: " + username);
-        }
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        Users user = userRepository.findByUsername(userPrincipal.getUsername());
         userDataUpdateMapper.updateUserDetailsFromDto(updateUserDataRequest, user);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
         userRepository.save(user);
     }
 
     public void deleteUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users user = userRepository.findByUsername(username);
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        Users user = userRepository.findByUsername(userPrincipal.getUsername());
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for username: " + username);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
         userRepository.delete(user);
         carService.deleteCarsByUserId(user.getId());

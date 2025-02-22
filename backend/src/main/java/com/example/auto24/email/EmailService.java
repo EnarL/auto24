@@ -3,31 +3,40 @@ package com.example.auto24.email;
 import com.example.auto24.users.Users;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@Slf4j
 public class EmailService implements EmailSender {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private final JavaMailSender mailSender;
+    private final String fromEmail;
+    private final String appBaseUrl;
+
+    public EmailService(JavaMailSender mailSender, @Value("enar.leini00@gmail.com") String fromEmail, @Value("${app.base.url}")String appBaseUrl) {
+        this.mailSender = mailSender;
+        this.fromEmail = fromEmail;
+        this.appBaseUrl = appBaseUrl;
+    }
 
     @Override
     @Async
-    public void send(String to, String email) {
+    public void send(String to, String email, String subject) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
-            helper.setFrom("hello@hello.com");
+            helper.setSubject(subject);
+            helper.setFrom(fromEmail);
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("Failed to send email", e);
@@ -35,54 +44,55 @@ public class EmailService implements EmailSender {
         }
     }
 
+    @Async
     public void sendConfirmationEmail(Users user, String token) throws MessagingException {
-        String confirmationUrl = "http://localhost:8080/auth/confirm?token=" + token;
-        String emailContent = "<html><body>"
-                + "<h1>Welcome to Auto24, " + user.getFirstname() + "!</h1>"
-                + "<p>Thank you for registering. Please confirm your email address by clicking the link below:</p>"
-                + "<a href=\"" + confirmationUrl + "\">Confirm your email</a>"
-                + "<p>Best regards,<br>Auto24 Team</p>"
-                + "</body></html>";
-        send(user.getEmail(), emailContent);
+        String subject = "Confirm your email";
+        String confirmationUrl = appBaseUrl + "/auth/confirm?token=" + token;
+        String emailContent = buildEmailContent(
+                "Welcome to Auto24, " + user.getFirstname() + "!",
+                "Thank you for registering. Please confirm your email address by clicking the link below:",
+                confirmationUrl,
+                "Confirm your email"
+        );
+        send(user.getEmail(), emailContent, subject);
     }
+
     @Async
-    public void sendPasswordResetEmail(String to, String token) throws MessagingException {
+    public void sendPasswordResetEmail(String to, String token) {
         String subject = "Password Reset Request";
-        String resetUrl = "http://localhost:3000/reset_password?token=" + token;
-        String message = "<html><body>"
-                + "<h1>Password Reset Request</h1>"
-                + "<p>Click the link below to reset your password:</p>"
-                + "<a href=\"" + resetUrl + "\">Reset your password</a>"
-                + "<p>If you did not request a password reset, please ignore this email.</p>"
-                + "<p>Best regards,<br>Auto24 Team</p>"
-                + "</body></html>";
+        String resetUrl = appBaseUrl + "/reset_password?token=" + token; // Use configurable base URL
+        String message = buildEmailContent(
+                "Password Reset Request",
+                "Click the link below to reset your password:",
+                resetUrl,
+                "Reset your password"
+        );
 
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        helper.setText(message, true);
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setFrom("noreply@example.com");
-
-        mailSender.send(mimeMessage);
+        send(to, message, subject);
     }
+
     @Async
-    public void sendNewsLetterEmail(Users user) throws MessagingException {
+    public void sendNewsLetterEmail(Users user) {
         String subject = "Auto24 Newsletter";
-        String message = "<html><body>"
-                + "<h1>Auto24 Newsletter</h1>"
-                + "<p>Dear " + user.getFirstname() + ",</p>"
-                + "<p>Check out our latest offers and news!</p>"
-                + "<p>Best regards,<br>Auto24 Team</p>"
-                + "</body></html>";
+        String message = buildEmailContent(
+                "Auto24 Newsletter",
+                "Dear " + user.getFirstname() + ",<br>Check out our latest offers and news!",
+                null,
+                null
+        );
 
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        helper.setText(message, true);
-        helper.setTo(user.getEmail());
-        helper.setSubject(subject);
-        helper.setFrom("noreply@example.com");
-        mailSender.send(mimeMessage);
+        send(user.getEmail(), message, subject);
+    }
 
+    private String buildEmailContent(String title, String body, String link, String linkText) {
+        StringBuilder emailBuilder = new StringBuilder("<html><body>");
+        emailBuilder.append("<h1>").append(title).append("</h1>")
+                .append("<p>").append(body).append("</p>");
+        if (link != null && linkText != null) {
+            emailBuilder.append("<a href=\"").append(link).append("\">").append(linkText).append("</a>");
+        }
+        emailBuilder.append("<p>Best regards,<br>Auto24 Team</p>")
+                .append("</body></html>");
+        return emailBuilder.toString();
     }
 }

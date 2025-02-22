@@ -44,10 +44,19 @@ public class Users {
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Phone number is invalid")
     private String phoneNumber;
 
+    @Builder.Default
     private boolean newsletter = false;
+
+    @Builder.Default
     private List<String> carIds = new ArrayList<>();
+
+    @Builder.Default
     private boolean active = false;
+
+    @Builder.Default
     private boolean agreedToTerms = false;
+
+    @Builder.Default
     private Role role = Role.USER;
 
     @CreatedDate

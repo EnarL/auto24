@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +17,20 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "cars")
 public class Car {
+
     @Id
     private String id;
+
+    @Builder.Default
     private List<String> imageKeys = new ArrayList<>();
+
     private String ownerId;
+
     @CreatedDate
     private LocalDateTime createdAt;
-    private LocalDateTime expirationDate;
-    private boolean isActive;
 
+    private LocalDateTime expirationDate;
+
+    @Builder.Default
+    private boolean isActive = false;
 }

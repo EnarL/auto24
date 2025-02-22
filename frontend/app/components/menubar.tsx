@@ -5,7 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-const MenuBar: React.FC = () => {
+interface MenuBarProps {
+    showCarCount: boolean;
+}
+
+const MenuBar: React.FC<MenuBarProps> = ({ showCarCount }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -24,6 +28,7 @@ const MenuBar: React.FC = () => {
         transmission: "",
         driveType: "",
     });
+    const [carCount, setCarCount] = useState<number>(0);
 
     useEffect(() => {
         const newFilters: Record<string, string> = {};
@@ -32,32 +37,45 @@ const MenuBar: React.FC = () => {
                 const [yearFrom, yearTo] = value.split("-");
                 newFilters["yearFrom"] = yearFrom;
                 newFilters["yearTo"] = yearTo;
-            }
-            else if (key==="price") {
+            } else if (key === "price") {
                 const [priceFrom, priceTo] = value.split("-");
                 newFilters["priceFrom"] = priceFrom;
                 newFilters["priceTo"] = priceTo;
-            }
-            else if (key==="enginePowerKW") {
+            } else if (key === "enginePowerKW") {
                 const [powerFrom, powerTo] = value.split("-");
                 newFilters["powerFrom"] = powerFrom;
                 newFilters["powerTo"] = powerTo;
-            }
-            else if(key==="odometerReadingKM") {
+            } else if (key === "odometerReadingKM") {
                 const [mileageFrom, mileageTo] = value.split("-");
                 newFilters["mileageFrom"] = mileageFrom;
                 newFilters["mileageTo"] = mileageTo;
-            }
-            else {
+            } else {
                 newFilters[key] = value;
             }
         });
         setFilters((prev) => ({ ...prev, ...newFilters }));
+
+        // Fetch car count from the backend
+        fetchCarCount();
     }, [searchParams]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFilters((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const fetchCarCount = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/cars/count');
+            if (response.ok) {
+                const data = await response.json();
+                setCarCount(data);
+            } else {
+                console.error("Failed to fetch car count");
+            }
+        } catch (error) {
+            console.error("Error fetching car count:", error);
+        }
     };
 
     const handleSearch = () => {
@@ -230,9 +248,9 @@ const MenuBar: React.FC = () => {
                 <button
                     type="button"
                     onClick={handleSearch}
-                    className="bg-[#8eb51e] hover:brightness-110 text-white text-lg p-1 justify-center w-[150px] mx-auto block transition duration-300"
+                    className="bg-[#8eb51e] mt-4 hover:brightness-110 text-white text-lg p-1 justify-center w-[150px] mx-auto block transition duration-300"
                 >
-                    OTSI
+                    OTSI {showCarCount && carCount > 0 ? `(${carCount})` : ""}
                 </button>
             </form>
         </div>

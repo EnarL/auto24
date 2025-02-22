@@ -3,7 +3,6 @@ package com.example.auto24.auth.emailverificationToken;
 import com.example.auto24.email.EmailService;
 import com.example.auto24.users.UserRepository;
 import com.example.auto24.users.Users;
-import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,10 +36,6 @@ public class EmailVerificationService {
         sendNewsletter(user);
     }
     private void sendNewsletter(Users user) {
-        try {
-            emailService.sendNewsLetterEmail(user);
-        } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send newsletter email", e);
-        }
+        emailService.sendNewsLetterEmail(user);
     }
 }

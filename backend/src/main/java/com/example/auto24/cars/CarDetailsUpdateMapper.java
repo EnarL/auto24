@@ -9,6 +9,5 @@ import org.mapstruct.Mapper;
 public interface CarDetailsUpdateMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateCarDetailsFromDto(CarDetails source, @MappingTarget CarDetails target);
+    void updateCarDetailsFromDto(CarDetailsDTO source, @MappingTarget CarDetails target);
 }
-

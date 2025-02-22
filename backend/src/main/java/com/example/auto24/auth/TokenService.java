@@ -3,8 +3,10 @@ package com.example.auto24.auth;
 import com.example.auto24.users.Users;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class TokenService {
@@ -38,5 +40,14 @@ public class TokenService {
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
         response.addHeader("Set-Cookie", String.format("%s=%s; Max-Age=%d; Path=/; Secure; HttpOnly=%b; SameSite=%s", name, value, maxAge, httpOnly, sameSite));
+    }
+    public void refreshToken(String refreshToken, HttpServletResponse response) {
+        if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid refresh token");
+        }
+        String username = jwtUtil.extractUserName(refreshToken);
+        String newAccessToken = jwtUtil.generateToken(username);
+        addCookie(response, "accessToken", newAccessToken, 900, true, "Strict");
+
     }
 }

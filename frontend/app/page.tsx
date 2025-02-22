@@ -43,10 +43,10 @@ const Page: React.FC = () => {
                     <div className="grid grid-cols-2 gap-[10px] h-[633px]" style={{ gridTemplateColumns: '250px 740px' }}>
                         <div className="col-span-1 w-[250px]">
                             <h1 className="text-[18px] font-sans w-[250px] opacity-60">SÕIDUKIKUULUTUSED</h1>
-                            <MenuBar/>
+                            <MenuBar showCarCount={true} />
                         </div>
                         <div className="col-span-1 row-span-1">
-                        <div className="grid grid-cols-2 grid-columns w-[740px] row-span-1 h-[250px]">
+                            <div className="grid grid-cols-2 grid-columns w-[740px] row-span-1 h-[250px]">
                                 <SearchSection/>
                                 <PopularBrands columns={columns} otherBrands={otherBrands} onBrandClick={handleBrandClick}/>
                             </div>

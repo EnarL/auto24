@@ -1,8 +1,15 @@
 package com.example.auto24.cars;
 
+import com.example.auto24.users.SecurityUtils;
+import com.example.auto24.users.UserPrincipal;
+import com.example.auto24.users.UserRepository;
+import com.example.auto24.users.Users;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,12 +20,16 @@ public class CarDetailsService {
     private final CarDetailsDTOMapper carDetailsDTOMapper;
     private final CarRepository carRepository;
     private final MongoTemplate mongoTemplate;
+    private final CarDetailsUpdateMapper carDetailsUpdateMapper;
+    private final UserRepository userRepository;
 
-    public CarDetailsService(CarDetailsRepository carDetailsRepository, CarDetailsDTOMapper carDetailsDTOMapper, CarRepository carRepository, MongoTemplate mongoTemplate) {
+    public CarDetailsService(CarDetailsRepository carDetailsRepository, CarDetailsDTOMapper carDetailsDTOMapper, CarRepository carRepository, MongoTemplate mongoTemplate, CarDetailsUpdateMapper carDetailsUpdateMapper, UserRepository userRepository) {
         this.carDetailsRepository = carDetailsRepository;
         this.carDetailsDTOMapper = carDetailsDTOMapper;
         this.carRepository = carRepository;
         this.mongoTemplate = mongoTemplate;
+        this.carDetailsUpdateMapper = carDetailsUpdateMapper;
+        this.userRepository = userRepository;
     }
 
 
@@ -60,9 +71,9 @@ public class CarDetailsService {
         return carDetailsRepository.findByCarId(id)
                 .map(carDetailsDTOMapper::apply);
     }
-
     public List<CarPreviewDTO> getAllCarsPreview() {
         return carRepository.findAll().stream()
+                .filter(Car::isActive)
                 .map(this::createCarPreviewDTO)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -107,8 +118,11 @@ public class CarDetailsService {
     }
 
     private String createCarTitle(CarDetailsDTO carDetailsDTO) {
-        String modelTrim = carDetailsDTO.modelTrim() != null ? " " + carDetailsDTO.modelTrim() : "";
-        return carDetailsDTO.make() + " " + carDetailsDTO.model() + modelTrim;
+        String make = Optional.ofNullable(carDetailsDTO.make()).orElse("");
+        String model = Optional.ofNullable(carDetailsDTO.model()).orElse("");
+        String modelTrim = Optional.ofNullable(carDetailsDTO.modelTrim()).map(trim -> " " + trim).orElse("");
+
+        return make + " " + model + modelTrim;
     }
 
     private String extractYearFromFirstRegistrationDate(CarDetailsDTO carDetailsDTO) {
@@ -117,8 +131,11 @@ public class CarDetailsService {
                 : "";
     }
 
-    public List<CarPreviewDTO> getCarPreviewsForUser(String ownerId) {
-        List<Car> cars = carRepository.findByOwnerId(ownerId);
+    public List<CarPreviewDTO> getCarPreviewsForUser() {
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        Users user = userRepository.findByUsername(userPrincipal.getUsername());
+        String userId = user.getId();
+        List<Car> cars = carRepository.findByOwnerId(userId);
 
         return cars.stream()
                 .map(this::createCarPreviewDTO)
@@ -126,11 +143,25 @@ public class CarDetailsService {
     }
 
 
-    public List<CarDTO> getCarDetailsForUser(String ownerId) {
-        List<Car> cars = carRepository.findByOwnerId(ownerId);
+    public List<CarDTO> getCarDetailsForUser() {
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        Users user = userRepository.findByUsername(userPrincipal.getUsername());
+        String userId = user.getId();
+        List<Car> cars = carRepository.findByOwnerId(userId);
         return cars.stream().
                 map(this::createCarDTO).
                 collect(Collectors.toList());
 
+    }
+
+    public void deleteCarDetailsByCarId(String carId) {
+        carDetailsRepository.findByCarId(carId).ifPresent(carDetailsRepository::delete);
+    }
+
+    public void updateCarDetails(String carId, CarDetailsDTO carDetailsDTO) {
+        CarDetails carDetails = carDetailsRepository.findByCarId(carId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car details not found"));
+        carDetailsUpdateMapper.updateCarDetailsFromDto(carDetailsDTO, carDetails);
+        carDetailsRepository.save(carDetails);
     }
 }

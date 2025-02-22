@@ -1,9 +1,9 @@
 import React from 'react';
-import { tiresFeatures } from '@/app/data/labels';
+import CheckboxList from '@/app/components/CheckboxList';
 
 interface TiresProps {
     formData: any;
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 
 const Tires: React.FC<TiresProps> = ({ formData, handleChange }) => {
@@ -11,21 +11,7 @@ const Tires: React.FC<TiresProps> = ({ formData, handleChange }) => {
         <div>
             <h2 className="text-[16px] mb-2 mt-2">REHVID JA VELJED</h2>
             <div className="grid grid-cols-2 text-[12px]">
-                {tiresFeatures.map((item) => (
-                    <label
-                        key={item.name}
-                        className="flex items-center bg-gray-50 p-2 border-b border-gray-200"
-                    >
-                        <input
-                            type="checkbox"
-                            name={item.name}
-                            checked={formData[item.name]}
-                            onChange={handleChange}
-                            className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2"
-                        />
-                        {item.label}
-                    </label>
-                ))}
+                <CheckboxList info={formData.tiresAndWheels} parent="tiresAndWheels" handleChange={handleChange} />
             </div>
         </div>
     );

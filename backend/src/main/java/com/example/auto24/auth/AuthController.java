@@ -3,11 +3,9 @@ package com.example.auto24.auth;
 import com.example.auto24.auth.emailverificationToken.EmailVerificationService;
 import com.example.auto24.auth.prtoken.PasswordResetService;
 import com.example.auto24.users.*;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +17,14 @@ public class AuthController {
     private final PasswordResetService passwordResetService;
     private final EmailVerificationService emailVerificationService;
     private final UserService userService;
-    private final JWTUtil jwtUtil;
     private final TokenService tokenService;
-    private final UserRepository userRepository;
 
-    public AuthController(AuthService authService, PasswordResetService passwordResetService, EmailVerificationService emailVerificationService, UserService userService, JWTUtil jwtUtil, TokenService tokenService, UserRepository userRepository) {
+    public AuthController(AuthService authService, PasswordResetService passwordResetService, EmailVerificationService emailVerificationService, UserService userService, TokenService tokenService) {
         this.authService = authService;
         this.passwordResetService = passwordResetService;
         this.emailVerificationService = emailVerificationService;
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
         this.tokenService = tokenService;
-        this.userRepository = userRepository;
     }
 
     // ALL
@@ -81,35 +75,13 @@ public class AuthController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
-        if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Refresh token is missing or invalid.");
-        }
-        String username = jwtUtil.extractUserName(refreshToken);
-        String newAccessToken = jwtUtil.generateToken(username);
-        tokenService.addCookie(response, "accessToken", newAccessToken, 900, true, "Strict");
-
+        tokenService.refreshToken(refreshToken, response);
         return ResponseEntity.ok("Access token refreshed.");
     }
     @GetMapping("/check-session")
-    public String checkSession(HttpServletRequest request) {
-        String accessToken = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("accessToken".equals(cookie.getName())) {
-                    accessToken = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        if (accessToken != null && jwtUtil.validateToken(accessToken)) {
-            String username = jwtUtil.extractUserName(accessToken);
-            Users user = userRepository.findByUsername(username);
-            if (user != null) {
-                return "User is logged in with username: " + username;
-            }
-        }
-        return "User is not logged in";
+    public ResponseEntity<?> checkSession(HttpServletRequest request) {
+        authService.checkSession(request);
+      return ResponseEntity.ok("Session is valid");
     }
 
 }

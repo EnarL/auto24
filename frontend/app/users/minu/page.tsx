@@ -3,9 +3,6 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Tabs from "../../components/Tabs";
 import { useAuthUser } from "@/app/context/AuthUserContext";
-import Link from "next/link";
-
-// Define types for the car preview data
 interface CarPreview {
     id: string;
     title: string;
@@ -44,16 +41,16 @@ const MinuPage: React.FC = () => {
         fetchUserCars();
     }, [isLoggedIn, username]);
 
-    const handleDeleteCar = async (carId: string) => {
+    const handleDeleteCar = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this car sale?")) {
             try {
-                const response = await fetch(`http://localhost:8080/car-details/delete/${carId}`, {
+                const response = await fetch(`http://localhost:8080/cars/${id}`, {
                     method: "DELETE",
                     credentials: "include",
                 });
 
                 if (response.ok) {
-                    setUserCars(userCars.filter((car) => car.id !== carId));
+                    setUserCars(userCars.filter((car) => car.id !== id));
                     alert("Car sale deleted successfully");
                 } else {
                     alert("Failed to delete the car sale");
@@ -81,7 +78,6 @@ const MinuPage: React.FC = () => {
                         <div className="grid grid-cols-1 gap-4 mt-4 mx-5">
                             {userCars.map((car) => (
                                 <div key={car.id} className="border rounded-md shadow-md p-4 bg-white">
-                                    {/* Status */}
                                     <div className="flex justify-between items-center">
                                         <h3 className="font-bold text-lg">{car.title}</h3>
                                         <span
@@ -89,13 +85,9 @@ const MinuPage: React.FC = () => {
                       {car.isActive ? "Aktiivne" : "Mitteaktiivne"}
                     </span>
                                     </div>
-
-                                    {/* Expiration Date */}
                                     <p className="text-gray-600 mt-1">
                                         Kehtiv kuni: {new Date(car.expirationDate).toLocaleDateString("et-EE")}
                                     </p>
-
-                                    {/* Buttons */}
                                     <div className="flex space-x-4 mt-3">
                                         <button onClick={() => handleEditCar(car.id)}
                                                 className="text-blue-500 hover:text-blue-700">

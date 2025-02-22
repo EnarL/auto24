@@ -2,9 +2,10 @@ package com.example.auto24.cars;
 
 import com.example.auto24.cars.extra_info.CarExtraInfoDTO;
 import com.example.auto24.cars.extra_info.CarExtraInfoService;
-import com.example.auto24.users.UserPrincipal;
+import com.example.auto24.users.SecurityUtils;
 import com.example.auto24.users.UserRepository;
 import com.example.auto24.users.Users;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,28 +29,35 @@ public class CarService {
         this.carExtraInfoService = carExtraInfoService;
     }
 
-    public void deleteCar(String id) {
-        Car car = carRepository.findById(id).orElse(null);
-        if (car != null) {
-            Users owner = userRepository.findById(car.getOwnerId()).orElse(null);
-            if (owner != null) {
-                owner.getCarIds().remove(car.getId());
-                userRepository.save(owner);
-            }
-            carRepository.deleteById(id);
-        }
-    }
+
     public void deleteCarsByUserId(String userId) {
         List<Car> cars = carRepository.findByOwnerId(userId);
         for (Car car : cars) {
             carRepository.deleteById(car.getId());
         }
     }
+    @Transactional
+    public void deleteCarListing(String carId) {
+        String userId = SecurityUtils.getAuthenticatedUserId();
+        carRepository.findByOwnerId(userId)
+                .stream()
+                .filter(c -> c.getId().equals(carId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found or you are not authorized to delete this car listing"));
 
-    public void createCarListing(UserPrincipal userDetails, CarListingRequest carListingRequest) {
-        String userId = userDetails.getUserId();
+        carDetailsService.deleteCarDetailsByCarId(carId);
+        carExtraInfoService.deleteCarExtraInfoByCarId(carId);
+        carRepository.deleteById(carId);
+
+        userRepository.findById(userId).ifPresent(owner -> {
+            owner.getCarIds().remove(carId);
+            userRepository.save(owner);
+        });
+    }
+    @Transactional
+    public void createCarListing(CarListingRequest carListingRequest) {
+        String userId = SecurityUtils.getAuthenticatedUserId();
         Car savedCar = createAndSaveCar(userId);
-
         carDetailsService.createAndSaveCarDetails(savedCar.getId(), carListingRequest.carDetailsDTO());
 
         carExtraInfoService.createAndSaveCarExtraInfo(savedCar.getId(), carListingRequest.carExtraInfoDTO());
@@ -91,5 +99,18 @@ public class CarService {
         CarDetailsDTO carDetailsDTO = carDetailsOpt.get();
         CarExtraInfoDTO carExtraInfoDTO = carExtraInfoOpt.get();
         return Optional.of(new CarListingResponse(carDetailsDTO, carExtraInfoDTO));
+    }
+
+    @Transactional
+    public void updateCarListing(String carId, CarListingRequest carListingRequest) {
+        carRepository.findById(carId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
+
+        carDetailsService.updateCarDetails(carId, carListingRequest.carDetailsDTO());
+        carExtraInfoService.updateCarExtraInfo(carId, carListingRequest.carExtraInfoDTO());
+    }
+
+    public Long countCars() {
+        return carRepository.count();
     }
 }

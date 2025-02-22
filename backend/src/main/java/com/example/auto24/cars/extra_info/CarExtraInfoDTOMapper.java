@@ -20,4 +20,7 @@ public class CarExtraInfoDTOMapper implements Function<CarExtraInfo, CarExtraInf
                 carExtraInfo.getAdditional()
         );
     }
+
+
+
 }

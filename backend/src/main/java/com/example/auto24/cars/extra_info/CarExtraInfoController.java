@@ -13,22 +13,22 @@ public class CarExtraInfoController {
     @Autowired
     private CarExtraInfoRepository carExtraInfoRepository;
 
-    @GetMapping
-    public List<CarExtraInfo> getAllCarExtraInfo() {
-        return carExtraInfoRepository.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<CarExtraInfo> getCarExtraInfoById(@PathVariable String id) {
-        Optional<CarExtraInfo> carExtraInfo = carExtraInfoRepository.findById(id);
-        return carExtraInfo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/car/{carId}")
-    public ResponseEntity<CarExtraInfo> getCarExtraInfoByCarId(@PathVariable String carId) {
-        Optional<CarExtraInfo> carExtraInfo = carExtraInfoRepository.findByCarId(carId);
-        return carExtraInfo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+//    @GetMapping
+//    public List<CarExtraInfo> getAllCarExtraInfo() {
+//        return carExtraInfoRepository.findAll();
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<CarExtraInfo> getCarExtraInfoById(@PathVariable String id) {
+//        Optional<CarExtraInfo> carExtraInfo = carExtraInfoRepository.findById(id);
+//        return carExtraInfo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+//    }
+//
+//    @GetMapping("/car/{carId}")
+//    public ResponseEntity<CarExtraInfo> getCarExtraInfoByCarId(@PathVariable String carId) {
+//        Optional<CarExtraInfo> carExtraInfo = carExtraInfoRepository.findByCarId(carId);
+//        return carExtraInfo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+//    }
 
     @PostMapping
     public CarExtraInfo createCarExtraInfo(@RequestBody CarExtraInfo carExtraInfo) {
