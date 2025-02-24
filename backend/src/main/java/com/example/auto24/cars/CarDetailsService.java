@@ -47,11 +47,11 @@ public class CarDetailsService {
         String userId = SecurityUtils.getAuthenticatedUserId();
         List<Car> cars = carRepository.findByOwnerId(userId);
         return cars.stream()
+                .filter(Car::isActive)
                 .map(this::createCarPreviewDTO)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
-
     public CarPreviewDTO createCarPreviewDTOFromDetails(CarDetails carDetails) {
         Optional<Car> carOptional = carRepository.findById(carDetails.getCarId());
         if (carOptional.isEmpty() || !carOptional.get().isActive()) {
@@ -127,13 +127,23 @@ public class CarDetailsService {
         String model = Optional.ofNullable(carDetailsDTO.model()).orElse("");
         String modelTrim = Optional.ofNullable(carDetailsDTO.modelTrim()).map(trim -> " " + trim).orElse("");
 
-        return make + " " + model + modelTrim;
+
+        if (!make.isEmpty()) {
+            return make + modelTrim;
+        } else if (!model.isEmpty()) {
+            return model + modelTrim;
+        } else if (!modelTrim.isEmpty()) {
+            return modelTrim.trim();
+        } else {
+            return "";
+        }
     }
 
     public String extractYearFromFirstRegistrationDate(CarDetailsDTO carDetailsDTO) {
-        return carDetailsDTO.firstRegistrationDate() != null
-                ? carDetailsDTO.firstRegistrationDate().substring(0, 4)
-                : "";
+        if (carDetailsDTO.firstRegistrationDate() != null && carDetailsDTO.firstRegistrationDate().length() >= 4) {
+            return carDetailsDTO.firstRegistrationDate().substring(0, 4);
+        }
+        return "";
     }
 
 
@@ -156,4 +166,5 @@ public class CarDetailsService {
         carDetailsUpdateMapper.updateCarDetailsFromDto(carDetailsDTO, carDetails);
         carDetailsRepository.save(carDetails);
     }
+
 }

@@ -11,6 +11,7 @@ import Banner from "@/app/components/common/banner";
 import FooterSection from "@/app/components/common/footersection";
 import { AuthUserProvider } from "@/app/context/AuthUserContext";
 import ClientOnlyLayout from "@/app/ClientOnlyLayout";
+import AuthWrapper from "@/app/components/auth/AuthWrapper";
 
 export const metadata: Metadata = {
     title: "Avaleht - auto24.ee",
@@ -26,25 +27,27 @@ export default function RootLayout({
         <html lang="en">
         <body className="flex flex-col min-h-screen">
         <AuthUserProvider>
-            <ClientOnlyLayout>
-                <Header className="w-full hidden md:block" />
-                <div className="mx-auto flex flex-col w-full max-w-custom flex-grow">
-                    <div>
-                        <Banner className="hidden lg:block" />
-                        <div className="flex items-center w-full">
-                            <Logo className="flex-grow logo-details overall-margin-left mr-4" />
-                            <Sublogos />
-                        </div>
-                        <TopBar />
-                        <Kuuluta />
-                        <div className="w-full md:w-[1000px] overall-margin-left">
-                            {children}
+            <AuthWrapper> {/* This ensures session validation before rendering */}
+                <ClientOnlyLayout>
+                    <Header className="w-full hidden md:block" />
+                    <div className="mx-auto flex flex-col w-full max-w-custom flex-grow">
+                        <div>
+                            <Banner className="hidden lg:block" />
+                            <div className="flex items-center w-full">
+                                <Logo className="flex-grow logo-details overall-margin-left mr-4" />
+                                <Sublogos />
+                            </div>
+                            <TopBar />
+                            <Kuuluta />
+                            <div className="w-full md:w-[1000px] overall-margin-left">
+                                {children}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <Foobar />
-                <FooterSection />
-            </ClientOnlyLayout>
+                    <Foobar />
+                    <FooterSection />
+                </ClientOnlyLayout>
+            </AuthWrapper>
         </AuthUserProvider>
         </body>
         </html>

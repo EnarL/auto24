@@ -1,4 +1,5 @@
 package com.example.auto24.users;
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.auto24.auth.emailverificationToken.EmailVerificationToken;
 import com.example.auto24.auth.emailverificationToken.EmailVerificationTokenRepository;
 import com.example.auto24.cars.CarService;
@@ -6,10 +7,12 @@ import com.example.auto24.email.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -111,4 +114,17 @@ public class UserService {
         userRepository.delete(user);
         carService.deleteCarsByUserId(user.getId());
     }
+
+    public SalesmanDTO getSalesmanInfo(String carId) {
+        String ownerId = carService.findUserIdFromCarId(carId);
+
+        return userRepository.findById(ownerId)
+                .map(user -> new SalesmanDTO(
+                        user.getFirstname(),
+                        user.getEmail(),
+                        user.getPhoneNumber()
+                ))
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + ownerId));
+    }
+
 }

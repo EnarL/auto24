@@ -2,7 +2,7 @@ package com.example.auto24.cars;
 
 
 public record CarDetailsDTO(
-        String id,
+        String carId,
         String vehicleType,
         String bodyType,
         String bodyTypeDetail,
@@ -44,6 +44,7 @@ public record CarDetailsDTO(
         int payloadCapacity,
         int brakedTrailerWeight,
         int unbrakedTrailerWeight,
+        int numberOfAxles,
         int wheelbase,
         int length,
         int width,

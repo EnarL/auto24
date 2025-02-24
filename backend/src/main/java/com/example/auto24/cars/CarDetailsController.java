@@ -23,7 +23,7 @@ public class CarDetailsController {
             return carDetailsService.getCarDetailsForUser();
     }
     @GetMapping("user/preview")
-    public List<CarPreviewDTO> getCarDetailsPreview() {
+    public List<CarPreviewDTO> getCarDetailsPreviewForUser() {
         return carDetailsService.getCarPreviewsForUser();
     }
     @GetMapping("/search")

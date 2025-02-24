@@ -7,6 +7,7 @@ interface CarPreviewDTO {
     price: number;
     firstRegistrationDate: string;
     imageKeys?: string[];
+    active: boolean;
 }
 
 const useCarPreviewForUser = () => {

@@ -25,7 +25,7 @@ const FormInput: React.FC<FormInputProps> = ({
             <input
                 type={type}
                 id={id}
-                className={`border border-gray-300 w-full text-[12px] ${className}`} // Full width for input
+                className={`border border-gray-300 w-full text-[12px] p-2 ${className}`} // Full width for input
                 value={value}
                 onChange={onChange}
             />

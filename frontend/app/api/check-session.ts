@@ -11,7 +11,6 @@ const useAuth = () => {
                 setLoading(false);
                 return;
             }
-
             try {
                 const response = await fetch('http://localhost:8080/auth/check-session', {
                     method: 'GET',

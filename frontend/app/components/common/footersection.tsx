@@ -19,18 +19,18 @@ const FooterSection: React.FC = () => {
     ];
 
     return (
-        <footer className="flex items-center">
-            <div className="mx-auto flex items-center w-[1000px]">
+        <footer className="flex flex-col items-center p-4">
+            <div className="mx-auto flex flex-col md:flex-row items-center w-full max-w-[1000px]">
                 <a href="https://balticclassifieds.com/" target="_blank" rel="noopener noreferrer">
                     <img
                         src="https://www.auto24.ee/images/logo/BCG.svg"
                         alt="Placeholder"
-                        className="w-36 p-4"
+                        className="w-36 mb-2 md:mb-0"
                     />
                 </a>
-                <div className="grid grid-rows-2 grid-flow-col gap-2 h-full ml-4">
+                <div className="grid grid-cols-4 md:grid-cols-5 gap-2 h-full mt-2 md:mt-0">
                     {websites.map((link, index) => (
-                        <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[12px]">
+                        <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[12px] text-center">
                             {link.name}
                         </a>
                     ))}

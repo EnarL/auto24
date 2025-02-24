@@ -15,19 +15,18 @@ interface ImageData {
 
 const AddPictureForm: React.FC = () => {
     const [imageData, setImageData] = useState<(ImageData | null)[]>(Array(30).fill(null));
-    const { slug } = useParams();
-    const actualSlug = Array.isArray(slug) ? slug[0] : slug;
+    const { id } = useParams();
     const router = useRouter();
 
     const fetchImages = async () => {
-        if (!slug) {
-            console.error("Slug is undefined");
+        if (!id) {
+            console.error("id is undefined");
             return;
         }
 
         try {
             const response = await axios.get<string[]>(
-                `http://localhost:8080/productImages/getCarImages/${slug}`,
+                `http://localhost:8080/productImages/getCarImages/${id}`,
                 { withCredentials: true }
             );
 
@@ -49,7 +48,7 @@ const AddPictureForm: React.FC = () => {
 
     useEffect(() => {
         fetchImages();
-    }, [slug]);
+    }, [id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -89,7 +88,8 @@ const AddPictureForm: React.FC = () => {
                     formDataToSend.append("files", imgData.file);
                 }
             });
-            formDataToSend.append("id", actualSlug || "");
+            formDataToSend.append("id", id as string);
+
 
             const response = await axios.post<string[]>(
                 "http://localhost:8080/productImages/upload",
@@ -138,14 +138,14 @@ const AddPictureForm: React.FC = () => {
             return;
         }
 
-        if (!slug || !imageToDelete?.fileKey) {
+        if (!id || !imageToDelete?.fileKey) {
             console.error("Missing slug or file key for deletion");
             return;
         }
 
         try {
             const response = await axios.delete(
-                `http://localhost:8080/productImages/delete/${slug}/${imageToDelete.fileKey}`,
+                `http://localhost:8080/productImages/delete/${id}/${imageToDelete.fileKey}`,
                 { withCredentials: true }
             );
 
@@ -169,7 +169,7 @@ const AddPictureForm: React.FC = () => {
         <form onSubmit={handleSubmit} className="p-4">
             <div className="h-[60px] w-full text-[14px] flex justify-start items-center mt-4 mb-4">
                 <span className="flex items-center ml-[50px]">
-                    <Link href={`/edit/${slug}`} className="flex items-center">
+                    <Link href={`/users/edit/${id}`} className="flex items-center">
                         <span
                             className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white font-bold mr-2">
                             1
@@ -185,11 +185,13 @@ const AddPictureForm: React.FC = () => {
                     <span>Piltide lisamine</span>
                 </span>
                 <span className="flex items-center ml-16">
+                      <Link href={`/users/confirm_listing/${id}`} className="flex items-center">
                     <span
                         className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white font-bold mr-2">
                         3
                     </span>
-                    <span>Teenuste tellimine</span>
+                    <span>Kuulutuse kinnitamine</span>
+                          </Link>
                 </span>
             </div>
 

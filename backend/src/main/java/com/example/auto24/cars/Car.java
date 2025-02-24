@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,4 +34,7 @@ public class Car {
 
     @Builder.Default
     private boolean isActive = false;
+    public boolean isActive() {
+        return isActive;
+    }
 }

@@ -34,4 +34,8 @@ public class UserController {
         userService.changePassword(request);
         return ResponseEntity.ok("Password changed successfully");
     }
+    @GetMapping("/SalesmanInfo/{CarId}")
+    public SalesmanDTO getSalesmanInfo(@PathVariable  String CarId){
+        return  userService.getSalesmanInfo(CarId);
+    }
 }

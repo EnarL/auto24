@@ -7,7 +7,7 @@ const ClientOnlyLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     const { loading } = useAuthUser();
     const [isClient, setIsClient] = useState(false);
 
-    useTokenRefresh(); // Call the token refresh hook here
+    useTokenRefresh(); // Call the token refresh hook
 
     useEffect(() => {
         setIsClient(true);

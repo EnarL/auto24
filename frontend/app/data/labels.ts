@@ -1,4 +1,4 @@
-// Grouped labels and names for each section for creating car listing
+
 
 export const contactFields = [
     {
@@ -67,6 +67,7 @@ export const vehicleFields=[
     { name: "length", label: "Pikkus", type: "text" },
     { name: "width", label: "Laius", type: "text" },
     { name: "height", label: "Kõrgus", type: "text" },
+    {name: "numberOfAxles", label: "Sildade arv", type: "text"},
     { name: "acceleration0To100", label: "Kiirendus 0-100km/h", type: "text" },
     { name: "topSpeed", label: "Tippkiirus", type: "text" },
     { name: "locationCountry", label: "Sõiduki asukoht", type: "text", readOnly: true },

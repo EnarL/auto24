@@ -3,25 +3,25 @@ import {CarDetailsDTO, CarExtraInfoDTO} from "@/app/types/types";
 
 
 
-const useCarDetails = (slug: string) => {
+const useCarDetails = (id: string) => {
     const [car, setCar] = useState<CarDetailsDTO | null>(null);
     const [carExtraInfo, setCarExtraInfo] = useState<CarExtraInfoDTO | null>(null);
     const [images, setImages] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        if (!slug) return;
+        if (!id) return;
 
         const fetchCarDetails = async () => {
             try {
-                const carResponse = await fetch(`http://localhost:8080/cars/carlisting/${slug}`);
+                const carResponse = await fetch(`http://localhost:8080/cars/carlisting/${id}`);
                 if (carResponse.ok) {
                     const carData = await carResponse.json();
                     setCar(carData.carDetailsDTO);
                     setCarExtraInfo(carData.carExtraInfoDTO);
                 }
 
-                const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${slug}`);
+                const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${id}`);
                 if (imageResponse.ok) {
                     const imageData: string[] = await imageResponse.json();
                     setImages(imageData);
@@ -34,7 +34,7 @@ const useCarDetails = (slug: string) => {
         };
 
         fetchCarDetails();
-    }, [slug]);
+    }, [id]);
 
     return { car, carExtraInfo, images, isLoading };
 };

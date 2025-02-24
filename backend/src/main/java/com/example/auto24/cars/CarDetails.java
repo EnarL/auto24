@@ -71,6 +71,7 @@ public class CarDetails {
     private int length;
     private int width;
     private int height;
+    private int numberOfAxles;
 
     // Performance Metrics
     private double acceleration0To100;

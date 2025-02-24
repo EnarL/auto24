@@ -45,6 +45,7 @@ export interface CarDetailsDTO {
     length: number;
     width: number;
     height: number;
+    numberOfAxles:number;
     acceleration0To100: number;
     topSpeed: number;
     locationCountry: string;
@@ -66,7 +67,7 @@ export interface CarExtraInfoDTO {
     steering: Steering;
     seats: Seats;
     comfortFeatures: Comfort;
-    additionalFeatures: additionalFeatures;
+    additional: additionalFeatures;
     sportFeatures: Sport;
     audioVideoCommunication: AudioVideoCommunication;
     interiorFeatures: Interior;

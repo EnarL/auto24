@@ -1,13 +1,7 @@
 import React from 'react';
-import { vehicleFields } from "@/app/data/labels";
-
-export interface VehicleDetailsProps {
-    formData: Record<string, any>;
-    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-}
 
 const Field: React.FC<{
-    field: typeof vehicleFields[number];
+    field: { name: string; label: string; type: string };
     value: any;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }> = ({ field, value, handleChange }) => {
@@ -40,7 +34,6 @@ const Field: React.FC<{
                     value={value || ""}
                     onChange={handleChange}
                     className="w-[300px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mr-2"
-                    readOnly={field.readOnly || false}
                     id={field.name}
                 />
             )}

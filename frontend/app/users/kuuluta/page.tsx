@@ -12,306 +12,55 @@ import InteriorFeatures from "@/app/components/CarRegistrationForm/InteriorFeatu
 import SeatsFeatures from "@/app/components/CarRegistrationForm/Seats";
 import ComfortFeatures from "@/app/components/CarRegistrationForm/ComfortFeatures";
 import SportFeatures from "@/app/components/CarRegistrationForm/SportFeatures";
-import AdditionalFeatures from "@/app/components/CarRegistrationForm/AdditionalFeatures";
+import Additional from "@/app/components/CarRegistrationForm/AdditionalFeatures";
 import { useRouter } from "next/navigation";
 import { CarDetailsDTO, CarExtraInfoDTO } from "@/app/types/types";
+import carExtraInfoFormData from "@/app/utils/CarExtraInfoFormData";
+import carDetailsFormData from "@/app/utils/CarDetailsFormData"; // Adjust the import path as necessary
 
 const CarDetailsForm: React.FC = () => {
     const router = useRouter();
-    const [carDetails, setCarDetails] = useState<CarDetailsDTO>({
-        vehicleType: '',
-        bodyType: '',
-        bodyTypeDetail: '',
-        model: '',
-        make: '',
-        modelGeneration: '',
-        modelTrim: '',
-        firstRegistrationDate: '',
-        price: 0,
-        includesRegistrationFee: false,
-        odometerReading: 0,
-        hasServiceBook: false,
-        vinCode: '',
-        registrationNumber: '',
-        transmission: '',
-        driveType: '',
-        engineCapacityLiters: 0,
-        engineCapacityCubicCentimeters: 0,
-        engineConfiguration: '',
-        engineDetails: '',
-        enginePowerKW: 0,
-        enginePowerHP: 0,
-        fuelType: '',
-        fuelTankCapacity: 0,
-        fuelConsumptionHighway: 0,
-        fuelConsumptionCity: 0,
-        fuelConsumptionCombined: 0,
-        fuelConsumptionStandard: '',
-        co2Emissions: 0,
-        seatingCapacity: 0,
-        numberOfDoors: 0,
-        hasWarranty: false,
-        accidentDamaged: false,
-        color: '',
-        metallicColor: false,
-        colorDetail: '',
-        curbWeight: 0,
-        grossWeight: 0,
-        payloadCapacity: 0,
-        brakedTrailerWeight: 0,
-        unbrakedTrailerWeight: 0,
-        wheelbase: 0,
-        length: 0,
-        width: 0,
-        height: 0,
-        acceleration0To100: 0,
-        topSpeed: 0,
-        locationCountry: 'Eesti',
-        locationCounty: '',
-        importedFromCountry: '',
-        registeredInCountry: false,
-        inspectionValidUntil: '',
-        reserved: false,
-        reservationUntilDate: '',
-        exchangePossible: false,
-        exchangeDetails: '',
-        description: '',
-    });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const [carDetails, setCarDetails] = useState<CarDetailsDTO>(carDetailsFormData);
+    const [carExtraInfo, setCarExtraInfo] = useState<CarExtraInfoDTO>(carExtraInfoFormData);
+
+    const handleCarDetailsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
+
         if (type === 'checkbox') {
             const { checked } = e.target as HTMLInputElement;
-            setCarDetails({
-                ...carDetails,
+            setCarDetails(prevState => ({
+                ...prevState,
                 [name]: checked,
-            });
+            }));
         } else {
-            setCarDetails({
-                ...carDetails,
+            setCarDetails(prevState => ({
+                ...prevState,
                 [name]: value || '',
-            });
+            }));
         }
     };
 
-    const [carExtraInfo, setCarExtraInfo] = useState<CarExtraInfoDTO>({
-        safetyAndSecurity: {
-            roolivoimendi: false,
-            kesklukustus: false,
-            absPidurid: false,
-            elektroonilineSeisupidur: false,
-            turvapadi: false,
-            turvakardinad: false,
-            korvalistujaTurvapadjaValjalulitamiseVõimalus: false,
-            juhiVäsimuseTuvastamiseSüsteem: false,
-            signalisatsioon: false,
-            immobilisaator: false,
-            stabiilsuskontroll: false,
-            pidurdusjoukontroll: false,
-            veojoukontroll: false,
-            soiduradaHoidmiseAbisüsteem: false,
-            soiduradaVahetamiseAbisüsteem: false,
-            liiklusmärkideTuvastusJaKuvamine: false,
-            oiseNagemiseAssistent: false,
-            pimenurgaHoiatus: false,
-            kokkuporgetEnnetavPidurisüsteem: false,
-            jalakäijaOhutusfunktsioonigaKapott: false,
-            automaatpidurdussüsteem: false,
-            lisapidurituli: false,
-            vihmasensor: false,
-            isofixLasteistmeKinnitus: false,
-            integreeritudLapseiste: false,
-            turvavöödeEelpingutidEsiistmetel: false,
-            automaatnePaigalseismiseFunktsioon: false,
-            mägipidur: false,
-        },
-        lights: {
-            xenon: false,
-            laser: false,
-            led: false,
-            esituledePesurid: false,
-            kurvituled: false,
-            päevasõidutuledeAutomaatneLülitus: false,
-            kaugtuledeÜmberlülitamiseAssistent: false,
-            udutuled: false,
-            tuledeKorrektor: false,
-            lisatuled: false,
-        },
-        tiresAndWheels: {
-            suverehvid: false,
-            talverehvid: false,
-            valuveljed: false,
-            ilukilbid: false,
-            tagavararatas: false,
-            rehvirõhuKontrollsüsteem: false,
-            autogaKaasaSuverehvid: false,
-            autogaKaasaTalverehvid: false,
-            autogaKaasaValuveljed: false,
-            autogaKaasaIlukilbid: false,
-        },
-        steering: {
-            reguleeritavRoolisammas: false,
-            multifunktsionaalneRool: false,
-            nahkkattegaRool: false,
-            sportrool: false,
-            soojendusegaRool: false,
-            käiguvahetusRoolilt: false,
-            parempoolneRool: false,
-        },
-        seats: {
-            nahkpolster: false,
-            nahkpolsterLisainfo: '',
-            poolnahkpolster: false,
-            poolnahkpolsterLisainfo: '',
-            veluurpolster: false,
-            veluurpolsterLisainfo: '',
-            tekstiilpolster: false,
-            tekstiilpolsterLisainfo: '',
-            elektriliseltReguleeritavadIstmed: false,
-            ohugaReguleeritavIste: false,
-            istmedReguleeritavaKorgusega: false,
-            istmesoojendused: false,
-            reguleeritavaKumerusegaSeljatugi: false,
-            massaazifunktsioonigaIstmed: false,
-            massaazifunktsioonigaIstmedLisainfo: '',
-            ventileeritavadIstmed: false,
-            kaetugiEes: false,
-            kaetugiTaga: false,
-            kaassoitjaIstmeSeljatugiAllaklapitav: false,
-            tagaistmeSeljatugiAllaklapitav: false,
-            comfortIstmed: false,
-            sportistmed: false,
-        },
-        comfortFeatures: {
-            kliimaseade: false,
-            elektrilisedValispeeglid: false,
-            virtuaalsedValispeeglid: false,
-            virtuaalneSisepeegel: false,
-            elektrilisedAkendeTostukid: false,
-            toonitudKlaasid: false,
-            katuseluuk: false,
-            katuseluukLisainfo: '',
-            panoraamkatus: false,
-            usteServosulgurid: false,
-            votmetaAvamine: false,
-            votmetaKaivitus: false,
-            pusikiiruseHoidja: false,
-            pakiruumiAvamineElektriliselt: false,
-            peeglidPaikesesirmides: false,
-            rulookardinTagaaknal: false,
-            rulookardinadUstel: false,
-            mootoriEelsoojendus: false,
-            mootoriEelsoojendusLisainfo: '',
-            salongiEelsoojendus: false,
-            salongiEelsoojendusLisainfo: '',
-            salongiLisasoojendus: false,
-            integreeritudVaravapult: false,
-            automaatseltTumenevadPeeglid: false,
-            eraldiKliimaseadeTagaistmetele: false,
-            usteSisevalgustus: false,
-            kohtvalgustid: false,
-            parkimisandurid: false,
-            parkimiskaamera: false,
-            automaatseParkimiseFunktsioon: false,
-            comingLeavingHomeFunktsioon: false,
-            digitaalneNaidikutepaneel: false,
-            infoKuvamineEsiklaasile: false,
-            pakiruumiLiugpõrand: false,
-            elektrilisedLiuguksed: false,
-            telefoniJuhtmevabaLaadimine: false,
-        },
-        additionalFeatures: {
-            reguleeritavVedrustus: false,
-            ohkvedrustus: false,
-            startStoppSusteem: false,
-            pistikupesad12v: false,
-            katusereelingud: false,
-            katusereelingudLisainfo: '',
-            suusakott: false,
-            rehviparanduskomplekt: false,
-            jahutusegaKindalaegas: false,
-            valistemperatuuriNaidik: false,
-            topeltklaasid: false,
-            topeltklaasidLisainfo: '',
-            elektriliseSoojendusegaEsiklaas: false,
-            tagaklaasiSoojendus: false,
-            aknapesupihustiteSulatus: false,
-            pagasikate: false,
-            pagasiVorkPakiruumis: false,
-            salongiJaPakiruumiEraldusvork: false,
-            kaubakinnituseKonksud: false,
-            tagaklaasiPuhasti: false,
-            paigaldatudTulekustuti: false,
-            veokonks: false,
-            haagiseStabiliseerimissusteem: false,
-            reisiarvesti: false,
-            esiJaTagaratastePorikummid: false,
-            invavarustus: false,
-            neljarattaPooramine: false,
-            arvelKuiN1Kaubik: false,
-            muudLisad: '',
-        },
-        sportFeatures: {
-            tagaspoiler: false,
-            esispoiler: false,
-            spoileriring: false,
-            sportvedrustus: false,
-            sportsummuti: false,
-        },
-        audioVideoCommunication: {
-            stereo: false,
-            stereoLisainfo: '',
-            helivoimendi: false,
-            helivoimendiLisainfo: '',
-            kolarid: false,
-            kolaridLisainfo: '',
-            subwoofer: false,
-            subwooferLisainfo: '',
-            cdBox: false,
-            cdBoxLisainfo: '',
-            appleCarPlay: false,
-            androidAuto: false,
-            dvd: false,
-            elektrilineAntenn: false,
-            ekraan: false,
-            ekraanLisainfo: '',
-            navigatsiooniseade: false,
-            autokompuuter: false,
-            autotelefon: false,
-            autotelefonLisainfo: '',
-            kaedVabadSusteem: false,
-            kaedVabadSusteemLisainfo: '',
-            gsmAntenn: false,
-        },
-        interiorFeatures: {
-            iluliistudSalongis: false,
-            iluliistudSalongisLisainfo: '',
-            taskudEsiistmeteSeljatugedes: false,
-            jalamatid: false,
-            sahtlidEsiistmeteAll: false,
-            pagasiruumiMatt: false,
-            topsihoidjad: false,
-            nahkkattegaKaigukanginupp: false,
-            nahkkattegaKasipidurikang: false,
-            tumeLaepolster: false,
-        },
-    });
+    const handleExtraInfoChange = (e: React.ChangeEvent<HTMLElement>, category: keyof CarExtraInfoDTO) => {
+        const { name, type, value } = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+        let updatedValue: string | boolean;
 
-    const handleExtraInfoChange = (e: React.ChangeEvent<HTMLInputElement>, category: keyof CarExtraInfoDTO) => {
-        const { name, type, checked } = e.target;
-
-        const updatedValue = type === 'checkbox' ? checked : e.target.value;
-
-        // Update the specific part of the state based on the category and name
-        setCarExtraInfo(prevState => ({
-            ...prevState,
-            [category]: {
-                ...prevState[category],
-                [name.split('.').pop() as string]: updatedValue, // Use only the key without parent category
-            },
-        }));
+        if (type === 'checkbox') {
+            updatedValue = (e.target as HTMLInputElement).checked;
+        } else {
+            updatedValue = value;
+        }
+        setCarExtraInfo(prevState => {
+            const currentCategory = prevState[category] || {};
+            return {
+                ...prevState,
+                [category]: {
+                    ...currentCategory,
+                    [name.split('.').pop() as string]: updatedValue,
+                },
+            };
+        });
     };
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -328,7 +77,8 @@ const CarDetailsForm: React.FC = () => {
             });
             if (response.status === 201) {
                 alert('Car listing created successfully');
-                router.push('lisa_pildid');
+                const id = response.data;
+                router.push(`/users/lisa_pildid/${id}`);
             } else {
                 alert('Failed to create car listing');
             }
@@ -357,12 +107,11 @@ const CarDetailsForm: React.FC = () => {
                     <span className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white font-bold mr-2">
                         3
                     </span>
-                    <span>Teenuste tellimine</span>
+                    <span>Ostmine / vahetus</span>
                 </span>
             </div>
-
-            <ContactDetails formData={carDetails} handleChange={handleChange} />
-            <VehicleDetails formData={carDetails} handleChange={handleChange} />
+            <ContactDetails formData={carDetails} handleChange={handleCarDetailsChange} />
+            <VehicleDetails formData={carDetails} handleChange={handleCarDetailsChange} />
             <h1 className="text-xl mb-2">Varustus</h1>
             <SafetyEquipment formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'safetyAndSecurity')} />
             <LightsDetails formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'lights')} />
@@ -373,11 +122,8 @@ const CarDetailsForm: React.FC = () => {
             <SeatsFeatures formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'seats')} />
             <ComfortFeatures formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'comfortFeatures')} />
             <SportFeatures formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'sportFeatures')} />
-            <AdditionalFeatures formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'additionalFeatures')} />
-
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-                Submit
-            </button>
+            <Additional formData={carExtraInfo} handleChange={(e) => handleExtraInfoChange(e, 'additional')} />
+            <button type="submit" className="mt-4 p-2 bg-blue-600 text-white">Submit</button>
         </form>
     );
 };

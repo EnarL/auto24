@@ -27,7 +27,7 @@ public class CarDetailsSpecification {
                          "fuelConsumptionCombined", "co2Emissions", "seatingCapacity",
                          "numberOfDoors", "curbWeight", "grossWeight", "payloadCapacity",
                          "brakedTrailerWeight", "unbrakedTrailerWeight", "wheelbase",
-                         "length", "width", "height", "acceleration0To100", "topSpeed" -> {
+                         "length", "width", "height", "numberOfAxles", "acceleration0To100", "topSpeed" -> {
                         if (value.contains("-")) {
                             String[] range = value.split("-");
                             double min = Double.parseDouble(range[0]);

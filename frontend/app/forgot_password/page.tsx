@@ -51,7 +51,7 @@ const ForgotPassword: React.FC = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Sisesta e-mail *"
-                            className="w-full p-4 text-[14px] border border-gray-300 focus:border-blue-600 focus:outline-none rounded-lg"
+                            className="w-full p-4 text-[14px] border border-gray-300 focus:border-blue-600 focus:outline-none "
                             required
                         />
                     </div>
@@ -75,7 +75,7 @@ const ForgotPassword: React.FC = () => {
                     <div className="mt-6">
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition"
+                            className="w-full bg-blue-600 text-white p-2 hover:bg-blue-700 transition"
                         >
                             Saada link
                         </button>

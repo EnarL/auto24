@@ -17,7 +17,7 @@ const Vali: React.FC = () => {
     const router = useRouter();
 
     const handleBrandClick = (brand: string) => {
-        router.push(`/cars?make=${brand}`);
+        router.push(`search/cars?make=${brand}`);
     };
 
     const columns = 7;

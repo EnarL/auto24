@@ -14,8 +14,8 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
                                                          onChange,
                                                      }) => {
     return (
-        <div className="mb-4 flex items-center justify-between">
-            <label className="text-gray-700 text-[12px]" htmlFor={id}>
+        <div className="flex items-center justify-between">
+            <label className="text-gray-700 text-[12px] p-2" htmlFor={id}>
                 {label}
             </label>
             <input

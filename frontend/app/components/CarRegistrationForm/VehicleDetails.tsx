@@ -1,7 +1,11 @@
 import React from 'react';
-import { vehicleFields } from "@/app/data/labels";
-import Field from "@/app/components/VehicleDetailsFields";
-import { VehicleDetailsProps } from "@/app/components/VehicleDetailsFields";
+import { vehicleFields } from "@/app/data/labels"; // Ensure this path is correct
+import Field from "@/app/components/VehicleDetailsFields"; // Ensure this path is correct
+
+export interface VehicleDetailsProps {
+    formData: Record<string, any>;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+}
 
 const VehicleDetails: React.FC<VehicleDetailsProps> = ({ formData, handleChange }) => {
     return (

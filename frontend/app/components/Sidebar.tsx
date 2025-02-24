@@ -14,7 +14,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection }) => {
             <section className="w-[250px] border-2 border-gray-100 rounded-md">
                 <h2 className="border-gray-100 border-b-2 p-2 text-[#06c] font-semibold">MINU KUULUTUSED</h2>
                 <div className="break-words from-white to-gray-50 opacity-80 bg-gradient-to-t p-2">
-                    {/* Use Link from next/link */}
                     <Link href="/users/minu" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Kõik')}`}>Kõik</Link>
                     <Link href="/users/kuulutused" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Sõidukite kuulutused')}`}>Sõidukite kuulutused</Link>
                     <Link href="/users/kaubad_varuosad" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Kaubad ja varuosad')}`}>Kaubad ja varuosad</Link>
@@ -45,11 +44,11 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection }) => {
             <section className="w-[250px] border-2 border-gray-100 rounded-md">
                 <h2 className="border-gray-100 border-b-2 p-2 text-[#06c] font-semibold">MINU LEMMIKUD</h2>
                 <div className="break-words from-white to-gray-50 opacity-80 bg-gradient-to-t p-2">
-                    <Link href="/users/salvestatud_sõidukid" className={`block ${getLinkClass('Salvestatud sõidukid')}`}>Salvestatud sõidukid</Link>
-                    <Link href="/users/salvestatud_kaubad" className={`block ${getLinkClass('Salvestatud kaubad ja varuosad')}`}>Salvestatud kaubad ja varuosad</Link>
-                    <Link href="/users/salvestatud_otsingud" className={`block ${getLinkClass('Salvestatud otsingud')}`}>Salvestatud otsingud</Link>
-                    <Link href="/users/salvestatud_firmad" className={`block ${getLinkClass('Salvestatud firmad ja teenused')}`}>Salvestatud firmad ja teenused</Link>
-                    <Link href="/users/minu_oksjonid" className={`block ${getLinkClass('Minu oksjonid')}`}>Minu oksjonid</Link>
+                    <Link href="/users/salvestatud_soidukid" className={`block ${getLinkClass('Salvestatud_soidukid')}`}>Salvestatud sõidukid</Link>
+                    <Link href="/users/salvestatud_kaubad" className={`block ${getLinkClass('Salvestatud_kaubad')}`}>Salvestatud kaubad ja varuosad</Link>
+                    <Link href="/users/salvestatud_otsingud" className={`block ${getLinkClass('Salvestatud_otsingud')}`}>Salvestatud otsingud</Link>
+                    <Link href="/users/salvestatud_firmad" className={`block ${getLinkClass('Salvestatud_firmad')}`}>Salvestatud firmad ja teenused</Link>
+                    <Link href="/users/minu_oksjonid" className={`block ${getLinkClass('Minu_oksjonid')}`}>Minu oksjonid</Link>
                 </div>
             </section>
             <section className="w-[250px] border-2 border-gray-100 rounded-md">
@@ -61,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection }) => {
             <section className="w-[250px] border-2 border-gray-100 rounded-md">
                 <h2 className="border-gray-100 border-b-2 p-2 text-[#06c] font-semibold">MINU KONTO</h2>
                 <div className="break-words from-white to-gray-50 opacity-80 bg-gradient-to-t p-2">
-                    <Link href="/users/andmete_kinnitamine" className={`block ${getLinkClass('Andmete kinnitamine')}`}>Andmete kinnitamine</Link>
+                    <Link href="/users/andmete_kinnitamine" className={`block ${getLinkClass('Andmete_kinnitamine')}`}>Andmete kinnitamine</Link>
                     <Link href="/users/change_data" className={`block ${getLinkClass('Muuda andmeid')}`}>Muuda andmeid</Link>
                     <Link href="/users/change_pw" className={`block ${getLinkClass('Muuda parool')}`}>Muuda parool</Link>
                     <Link href="/users/kasutustingimused" className={`block ${getLinkClass('Kasutustingimused')}`}>Kasutustingimused</Link>

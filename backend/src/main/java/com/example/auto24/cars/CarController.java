@@ -3,6 +3,8 @@ package com.example.auto24.cars;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Optional;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -19,10 +21,11 @@ public class CarController {
 //public
     @PostMapping("/create")
     public ResponseEntity<String> createCarListing(@RequestBody CarListingRequest carListingRequest) {
-        carService.createCarListing(carListingRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Car listing created successfully");
-    }
-//public
+    String carId = carService.createCarListing(carListingRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).body(carId);
+}
+
+    //public
     @GetMapping("/carlisting/{id}")
     public ResponseEntity<CarListingResponse> getCarListing(@PathVariable String id) {
         Optional<CarListingResponse> carListingResponse = carService.getCarListingById(id);
@@ -59,6 +62,13 @@ public class CarController {
         boolean isActive = carService.toggleCarListingStatus(id);
         return ResponseEntity.ok(isActive ? "Listing activated" : "Listing deactivated");
     }
+
+    @GetMapping("/OwnerOtherSales/{carId}")
+    public ResponseEntity<List<CarPreviewDTO>> getOwnerOtherSales(@PathVariable String carId) {
+        List<CarPreviewDTO> carPreviews = carService.getOwnerOtherSales(carId);
+        return ResponseEntity.ok(carPreviews);
+    }
+
 
 
 }

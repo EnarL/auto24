@@ -35,7 +35,7 @@ const Page: React.FC = () => {
     const { cars, carImages, loading, error } = useCarPreview(); // Fetch car data
 
     const handleBrandClick = (brand: string) => {
-        router.push(`/cars?make=${brand}`);
+        router.push(`search/cars?make=${brand}`);
     };
 
     return (

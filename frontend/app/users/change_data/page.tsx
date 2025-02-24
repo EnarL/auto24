@@ -1,6 +1,7 @@
 "use client";
+
 import React, { useEffect } from "react";
-import Sidebar from "@/app/components/Sidebar";
+import UserLayout from "@/app/components/UserLayout";
 import FormInput from "@/app/components/FormInput";
 import CheckboxInput from "@/app/components/CheckBoxInput";
 import { useAuthUser } from "@/app/context/AuthUserContext";
@@ -32,13 +33,12 @@ const ChangeData: React.FC = () => {
     }, [username, firstname, lastname, email, phoneNumber, newsletter, active, setUserData]);
 
     return (
-        <div className="flex">
-            <Sidebar activeSection="Muuda andmeid" />
+        <UserLayout activeTab="Muuda andmeid">
             <div className="w-[500px] ml-4 mt-6 flex flex-col">
                 <h2 className="text-[24px]">Muuda kasutajaandmeid</h2>
                 <p className="italic mt-2 mb-2 text-[12px]">Tärniga (*) tähistatud väljad on kohustuslikud!</p>
 
-                <form className="" onSubmit={handleRegister}>
+                <form onSubmit={handleRegister}>
                     <div className="flex items-center">
                         <span className="block text-gray-700 w-[250px] text-[12px]">Meiliaadress: </span>
                         <span className={`${active ? "text-green-600" : "text-red-600"}`}>
@@ -50,7 +50,6 @@ const ChangeData: React.FC = () => {
                     </div>
 
                     {[
-
                         {
                             id: "firstname",
                             label: "Eesnimi *",
@@ -93,14 +92,12 @@ const ChangeData: React.FC = () => {
                             id="terms"
                             label="Nõustun andmekaitse-ja kasutusetingimustega *"
                             checked={true}
-                            onChange={() => {
-                            }}
+                            onChange={() => {}}
                         />
                     </div>
 
                     {error && <p className="text-red-500 mb-4 text-right">{error}</p>}
                     {success && <p className="text-green-500 mb-4 text-right">{success}</p>}
-
 
                     <button
                         type="submit"
@@ -110,7 +107,7 @@ const ChangeData: React.FC = () => {
                     </button>
                 </form>
             </div>
-        </div>
+        </UserLayout>
     );
 };
 

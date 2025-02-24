@@ -1,5 +1,6 @@
 package com.example.auto24.cars;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.auto24.cars.extra_info.CarExtraInfoDTO;
 import com.example.auto24.cars.extra_info.CarExtraInfoService;
 import com.example.auto24.users.SecurityUtils;
@@ -10,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarService {
@@ -55,14 +59,16 @@ public class CarService {
         });
     }
     @Transactional
-    public void createCarListing(CarListingRequest carListingRequest) {
+    public String createCarListing(CarListingRequest carListingRequest) {
         String userId = SecurityUtils.getAuthenticatedUserId();
         Car savedCar = createAndSaveCar(userId);
         carDetailsService.createAndSaveCarDetails(savedCar.getId(), carListingRequest.carDetailsDTO());
-
         carExtraInfoService.createAndSaveCarExtraInfo(savedCar.getId(), carListingRequest.carExtraInfoDTO());
         updateUserCarIds(userId, savedCar.getId());
+
+        return savedCar.getId();
     }
+
 
 
     public void updateUserCarIds(String userId, String carId) {
@@ -125,5 +131,22 @@ public class CarService {
         return car.isActive();
     }
 
+
+    public List<CarPreviewDTO> getOwnerOtherSales(String carId) {
+        String ownerId = findUserIdFromCarId(carId);
+        List<Car> ownerCars = carRepository.findByOwnerId(ownerId);
+        return ownerCars.stream()
+                    .filter(Car::isActive)
+                    .filter(c -> !c.getId().equals(carId))
+                    .map(carDetailsService::createCarPreviewDTO)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+    }
+
+    public String findUserIdFromCarId(String carId) {
+        return carRepository.findById(carId)
+                .map(Car::getOwnerId)
+                .orElseThrow(() -> new NotFoundException("Car not found with ID: " + carId));
+    }
 
 }

@@ -1,6 +1,7 @@
 "use client";
+
 import React, { useState } from "react";
-import Sidebar from "@/app/components/Sidebar";
+import UserLayout from "@/app/components/UserLayout";
 import useChangePassword from "@/app/hooks/useChangePassword";
 
 const ChangePasswordPage: React.FC = () => {
@@ -22,14 +23,14 @@ const ChangePasswordPage: React.FC = () => {
     };
 
     return (
-        <div className="flex">
-            <Sidebar activeSection="Muuda parool" />
+        <UserLayout activeTab="Muuda parool">
+            <div className="w-[400px] ml-4  mt-6 flex flex-col">
+                <h2 className="text-[24px] font-semibold">Muuda parool</h2>
+                <p className="italic mt-2 mb-2 text-[12px] text-gray-600">
+                    Tärniga (*) tähistatud väljad on kohustuslikud!
+                </p>
 
-            <div className="w-[400px] ml-4 mt-6 flex flex-col">
-                <h2 className="text-[24px]">Muuda parool</h2>
-                <p className="italic mt-2 mb-2 text-[12px]">Tärniga (*) tähistatud väljad on kohustuslikud!</p>
-
-                <div className="border-l-4 border-gray-300 w-full p-3 bg-gray-50 text-[12px]">
+                <div className="border-l-4 border-gray-300 w-full p-3 bg-gray-50 text-[12px] text-gray-700">
                     <p>Parool peab sisaldama vähemalt ühte numbrit ja ühte tähte.</p>
                     <p>Parool peab olema vähemalt 8 märki pikk.</p>
                 </div>
@@ -44,7 +45,7 @@ const ChangePasswordPage: React.FC = () => {
                             value={currentPassword}
                             placeholder="Praegune parool *"
                             onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-full p-2 text-[14px] border border-gray-300 focus:border-blue-600 focus:outline-none rounded"
+                            className="w-full p-2 text-[14px] border border-gray-300 focus:border-blue-600 focus:outline-none"
                             required
                         />
                     </div>
@@ -79,7 +80,7 @@ const ChangePasswordPage: React.FC = () => {
                     </div>
                 </form>
             </div>
-        </div>
+        </UserLayout>
     );
 };
 

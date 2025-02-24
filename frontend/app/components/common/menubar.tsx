@@ -101,7 +101,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ showCarCount }) => {
         console.log("Query Params:", queryParams);
 
         if (queryParams) {
-            router.push(`/cars?${queryParams}`);
+            router.push(`search/cars?${queryParams}`);
         } else {
             console.log("No valid filters found.");
         }

@@ -1,6 +1,6 @@
-"use client"
-import React, {useEffect, useState} from 'react';
-import {useRouter, useSearchParams} from 'next/navigation';
+"use client";
+import React, { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthUser } from '@/app/context/AuthUserContext';
 
 const LoginPage: React.FC = () => {
@@ -8,6 +8,7 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [infoMessage, setInfoMessage] = useState(''); // New state for info message
     const { setIsLoggedIn, updateUserData } = useAuthUser();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -31,7 +32,7 @@ const LoginPage: React.FC = () => {
                     username: username,
                     password: password,
                 }),
-                credentials: 'include'
+                credentials: 'include',
             });
 
             if (response.ok) {
@@ -50,6 +51,16 @@ const LoginPage: React.FC = () => {
 
     const handleRegisterRedirect = () => {
         router.push('/register');
+    };
+
+    const handleAddListingClick = () => {
+        if (!username || !password) {
+            setInfoMessage("Logi esmalt sisse.");
+            setTimeout(() => setInfoMessage(''), 3000); // Clear message after 3 seconds
+        } else {
+            // Navigate to the add listing page if logged in
+            router.push('/add-listing'); // Adjust this path as needed
+        }
     };
 
     return (
@@ -85,7 +96,7 @@ const LoginPage: React.FC = () => {
                         </div>
                         <div className="flex justify-between items-center mt-2 mb-2 text-[12px]">
                             <div className="flex items-center">
-                                <input type="checkbox"/>
+                                <input type="checkbox" />
                                 <p className="ml-2">Mäleta mind</p>
                             </div>
                             <p
@@ -113,9 +124,13 @@ const LoginPage: React.FC = () => {
                     >
                         REGISTREERU
                     </button>
-                    <button className="w-full bg-lime-600 text-white p-2 hover:bg-lime-500 transition duration-300">
+                    <button
+                        className="w-full bg-lime-600 text-white p-2 hover:bg-lime-500 transition duration-300"
+                        onClick={handleAddListingClick}
+                    >
                         LISA KUULUTUS
                     </button>
+                    {infoMessage && <p className="text-xl mt-10">{infoMessage}</p>}
                 </div>
             </div>
         </div>

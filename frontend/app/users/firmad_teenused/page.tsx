@@ -1,26 +1,19 @@
-"use client"
+"use client";
 
-import React from 'react';
-import Sidebar from '../../components/Sidebar';
-import Tabs from '../../components/Tabs';
+import React from "react";
+import UserLayout from "@/app/components/UserLayout";
+import Link from "next/link";
 
-const MinuPage: React.FC = () => {
+const FirmadTeenusedPage: React.FC = () => {
     return (
-        <div className="flex flex-col">
-            <div className="flex">
-                <Sidebar activeSection="Firmad ja teenused" />
-                <div className="flex flex-col ">
-                    <Tabs activeTab="Firmad ja teenused" />
-                    <div
-                        className=" border-l-4 border-[#91d5ff] mt-4 ml-[10px] w-[740px] text-[#06c] mx-auto p-3 inline bg-[#f2faff] text-[14px] flex items-center">
-                        <img src="https://www.auto24.ee/images/icons/msg/info.svg" alt="Info" className="mr-2"/>
-                        <span>Teil ei ole praegu sisestatud ühtegi kuulutust. </span>
-                        <a href="#" className="underline ml-1">Sisesta kuulutus</a>
-                    </div>
-                </div>
+        <UserLayout activeTab="Firmad ja teenused">
+            <div className="border-l-4 border-[#91d5ff] mt-4 ml-[10px] w-[740px] text-[#06c] mx-auto p-3 bg-[#f2faff] text-[14px] flex items-center">
+                <img src="https://www.auto24.ee/images/icons/msg/info.svg" alt="Info" className="mr-2" />
+                <span>Teil ei ole praegu sisestatud ühtegi kuulutust.</span>
+                <Link href="/users/kuuluta" className="underline ml-1">Sisesta kuulutus</Link>
             </div>
-        </div>
+        </UserLayout>
     );
 };
 
-export default MinuPage;
+export default FirmadTeenusedPage;

@@ -1,14 +1,14 @@
 import React from "react";
-import {CarDetailsDTO} from "@/app/types/types";
+import { CarDetailsDTO } from "@/app/types/types";
 
 const CarInfo: React.FC<{ car: CarDetailsDTO }> = ({ car }) => {
     const carDetailsArray = [
         { label: "Liik", value: car.vehicleType },
         { label: "Keretüüp", value: car.bodyType },
         { label: "Esmane reg", value: car.firstRegistrationDate },
-        { label: "Mootor", value: `${car.engineCapacityLiters} ${car.enginePowerKW}kW` },
+        { label: "Mootor", value: `${car.engineCapacityLiters} ${car.enginePowerKW} kW` },
         { label: "Kütus", value: car.fuelType },
-        { label: "Läbisõidumõõdiku näit", value: `${car.odometerReading}km` },
+        { label: "Läbisõidumõõdiku näit", value: `${car.odometerReading} km` },
         { label: "Vedav sild", value: car.driveType },
         { label: "Käigukast", value: car.transmission },
         { label: "Värvus", value: car.color },
@@ -17,10 +17,10 @@ const CarInfo: React.FC<{ car: CarDetailsDTO }> = ({ car }) => {
     ];
 
     return (
-        <div className="pt-2">
+        <div className="car-info p-4 border rounded-lg shadow-md bg-gray-50">
             {carDetailsArray.map((detail, index) => (
                 <p key={index} className="text-lg mb-4 flex justify-between">
-                    <span>{detail.label}:</span>
+                    <span className="font-semibold">{detail.label}:</span>
                     <span>{detail.value}</span>
                 </p>
             ))}

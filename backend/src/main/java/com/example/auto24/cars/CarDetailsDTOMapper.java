@@ -55,6 +55,7 @@ public class CarDetailsDTOMapper implements Function<CarDetails, CarDetailsDTO> 
                 carDetails.getLength(),
                 carDetails.getWidth(),
                 carDetails.getHeight(),
+                carDetails.getNumberOfAxles(),
                 carDetails.getAcceleration0To100(),
                 carDetails.getTopSpeed(),
                 carDetails.getLocationCountry(),
@@ -117,6 +118,7 @@ public class CarDetailsDTOMapper implements Function<CarDetails, CarDetailsDTO> 
         carDetails.setLength(dto.length());
         carDetails.setWidth(dto.width());
         carDetails.setHeight(dto.height());
+        carDetails.setNumberOfAxles(dto.numberOfAxles());
         carDetails.setAcceleration0To100(dto.acceleration0To100());
         carDetails.setTopSpeed(dto.topSpeed());
         carDetails.setLocationCountry(dto.locationCountry());
