@@ -1,9 +1,6 @@
 package com.example.auto24.cars;
 
 import com.example.auto24.users.SecurityUtils;
-import com.example.auto24.users.UserPrincipal;
-import com.example.auto24.users.UserRepository;
-import com.example.auto24.users.Users;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
@@ -21,15 +18,13 @@ public class CarDetailsService {
     private final CarRepository carRepository;
     private final MongoTemplate mongoTemplate;
     private final CarDetailsUpdateMapper carDetailsUpdateMapper;
-    private final UserRepository userRepository;
 
-    public CarDetailsService(CarDetailsRepository carDetailsRepository, CarDetailsDTOMapper carDetailsDTOMapper, CarRepository carRepository, MongoTemplate mongoTemplate, CarDetailsUpdateMapper carDetailsUpdateMapper, UserRepository userRepository) {
+    public CarDetailsService(CarDetailsRepository carDetailsRepository, CarDetailsDTOMapper carDetailsDTOMapper, CarRepository carRepository, MongoTemplate mongoTemplate, CarDetailsUpdateMapper carDetailsUpdateMapper) {
         this.carDetailsRepository = carDetailsRepository;
         this.carDetailsDTOMapper = carDetailsDTOMapper;
         this.carRepository = carRepository;
         this.mongoTemplate = mongoTemplate;
         this.carDetailsUpdateMapper = carDetailsUpdateMapper;
-        this.userRepository = userRepository;
     }
 
 
