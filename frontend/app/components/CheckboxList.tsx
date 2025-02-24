@@ -21,7 +21,7 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ info, parent, handleChange 
         return Object.entries(info).map(([key, value], index) => {
             if (typeof value === 'boolean') {
                 return (
-                    <div key={index} className="flex flex-col bg-gray-50 p-2 border-b border-gray-200">
+                    <div key={key} className="flex flex-col bg-gray-50 p-2 border-b border-gray-200">
                         <label className="flex items-center">
                             <input
                                 type="checkbox"
@@ -45,15 +45,13 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ info, parent, handleChange 
                             <input
                                 type="text"
                                 name={`${parent}.${key}Lisainfo`}
-                                value={info[`${key}Lisainfo`]}
+                                value={info[`${key}Lisainfo`] || ''}
                                 onChange={handleChange}
                                 className="mt-2 p-1 border border-gray-300"
                             />
                         )}
                     </div>
                 );
-            } else if (typeof value === 'string' && key.endsWith('Lisainfo')) {
-                return null; // Hide the lisainfo field initially
             }
             return null;
         });
@@ -61,5 +59,4 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ info, parent, handleChange 
 
     return <>{renderCheckboxList(info, parent)}</>;
 };
-
-export default CheckboxList;
+export default CheckboxList

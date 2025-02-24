@@ -65,7 +65,7 @@ public class CarService {
     }
 
 
-    private void updateUserCarIds(String userId, String carId) {
+    public void updateUserCarIds(String userId, String carId) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.getCarIds().add(carId);
         userRepository.save(user);
@@ -111,6 +111,19 @@ public class CarService {
     }
 
     public Long countCars() {
-        return carRepository.count();
+        return carRepository.countByIsActiveTrue();
     }
+
+
+    public boolean toggleCarListingStatus(String carId) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
+
+        car.setActive(!car.isActive());
+        carRepository.save(car);
+
+        return car.isActive();
+    }
+
+
 }

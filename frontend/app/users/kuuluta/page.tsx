@@ -29,8 +29,6 @@ const CarDetailsForm: React.FC = () => {
         firstRegistrationDate: '',
         price: 0,
         includesRegistrationFee: false,
-        discountPrice: false,
-        exportPrice: false,
         odometerReading: 0,
         hasServiceBook: false,
         vinCode: '',
@@ -300,16 +298,20 @@ const CarDetailsForm: React.FC = () => {
     });
 
     const handleExtraInfoChange = (e: React.ChangeEvent<HTMLInputElement>, category: keyof CarExtraInfoDTO) => {
-        const { name, type, checked, value } = e.target;
+        const { name, type, checked } = e.target;
 
-        setCarExtraInfo((prevState) => ({
+        const updatedValue = type === 'checkbox' ? checked : e.target.value;
+
+        // Update the specific part of the state based on the category and name
+        setCarExtraInfo(prevState => ({
             ...prevState,
             [category]: {
                 ...prevState[category],
-                [name]: type === 'checkbox' ? checked : value,
+                [name.split('.').pop() as string]: updatedValue, // Use only the key without parent category
             },
         }));
     };
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

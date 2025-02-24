@@ -35,7 +35,8 @@ public class EmailVerificationService {
         emailVerificationTokenRepository.delete(verificationToken);
         sendNewsletter(user);
     }
-    private void sendNewsletter(Users user) {
+    public void sendNewsletter(Users user) {
         emailService.sendNewsLetterEmail(user);
     }
+
 }

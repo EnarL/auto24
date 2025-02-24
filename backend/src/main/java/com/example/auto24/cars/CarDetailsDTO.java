@@ -13,8 +13,6 @@ public record CarDetailsDTO(
         String firstRegistrationDate,
         double price,
         boolean includesRegistrationFee,
-        boolean discountPrice,
-        boolean exportPrice,
         int odometerReading,
         boolean hasServiceBook,
         String vinCode,

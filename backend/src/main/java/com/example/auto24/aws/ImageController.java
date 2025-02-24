@@ -54,14 +54,10 @@ public class ImageController {
     }
 
     @DeleteMapping("/delete/{id}/{fileKey}")
-    public ResponseEntity<String> deleteFile(@PathVariable String id, @PathVariable String fileKey,
-                                             @AuthenticationPrincipal UserPrincipal userDetails) {
+    public ResponseEntity<String> deleteFile(@PathVariable String id, @PathVariable String fileKey
+                                            ) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Car not found"));
-        if (!car.getOwnerId().equals(userDetails.getUserId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized to delete this image.");
-        }
-
         service.deleteFile(fileKey);
         car.getImageKeys().remove(fileKey);
         carRepository.save(car);

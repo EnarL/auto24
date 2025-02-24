@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CarRepository extends MongoRepository<Car, String> {
     List<Car> findByOwnerId(String ownerId);
+    long countByIsActiveTrue();
 }

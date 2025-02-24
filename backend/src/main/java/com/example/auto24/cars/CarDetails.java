@@ -24,8 +24,6 @@ public class CarDetails {
     // Pricing
     private double price;
     private boolean includesRegistrationFee = false;
-    private boolean discountPrice = false;
-    private boolean exportPrice = false;
 
     // Odometer & Documentation
     private int odometerReading;

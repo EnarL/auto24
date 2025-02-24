@@ -1,9 +1,7 @@
 package com.example.auto24.cars;
 
-import com.example.auto24.users.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import static org.springframework.http.ResponseEntity.ok;
@@ -56,5 +54,11 @@ public class CarController {
     public ResponseEntity<Long> countCars() {
         return ResponseEntity.ok(carService.countCars());
     }
+    @PatchMapping("/activate/{id}")
+    public ResponseEntity<String> changeCarListingActiveStatus(@PathVariable String id){
+        boolean isActive = carService.toggleCarListingStatus(id);
+        return ResponseEntity.ok(isActive ? "Listing activated" : "Listing deactivated");
+    }
+
 
 }

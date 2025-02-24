@@ -16,13 +16,15 @@ const RegisterPage: React.FC = () => {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/users/register', {
+            const response = await fetch('http://localhost:8080/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     username: username,
+                    firstname: firstname,
+                    lastname: lastname,
                     password: password,
                     email: email,
                     newsletter: newsletter,
@@ -31,16 +33,16 @@ const RegisterPage: React.FC = () => {
             });
 
             if (response.ok) {
-                setSuccess('Successfully registered');
+                setSuccess('Registreerumine õnnestus! Kontrolli oma e-posti aadressi kinnitamiseks.');
                 setError('');
             } else {
                 const errorMessage = await response.text();
-                setError(errorMessage);
+                setError(errorMessage || 'Registreerumine ebaõnnestus. Palun proovi uuesti.');
                 setSuccess('');
             }
         } catch (error) {
-            console.error('Error:', error);
-            setError('An error occurred. Please try again.');
+            console.error('Viga:', error);
+            setError('Tekkis ootamatu viga. Palun proovi hiljem uuesti.');
             setSuccess('');
         }
     };
@@ -88,7 +90,7 @@ const RegisterPage: React.FC = () => {
                         <label className="block text-gray-700 mx-auto w-[150px] text-[12px]" htmlFor="password">Parool uuesti *</label>
                         <input
                             type="password"
-                            id="password"
+                            id="passwordConfirm"
                             className="border border-gray-300 w-[300px]"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -122,17 +124,15 @@ const RegisterPage: React.FC = () => {
                         <input
                             type="checkbox"
                             id="newsletter"
-                            className=""
                             checked={newsletter}
                             onChange={(e) => setNewsletter(e.target.checked)}
                         />
                     </div>
                     <div className="mb-4 flex items-center">
-                        <label className="block mx-auto text-gray-700 text-[12px]" htmlFor="terms">Nõustun <a href="https://www.auto24.ee/users/kasutustingimused.php" className="underline hover:text-blue-600">andmekaitse-ja kasutusetingimustega</a> *</label>
+                        <label className="block mx-auto text-gray-700 text-[12px]" htmlFor="terms">Nõustun <a href="https://www.auto24.ee/users/kasutustingimused.php" className="underline hover:text-blue-600">andmekaitse- ja kasutusetingimustega</a> *</label>
                         <input
                             type="checkbox"
                             id="terms"
-                            className=""
                             checked={terms}
                             onChange={(e) => setTerms(e.target.checked)}
                         />

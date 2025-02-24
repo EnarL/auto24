@@ -1,6 +1,7 @@
-"use client";
+"use client"
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
+
 
 interface AuthUserContextType {
     isLoggedIn: boolean;
@@ -9,10 +10,12 @@ interface AuthUserContextType {
     lastname: string;
     email: string;
     newsletter: boolean;
+    active:boolean;
     phoneNumber: string;
     loading: boolean;
     accessToken: string;
-    refreshToken: string;
+    tokenExpiration: number;
+
     setIsLoggedIn: (isLoggedIn: boolean) => void;
     setUsername: (username: string) => void;
     setFirstname: (firstname: string) => void;
@@ -20,10 +23,12 @@ interface AuthUserContextType {
     setNewsletter: (newsletter: boolean) => void;
     setPhoneNumber: (phoneNumber: string) => void;
     setEmail: (email: string) => void;
+    setActive: (email: boolean) => void;
+    setTokenExpiration: (tokenExpiration: number) => void;
     setAccessToken: (accessToken: string) => void;
-    setRefreshToken: (refreshToken: string) => void;
     updateUserData: () => void;
 }
+
 const AuthUserContext = createContext<AuthUserContextType | undefined>(undefined);
 
 export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -33,10 +38,11 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [newsletter, setNewsletter] = useState(false);
+    const [active, setActive] = useState(false)
     const [phoneNumber, setPhoneNumber] = useState('');
     const [loading, setLoading] = useState(true);
     const [accessToken, setAccessToken] = useState('');
-    const [refreshToken, setRefreshToken] = useState('');
+    const [tokenExpiration, setTokenExpiration] = useState(0);
     const router = useRouter();
 
     const fetchUserData = async () => {
@@ -52,8 +58,11 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 setLastname(data.lastname);
                 setEmail(data.email);
                 setNewsletter(data.newsletter);
+                setActive(data.active)
                 setPhoneNumber(data.phoneNumber);
                 setIsLoggedIn(true);
+                setAccessToken(data.accessToken);
+                setTokenExpiration(Date.now() + data.expiresIn * 1000);
             } else {
                 console.error("Failed to fetch user data");
             }
@@ -77,19 +86,21 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 lastname,
                 email,
                 newsletter,
+                active,
                 phoneNumber,
                 loading,
                 accessToken,
-                refreshToken,
+                tokenExpiration,
                 setIsLoggedIn,
                 setUsername,
                 setFirstname,
                 setLastname,
                 setEmail,
                 setNewsletter,
+                setActive,
                 setPhoneNumber,
                 setAccessToken,
-                setRefreshToken,
+                setTokenExpiration,
                 updateUserData: fetchUserData,
             }}
         >
@@ -105,3 +116,4 @@ export const useAuthUser = (): AuthUserContextType => {
     }
     return context;
 };
+

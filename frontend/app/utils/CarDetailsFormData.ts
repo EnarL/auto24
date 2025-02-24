@@ -4,14 +4,14 @@ const CarDetailsFormData = {
     email: 'enar.leini00@gmail.com',
     vehicleType: '',
     bodyType: '',
-    brand: '',
+    bodyTypeDetail: '',
+    brand: '', // `make` in DTO
     model: '',
-    modelName: '',
     modelGeneration: '',
     modelTrim: '',
-    firstRegistrationMonth: '',
-    firstRegistrationYear: '',
+    firstRegistrationDate: '',
     price: '',
+    includesRegistrationFee: false,
     mileage: '',
     hasServiceBook: false,
     vinCode: '',
@@ -23,6 +23,8 @@ const CarDetailsFormData = {
     engineConfiguration: '',
     engineDetails: '',
     enginePowerKW: '',
+    enginePowerHP: '',
+    fuelType: '',
     fuelTankCapacity: '',
     fuelConsumptionHighway: '',
     fuelConsumptionCity: '',
@@ -32,9 +34,9 @@ const CarDetailsFormData = {
     seatingCapacity: '',
     numberOfDoors: '',
     hasWarranty: false,
-    isAccidentDamaged: false,
+    isAccidentDamaged: false, // `accidentDamaged` in DTO
     color: '',
-    isMetallicColor: false,
+    isMetallicColor: false, // `metallicColor` in DTO
     colorDetail: '',
     curbWeight: '',
     grossWeight: '',
@@ -52,10 +54,11 @@ const CarDetailsFormData = {
     importedFromCountry: '',
     registeredInCountry: false,
     inspectionValidUntil: '',
-    isReserved: false,
+    isReserved: false, // `reserved` in DTO
     reservationUntilDate: '',
     exchangePossible: false,
     exchangeDetails: '',
     description: '',
 };
+
 export default CarDetailsFormData;

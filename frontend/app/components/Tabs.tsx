@@ -15,22 +15,22 @@ const Tabs: React.FC<TabsProps> = ({ activeTab }) => {
                 <p className="">Minu kuulutused</p>
             </div>
             <div className="flex text-[14px] h-full items-end">
-                <Link href="/minu" className={`w-[86px] h-full text-center cursor-pointer flex items-end justify-center ${getLinkClass('Kõik')}`}>
+                <Link href="minu" className={`w-[86px] h-full text-center cursor-pointer flex items-end justify-center ${getLinkClass('Kõik')}`}>
                     Kõik
                 </Link>
-                <Link href="/kuulutused" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Sõidukite kuulutused')}`}>
+                <Link href="kuulutused" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Sõidukite kuulutused')}`}>
                     Sõidukite kuulutused
                 </Link>
-                <Link href="/kaubad_varuosad" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Kaubad ja varuosad')}`}>
+                <Link href="kaubad_varuosad" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Kaubad ja varuosad')}`}>
                     Kaubad ja varuosad
                 </Link>
-                <Link href="/firmad_teenused" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Firmad ja teenused')}`}>
+                <Link href="firmad_teenused" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Firmad ja teenused')}`}>
                     Firmad ja teenused
                 </Link>
-                <Link href="/reklaamid_bannerid" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Reklaam-bännerid')}`}>
+                <Link href="reklaamid_bannerid" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Reklaam-bännerid')}`}>
                     Reklaam-bännerid
                 </Link>
-                <Link href="/ordered_others" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Muud teenused')}`}>
+                <Link href="ordered_others" className={`w-[86px] text-center h-full cursor-pointer flex items-end justify-center ${getLinkClass('Muud teenused')}`}>
                     Muud teenused
                 </Link>
             </div>

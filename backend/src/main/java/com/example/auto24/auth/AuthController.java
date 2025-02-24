@@ -6,7 +6,7 @@ import com.example.auto24.users.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,10 +49,12 @@ public class AuthController {
 
     // cur user or ADMIN
     @GetMapping("/confirm")
-    public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
+    public ResponseEntity<Void> confirmEmail(@RequestParam("token") String token, HttpServletResponse response) {
         emailVerificationService.confirmEmail(token);
-        return ResponseEntity.ok("Email confirmed");
+        response.setHeader("Location", "http://localhost:3000/login?confirmed=true");
+        return new ResponseEntity<>(HttpStatus.FOUND);
     }
+
     // cur user or ADMIN
     @PostMapping("/forgot-password")
     public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
@@ -74,8 +76,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestParam String refreshToken, HttpServletResponse response) {
-        tokenService.refreshToken(refreshToken, response);
+    public ResponseEntity<?> refreshToken(HttpServletResponse response) {
+        tokenService.refreshToken(response);
         return ResponseEntity.ok("Access token refreshed.");
     }
     @GetMapping("/check-session")

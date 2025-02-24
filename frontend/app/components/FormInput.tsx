@@ -18,14 +18,14 @@ const FormInput: React.FC<FormInputProps> = ({
                                                  className = ""
                                              }) => {
     return (
-        <div className="mb-2 flex items-center">
-            <label className={`block text-gray-700 mx-auto w-[150px] text-[12px] ${className}`} htmlFor={id}>
+        <div className="mb-2 flex items-center"> {/* Flex container for alignment */}
+            <label className={`block text-gray-700 text-[12px] flex-none w-[120px] ${className}`} htmlFor={id}>
                 {label}
             </label>
             <input
                 type={type}
                 id={id}
-                className={`border border-gray-300 w-[300px] ${className}`}
+                className={`border border-gray-300 w-full text-[12px] ${className}`} // Full width for input
                 value={value}
                 onChange={onChange}
             />

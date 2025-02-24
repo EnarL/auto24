@@ -22,10 +22,10 @@ public class CarDetailsController {
     public List<CarDTO> getCarDetailsForUser() {
             return carDetailsService.getCarDetailsForUser();
     }
-//    @GetMapping("user/preview")
-//    public List<CarPreviewDTO> getCarDetailsPreview() {
-//        return carDetailsService.getCarPreviewsForUser();
-//    }
+    @GetMapping("user/preview")
+    public List<CarPreviewDTO> getCarDetailsPreview() {
+        return carDetailsService.getCarPreviewsForUser();
+    }
     @GetMapping("/search")
     public List<CarPreviewDTO> searchCars(@RequestParam Map<String, String> searchParams) {
         return carDetailsService.searchCars(searchParams);

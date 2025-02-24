@@ -2,7 +2,7 @@ import React from 'react';
 import CheckboxList from '@/app/components/CheckboxList';
 
 interface AdditionalFeaturesProps {
-    formData: any;
+    formData: Record<string, any>;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 

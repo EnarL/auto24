@@ -43,10 +43,18 @@ public class CarDetailsService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+    public List<CarPreviewDTO> getCarPreviewsForUser() {
+        String userId = SecurityUtils.getAuthenticatedUserId();
+        List<Car> cars = carRepository.findByOwnerId(userId);
+        return cars.stream()
+                .map(this::createCarPreviewDTO)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
-    private CarPreviewDTO createCarPreviewDTOFromDetails(CarDetails carDetails) {
+    public CarPreviewDTO createCarPreviewDTOFromDetails(CarDetails carDetails) {
         Optional<Car> carOptional = carRepository.findById(carDetails.getCarId());
-        if (carOptional.isEmpty()) {
+        if (carOptional.isEmpty() || !carOptional.get().isActive()) {
             return null;
         }
         Car car = carOptional.get();
@@ -71,6 +79,7 @@ public class CarDetailsService {
         return carDetailsRepository.findByCarId(id)
                 .map(carDetailsDTOMapper::apply);
     }
+
     public List<CarPreviewDTO> getAllCarsPreview() {
         return carRepository.findAll().stream()
                 .filter(Car::isActive)
@@ -79,17 +88,13 @@ public class CarDetailsService {
                 .collect(Collectors.toList());
     }
 
-    private CarPreviewDTO createCarPreviewDTO(Car car) {
-
+    public CarPreviewDTO createCarPreviewDTO(Car car) {
         Optional<CarDetails> carDetailsOptional = carDetailsRepository.findByCarId(car.getId());
-
         if (carDetailsOptional.isEmpty()) {
             return null;
         }
         CarDetails carDetails = carDetailsOptional.get();
-
         CarDetailsDTO carDetailsDTO = carDetailsDTOMapper.apply(carDetails);
-
         List<String> imageKeys = car.getImageKeys() != null ? car.getImageKeys() : new ArrayList<>();
 
         return new CarPreviewDTO(
@@ -100,7 +105,7 @@ public class CarDetailsService {
                 imageKeys
         );
     }
-    private CarDTO createCarDTO(Car car) {
+    public CarDTO createCarDTO(Car car) {
         Optional<CarDetails> carDetailsOptional = carDetailsRepository.findByCarId(car.getId());
         if (carDetailsOptional.isEmpty()) {
             return null;
@@ -117,7 +122,7 @@ public class CarDetailsService {
         );
     }
 
-    private String createCarTitle(CarDetailsDTO carDetailsDTO) {
+    public String createCarTitle(CarDetailsDTO carDetailsDTO) {
         String make = Optional.ofNullable(carDetailsDTO.make()).orElse("");
         String model = Optional.ofNullable(carDetailsDTO.model()).orElse("");
         String modelTrim = Optional.ofNullable(carDetailsDTO.modelTrim()).map(trim -> " " + trim).orElse("");
@@ -125,7 +130,7 @@ public class CarDetailsService {
         return make + " " + model + modelTrim;
     }
 
-    private String extractYearFromFirstRegistrationDate(CarDetailsDTO carDetailsDTO) {
+    public String extractYearFromFirstRegistrationDate(CarDetailsDTO carDetailsDTO) {
         return carDetailsDTO.firstRegistrationDate() != null
                 ? carDetailsDTO.firstRegistrationDate().substring(0, 4)
                 : "";
@@ -133,9 +138,7 @@ public class CarDetailsService {
 
 
     public List<CarDTO> getCarDetailsForUser() {
-        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
-        Users user = userRepository.findByUsername(userPrincipal.getUsername());
-        String userId = user.getId();
+        String userId = SecurityUtils.getAuthenticatedUserId();
         List<Car> cars = carRepository.findByOwnerId(userId);
         return cars.stream().
                 map(this::createCarDTO).

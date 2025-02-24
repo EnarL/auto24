@@ -1,14 +1,22 @@
 "use client"
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, {useEffect, useState} from 'react';
+import {useRouter, useSearchParams} from 'next/navigation';
 import { useAuthUser } from '@/app/context/AuthUserContext';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const { setIsLoggedIn, updateUserData } = useAuthUser();
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        if (searchParams.get('confirmed') === 'true') {
+            setSuccessMessage('E-post on edukalt kinnitatud! Palun logi sisse, et jätkata.');
+        }
+    }, [searchParams]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,12 +40,11 @@ const LoginPage: React.FC = () => {
                 updateUserData();
                 router.push('/users/minu/');
             } else {
-                const errorMessage = "sorry, wrong credentials"
-                setError(errorMessage);
+                setError("Vigased sisselogimisandmed. Palun proovi uuesti.");
             }
         } catch (error) {
-            console.error('Login failed:', error);
-            setError('An error occurred. Please try again.');
+            console.error('Sisselogimine ebaõnnestus:', error);
+            setError('Tekkis viga. Palun proovi uuesti.');
         }
     };
 
@@ -50,18 +57,21 @@ const LoginPage: React.FC = () => {
             <div className="bg-white p-8 md:p-16 w-full max-w-4xl flex flex-col md:flex-row">
                 <div className="w-full md:w-1/2 pr-0 md:pr-4 mb-8 md:mb-0">
                     <h2 className="text-2xl mb-6 text-center">Logi sisse</h2>
+                    {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
+
                     <form onSubmit={handleLogin}>
                         <div className="mb-4">
                             <input
                                 type="text"
                                 id="username"
-                                placeholder="Kasutaja"
+                                placeholder="Kasutajanimi"
                                 className="w-full p-2 border border-gray-300"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 required
                             />
                         </div>
+
                         <div className="mb-4">
                             <input
                                 type="password"
@@ -84,9 +94,10 @@ const LoginPage: React.FC = () => {
                             >
                                 Unustasin parooli
                             </p>
-
                         </div>
+
                         {error && <p className="text-red-500 mb-4">{error}</p>}
+
                         <button
                             type="submit"
                             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300"

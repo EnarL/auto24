@@ -9,8 +9,6 @@ export const initialFormData = {
     firstRegistrationDate: '',
     price: 0,
     includesRegistrationFee: false,
-    discountPrice: false,
-    exportPrice: false,
     odometerReading: 0,
     hasServiceBook: false,
     vinCode: '',

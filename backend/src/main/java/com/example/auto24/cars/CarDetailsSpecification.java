@@ -48,7 +48,7 @@ public class CarDetailsSpecification {
                             query.addCriteria(Criteria.where(key).gte(year + "-01-01").lte(year + "-12-31"));
                         }
                     }
-                    case "includesRegistrationFee", "discountPrice", "exportPrice",
+                    case "includesRegistrationFee",
                          "hasServiceBook", "hasWarranty", "accidentDamaged",
                          "metallicColor", "registeredInCountry", "reserved", "exchangePossible" ->
                             query.addCriteria(Criteria.where(key).is(Boolean.parseBoolean(value)));

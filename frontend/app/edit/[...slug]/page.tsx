@@ -1,8 +1,8 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import { CarDetailsDTO, CarExtraInfoDTO } from '@/app/types/types';
 import { initialFormData } from '@/app/data/InitialFormData';
 import VehicleDetails from '@/app/components/CarRegistrationForm/VehicleDetails';
@@ -16,6 +16,7 @@ import Seats from '@/app/components/CarRegistrationForm/Seats';
 import SportFeatures from '@/app/components/CarRegistrationForm/SportFeatures';
 import Steering from '@/app/components/CarRegistrationForm/Steering';
 import Tires from '@/app/components/CarRegistrationForm/Tires';
+import Link from "next/link";
 
 interface CarListingResponse {
     carDetailsDTO: CarDetailsDTO;
@@ -23,8 +24,8 @@ interface CarListingResponse {
 }
 
 const CarDetailsForm: React.FC = () => {
-    const router = useRouter();
     const { slug } = useParams();
+    const router = useRouter(); // Initialize the router
     const [formData, setFormData] = useState<CarDetailsDTO & CarExtraInfoDTO>(initialFormData);
 
     useEffect(() => {
@@ -73,21 +74,94 @@ const CarDetailsForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:8080/cars/update/${slug}`, formData, {
+            const response = await axios.put(`http://localhost:8080/cars/update/${slug}`, {
+                carDetailsDTO: {
+                    vehicleType: formData.vehicleType,
+                    bodyType: formData.bodyType,
+                    bodyTypeDetail: formData.bodyTypeDetail,
+                    model: formData.model,
+                    make: formData.make,
+                    modelGeneration: formData.modelGeneration,
+                    modelTrim: formData.modelTrim,
+                    firstRegistrationDate: formData.firstRegistrationDate,
+                    price: formData.price,
+                    includesRegistrationFee: formData.includesRegistrationFee,
+                    odometerReading: formData.odometerReading,
+                    hasServiceBook: formData.hasServiceBook,
+                    vinCode: formData.vinCode,
+                    registrationNumber: formData.registrationNumber,
+                    transmission: formData.transmission,
+                    driveType: formData.driveType,
+                    engineCapacityLiters: formData.engineCapacityLiters,
+                    engineCapacityCubicCentimeters: formData.engineCapacityCubicCentimeters,
+                    engineConfiguration: formData.engineConfiguration,
+                    engineDetails: formData.engineDetails,
+                    enginePowerKW: formData.enginePowerKW,
+                    enginePowerHP: formData.enginePowerHP,
+                    fuelType: formData.fuelType,
+                    fuelTankCapacity: formData.fuelTankCapacity,
+                    fuelConsumptionHighway: formData.fuelConsumptionHighway,
+                    fuelConsumptionCity: formData.fuelConsumptionCity,
+                    fuelConsumptionCombined: formData.fuelConsumptionCombined,
+                    fuelConsumptionStandard: formData.fuelConsumptionStandard,
+                    co2Emissions: formData.co2Emissions,
+                    seatingCapacity: formData.seatingCapacity,
+                    numberOfDoors: formData.numberOfDoors,
+                    hasWarranty: formData.hasWarranty,
+                    accidentDamaged: formData.accidentDamaged,
+                    color: formData.color,
+                    metallicColor: formData.metallicColor,
+                    colorDetail: formData.colorDetail,
+                    curbWeight: formData.curbWeight,
+                    grossWeight: formData.grossWeight,
+                    payloadCapacity: formData.payloadCapacity,
+                    brakedTrailerWeight: formData.brakedTrailerWeight,
+                    unbrakedTrailerWeight: formData.unbrakedTrailerWeight,
+                    wheelbase: formData.wheelbase,
+                    length: formData.length,
+                    width: formData.width,
+                    height: formData.height,
+                    acceleration0To100: formData.acceleration0To100,
+                    topSpeed: formData.topSpeed,
+                    locationCountry: formData.locationCountry,
+                    locationCounty: formData.locationCounty,
+                    importedFromCountry: formData.importedFromCountry,
+                    registeredInCountry: formData.registeredInCountry,
+                    inspectionValidUntil: formData.inspectionValidUntil,
+                    reserved: formData.reserved,
+                    reservationUntilDate: formData.reservationUntilDate,
+                    exchangePossible: formData.exchangePossible,
+                    exchangeDetails: formData.exchangeDetails,
+                    description: formData.description,
+                },
+                carExtraInfoDTO: {
+                    safetyAndSecurity: formData.safetyAndSecurity,
+                    audioVideoCommunication: formData.audioVideoCommunication,
+                    lights: formData.lights,
+                    tiresAndWheels: formData.tiresAndWheels,
+                    steering: formData.steering,
+                    seats: formData.seats,
+                    interiorFeatures: formData.interiorFeatures,
+                    sportFeatures: formData.sportFeatures,
+                    comfortFeatures: formData.comfortFeatures,
+                    additionalFeatures: formData.additionalFeatures,
+                }
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 withCredentials: true,
             });
-            if (response.status === 201) {
-                alert('Car listing created successfully');
-                router.push('lisa_pildid');
+            if (response.status === 200) {
+                alert('Car listing updated successfully');
+                // Redirect to the add image page using the slug
+                router.push(`/edit/add-image?slug=${slug}`);
             } else {
                 alert('Failed to update car listing');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while creating the car listing');
+            alert('An error occurred while updating the car listing');
         }
     };
 
@@ -101,10 +175,12 @@ const CarDetailsForm: React.FC = () => {
                     <span>Sõiduki sisestamine</span>
                 </span>
                 <span className="flex items-center ml-16">
+                       <Link href={`/edit/add-image/${slug}`} className="flex items-center">
                     <span className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white font-bold mr-2">
                         2
                     </span>
                     <span>Piltide lisamine</span>
+                       </Link>
                 </span>
                 <span className="flex items-center ml-16">
                     <span className="flex items-center justify-center w-[25px] h-[25px] rounded-full bg-gray-200 text-white font-bold mr-2">
@@ -129,6 +205,15 @@ const CarDetailsForm: React.FC = () => {
 
             <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
                 Submit
+            </button>
+
+            {/* Add the Redirect Button for Image Upload */}
+            <button
+                type="button"
+                className="bg-gray-500 text-white px-4 py-2 rounded mt-4 ml-2"
+                onClick={() => router.push(`/edit/add-image/${slug}`)}
+            >
+                Piltide lisamine
             </button>
         </form>
     );

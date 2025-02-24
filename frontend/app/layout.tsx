@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import TopBar from "./components/topbar";
-import Header from "./components/header";
-import Kuuluta from "./components/kuuluta";
-import Foobar from "./components/foobar";
-import Logo from "./components/logo";
-import Sublogos from "./components/sublogos";
+import TopBar from "./components/common/topbar";
+import Header from "./components/common/header";
+import Kuuluta from "./components/common/kuuluta";
+import Foobar from "./components/common/foobar";
+import Logo from "./components/common/logo";
+import Sublogos from "./components/common/sublogos";
 import React from "react";
-import Banner from "@/app/components/banner";
-import FooterSection from "@/app/components/footersection";
+import Banner from "@/app/components/common/banner";
+import FooterSection from "@/app/components/common/footersection";
 import { AuthUserProvider } from "@/app/context/AuthUserContext";
-import ClientOnlyLayout from "@/app/ClientOnlyLayout"; // Import the client-side wrapper
+import ClientOnlyLayout from "@/app/ClientOnlyLayout";
 
 export const metadata: Metadata = {
     title: "Avaleht - auto24.ee",
@@ -24,11 +24,11 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-        <body className="display flex flex-col">
+        <body className="flex flex-col min-h-screen">
         <AuthUserProvider>
             <ClientOnlyLayout>
                 <Header className="w-full hidden md:block" />
-                <div className="mx-auto flex flex-col w-full max-w-custom">
+                <div className="mx-auto flex flex-col w-full max-w-custom flex-grow">
                     <div>
                         <Banner className="hidden lg:block" />
                         <div className="flex items-center w-full">
@@ -37,7 +37,7 @@ export default function RootLayout({
                         </div>
                         <TopBar />
                         <Kuuluta />
-                        <div className="w-[1000px] overall-margin-left">
+                        <div className="w-full md:w-[1000px] overall-margin-left">
                             {children}
                         </div>
                     </div>

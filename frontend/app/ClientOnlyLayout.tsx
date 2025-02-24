@@ -1,15 +1,13 @@
-'use client';
-
-import { useAuthUser } from "@/app/context/AuthUserContext";
+"use client";
 import React, { useState, useEffect } from "react";
+import { useAuthUser } from "@/app/context/AuthUserContext";
 import useTokenRefresh from "@/app/hooks/useRefreshToken";
-import "./globals.css";
 
 const ClientOnlyLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { loading } = useAuthUser();
     const [isClient, setIsClient] = useState(false);
 
-    useTokenRefresh(); // Use the hook here
+    useTokenRefresh(); // Call the token refresh hook here
 
     useEffect(() => {
         setIsClient(true);

@@ -14,11 +14,17 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
                                                          onChange,
                                                      }) => {
     return (
-        <div className="mb-4 flex items-center">
-            <label className="block mx-auto text-gray-700 text-[12px]" htmlFor={id}>
+        <div className="mb-4 flex items-center justify-between">
+            <label className="text-gray-700 text-[12px]" htmlFor={id}>
                 {label}
             </label>
-            <input type="checkbox" id={id} checked={checked} onChange={onChange} />
+            <input
+                type="checkbox"
+                id={id}
+                checked={checked}
+                onChange={onChange}
+                className="ml-2" // Space between label and checkbox
+            />
         </div>
     );
 };

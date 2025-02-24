@@ -47,7 +47,7 @@ public class EmailService implements EmailSender {
     @Async
     public void sendConfirmationEmail(Users user, String token) throws MessagingException {
         String subject = "Confirm your email";
-        String confirmationUrl = appBaseUrl + "/auth/confirm?token=" + token;
+        String confirmationUrl = "http://localhost:8080" + "/auth/confirm?token=" + token;
         String emailContent = buildEmailContent(
                 "Welcome to Auto24, " + user.getFirstname() + "!",
                 "Thank you for registering. Please confirm your email address by clicking the link below:",
@@ -60,7 +60,7 @@ public class EmailService implements EmailSender {
     @Async
     public void sendPasswordResetEmail(String to, String token) {
         String subject = "Password Reset Request";
-        String resetUrl = appBaseUrl + "/reset_password?token=" + token; // Use configurable base URL
+        String resetUrl = appBaseUrl + "/reset_password?token=" + token;
         String message = buildEmailContent(
                 "Password Reset Request",
                 "Click the link below to reset your password:",

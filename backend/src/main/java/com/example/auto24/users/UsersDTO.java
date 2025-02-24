@@ -9,5 +9,6 @@ public record UsersDTO(
         String email,
         String phoneNumber,
         boolean newsletter,
-        List<String> carIds
+        List<String> carIds,
+        boolean active
 ) {}

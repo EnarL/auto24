@@ -19,19 +19,20 @@ const useUpdateUser = (initialUserData: UserDTO) => {
             });
 
             if (response.ok) {
-                setSuccess('Successfully updated user data');
+                setSuccess('Andmed on edukalt uuendatud');
                 setError('');
             } else {
                 const errorMessage = await response.text();
-                setError(errorMessage);
+                setError(errorMessage || 'Uuendamine ebaõnnestus');
                 setSuccess('');
             }
         } catch (error) {
             console.error('Error:', error);
-            setError('An error occurred. Please try again.');
+            setError('Tekkis viga. Palun proovige uuesti.');
             setSuccess('');
         }
     };
+
     return {
         userData,
         setUserData,

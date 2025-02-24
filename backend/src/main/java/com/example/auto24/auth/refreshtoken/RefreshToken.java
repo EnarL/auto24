@@ -1,6 +1,5 @@
 package com.example.auto24.auth.refreshtoken;
 
-import com.example.auto24.users.Users;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,5 +16,5 @@ public class RefreshToken {
     private String id;
     private String token;
     private LocalDateTime expiryDate;
-    private Users user;
+    private String userId;
 }

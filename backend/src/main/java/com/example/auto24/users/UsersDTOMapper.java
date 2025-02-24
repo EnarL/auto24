@@ -15,7 +15,8 @@ public class UsersDTOMapper implements Function<Users,UsersDTO> {
                 users.getEmail(),
                 users.getPhoneNumber(),
                 users.isNewsletter(),
-                users.getCarIds()
+                users.getCarIds(),
+                users.isActive()
         );
     }
 }

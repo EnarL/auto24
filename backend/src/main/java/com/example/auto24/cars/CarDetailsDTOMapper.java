@@ -20,8 +20,6 @@ public class CarDetailsDTOMapper implements Function<CarDetails, CarDetailsDTO> 
                 carDetails.getFirstRegistrationDate(),
                 carDetails.getPrice(),
                 carDetails.isIncludesRegistrationFee(),
-                carDetails.isDiscountPrice(),
-                carDetails.isExportPrice(),
                 carDetails.getOdometerReading(),
                 carDetails.isHasServiceBook(),
                 carDetails.getVinCode(),
@@ -84,8 +82,6 @@ public class CarDetailsDTOMapper implements Function<CarDetails, CarDetailsDTO> 
         carDetails.setFirstRegistrationDate(dto.firstRegistrationDate());
         carDetails.setPrice(dto.price());
         carDetails.setIncludesRegistrationFee(dto.includesRegistrationFee());
-        carDetails.setDiscountPrice(dto.discountPrice());
-        carDetails.setExportPrice(dto.exportPrice());
         carDetails.setOdometerReading(dto.odometerReading());
         carDetails.setHasServiceBook(dto.hasServiceBook());
         carDetails.setVinCode(dto.vinCode());

@@ -1,3 +1,4 @@
+
 export interface CarDetailsDTO {
     vehicleType: string;
     bodyType: string;
@@ -9,8 +10,6 @@ export interface CarDetailsDTO {
     firstRegistrationDate: string;
     price: number;
     includesRegistrationFee: boolean;
-    discountPrice: boolean;
-    exportPrice: boolean;
     odometerReading: number;
     hasServiceBook: boolean;
     vinCode: string;
@@ -67,7 +66,7 @@ export interface CarExtraInfoDTO {
     steering: Steering;
     seats: Seats;
     comfortFeatures: Comfort;
-    additionalFeatures: Additional;
+    additionalFeatures: additionalFeatures;
     sportFeatures: Sport;
     audioVideoCommunication: AudioVideoCommunication;
     interiorFeatures: Interior;
@@ -79,6 +78,7 @@ export interface UserDTO {
     email: string;
     phoneNumber: string;
     newsletter: boolean;
+    active: boolean;
 }
 
 export interface TiresAndWheels {
@@ -259,7 +259,7 @@ export interface AudioVideoCommunication {
     gsmAntenn: boolean;
 }
 
-export interface Additional {
+export interface additionalFeatures {
     reguleeritavVedrustus: boolean;
     ohkvedrustus: boolean;
     startStoppSusteem: boolean;

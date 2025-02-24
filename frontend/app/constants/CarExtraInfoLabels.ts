@@ -117,6 +117,34 @@ const featureLabels = {
         electricSlidingDoors: 'Electric Sliding Doors',
         wirelessPhoneCharging: 'Wireless Phone Charging',
     },
+    additionalFeatures: {
+        adjustableSuspension: 'Adjustable Suspension',
+        airSuspension: 'Air Suspension',
+        startStopSystem: 'Start-Stop System',
+        powerSockets12V: '12V Power Sockets',
+        roofRails: 'Roof Rails',
+        skiBag: 'Ski Bag',
+        tireRepairKit: 'Tire Repair Kit',
+        cooledGloveBox: 'Cooled Glove Box',
+        outsideTemperatureGauge: 'Outside Temperature Gauge',
+        doubleGlazedWindows: 'Double Glazed Windows',
+        heatedWindshield: 'Heated Windshield',
+        rearWindowHeating: 'Rear Window Heating',
+        washerNozzleHeating: 'Washer Nozzle Heating',
+        luggageCover: 'Luggage Cover',
+        cargoNet: 'Cargo Net',
+        separationNet: 'Separation Net',
+        cargoTieDownHooks: 'Cargo Tie-Down Hooks',
+        rearWiper: 'Rear Wiper',
+        fireExtinguisher: 'Fire Extinguisher',
+        towHitch: 'Tow Hitch',
+        trailerStabilityAssist: 'Trailer Stability Assist',
+        tripComputer: 'Trip Computer',
+        mudFlaps: 'Mud Flaps',
+        accessibilityEquipment: 'Accessibility Equipment',
+        fourWheelSteering: 'Four-Wheel Steering',
+    }
+
 };
 
 export default featureLabels;

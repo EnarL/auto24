@@ -1,8 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../components/Sidebar";
-import Tabs from "../../components/Tabs";
+import { useRouter } from "next/navigation";
+import Sidebar from "@/app/components/Sidebar";
+import Tabs from "@/app/components/Tabs";
 import { useAuthUser } from "@/app/context/AuthUserContext";
+
 interface CarPreview {
     id: string;
     title: string;
@@ -12,8 +14,14 @@ interface CarPreview {
 
 const MinuPage: React.FC = () => {
     const { isLoggedIn, username } = useAuthUser();
+    const router = useRouter(); // Initialize router
     const [userCars, setUserCars] = useState<CarPreview[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push("/login");
+        }
+    }, [isLoggedIn, router]);
 
     useEffect(() => {
         const fetchUserCars = async () => {
@@ -26,7 +34,8 @@ const MinuPage: React.FC = () => {
 
                     if (response.ok) {
                         const data = await response.json();
-                        setUserCars(data);
+                        const validCars = data.filter((car: CarPreview) => car && car.title);
+                        setUserCars(validCars);
                     } else {
                         console.error("Failed to fetch car previews");
                     }
@@ -38,8 +47,33 @@ const MinuPage: React.FC = () => {
             }
         };
 
-        fetchUserCars();
+        if (isLoggedIn) {
+            fetchUserCars();
+        }
     }, [isLoggedIn, username]);
+
+    const handleToggleActive = async (id: string) => {
+        try {
+            const response = await fetch(`http://localhost:8080/cars/activate/${id}`, {
+                method: "PATCH",
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                const message = await response.text();
+                alert(message);
+                setUserCars(userCars.map(car =>
+                    car.id === id ? { ...car, isActive: !car.isActive } : car
+                ));
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to update listing status: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error("Error updating car status:", error);
+            alert("Error updating listing status");
+        }
+    };
 
     const handleDeleteCar = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this car sale?")) {
@@ -66,6 +100,8 @@ const MinuPage: React.FC = () => {
         window.location.href = `/edit/${carId}`;
     };
 
+    if (!isLoggedIn) return null;
+
     return (
         <div className="flex flex-col">
             <div className="flex">
@@ -79,22 +115,22 @@ const MinuPage: React.FC = () => {
                             {userCars.map((car) => (
                                 <div key={car.id} className="border rounded-md shadow-md p-4 bg-white">
                                     <div className="flex justify-between items-center">
-                                        <h3 className="font-bold text-lg">{car.title}</h3>
+                                        <h3 className="font-bold text-lg">{car.title || "Unknown Title"}</h3>
                                         <span
-                                            className={car.isActive ? "text-green-500 font-semibold" : "text-red-500 font-semibold"}>
-                      {car.isActive ? "Aktiivne" : "Mitteaktiivne"}
-                    </span>
+                                            onClick={() => handleToggleActive(car.id)}
+                                            className={`cursor-pointer font-semibold ${car.isActive ? "text-green-500" : "text-red-500"}`}
+                                        >
+                                            {car.isActive ? "Aktiivne" : "Mitteaktiivne"}
+                                        </span>
                                     </div>
                                     <p className="text-gray-600 mt-1">
-                                        Kehtiv kuni: {new Date(car.expirationDate).toLocaleDateString("et-EE")}
+                                        Kehtiv kuni: {car.expirationDate ? new Date(car.expirationDate).toLocaleDateString("et-EE") : "Unknown Date"}
                                     </p>
                                     <div className="flex space-x-4 mt-3">
-                                        <button onClick={() => handleEditCar(car.id)}
-                                                className="text-blue-500 hover:text-blue-700">
+                                        <button onClick={() => handleEditCar(car.id)} className="text-blue-500 hover:text-blue-700">
                                             Muuda andmeid
                                         </button>
-                                        <button onClick={() => handleDeleteCar(car.id)}
-                                                className="text-red-500 hover:text-red-700">
+                                        <button onClick={() => handleDeleteCar(car.id)} className="text-red-500 hover:text-red-700">
                                             Kustuta kuulutus
                                         </button>
                                     </div>

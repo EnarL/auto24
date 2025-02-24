@@ -8,9 +8,9 @@ import CarExtraInfo from "@/app/components/CarDetails/CarExtraInfo";
 import CarSpecs from "@/app/components/CarDetails/CarSpecs";
 
 const CarDetails: React.FC = () => {
-    const { slug } = useParams(); // Get the slug from URL params
+    const { slug } = useParams();
     if (typeof slug !== "string") {
-        return <p>Invalid car slug or car not found</p>; // Handle slug validation
+        return <p>Invalid car slug or car not found</p>;
     }
 
     const { car, carExtraInfo, images, isLoading } = useCarDetails(slug);
