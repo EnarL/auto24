@@ -40,7 +40,9 @@ const BrandPage = () => {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             });
-            if (!response.ok) throw new Error("Failed to fetch car details");
+            if (!response.ok) {
+                throw new Error("Failed to fetch car details");
+            }
             const data: CarDetail[] = await response.json();
             setCarDetails(data);
             const imageRequests = data.map((car) =>

@@ -9,12 +9,6 @@ const MinuPage: React.FC = () => {
     const { isLoggedIn } = useRequireAuth();
     const { userCars, setUserCars, loading } = useUserCars();
     const { handleToggleActive, handleDeleteCar, handleEditCar } = useCarActions(userCars, setUserCars);
-    const [isMenuVisible, setIsMenuVisible] = useState(false); // State to control MenuBar visibility
-
-    const toggleMenu = () => {
-        setIsMenuVisible((prev) => !prev);
-    };
-
     if (!isLoggedIn) return null;
 
     return (

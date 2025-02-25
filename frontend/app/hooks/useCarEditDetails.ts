@@ -3,7 +3,6 @@ import axios from 'axios';
 import { CarDetailsDTO, CarExtraInfoDTO } from '@/app/types/types';
 import carExtraInfoFormData from "@/app/utils/CarExtraInfoFormData";
 import carDetailsFormData from "@/app/utils/CarDetailsFormData";
-import useCarForm from "@/app/hooks/useCarForm";
 
 interface CarListingResponse {
     carDetailsDTO: CarDetailsDTO;

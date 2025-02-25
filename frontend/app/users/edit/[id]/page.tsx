@@ -13,7 +13,6 @@ const CarDetailsForm: React.FC = () => {
         carDetails,
         carExtraInfo,
         isLoading,
-        isSubmitting,
         error,
         handleCarDetailsChange,
         handleExtraInfoChange,
