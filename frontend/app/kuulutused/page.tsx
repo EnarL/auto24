@@ -1,9 +1,10 @@
 "use client";
 
-import React from 'react';
-import MenuBar from "@/app/components/common/menubar";
-import CarGrid from '@/app/components/CarGrid';
-import useCarPreview from '@/app/hooks/useCarPreview';
+import React, { useState } from 'react';
+import ListingPage from '@/app/components/homepage/kuulutused';
+import ExtendedMenuBar from "@/app/components/common/ExtendedMenuBar"; // Import your MenuBar component
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 
 const vehicleTypes = [
     'Sõiduauto', 'Veoauto', 'Mootorsaan', 'Maastur', 'Haagis', 'Veesõiduk',
@@ -11,16 +12,30 @@ const vehicleTypes = [
 ];
 
 const Page: React.FC = () => {
-    const { cars, carImages, loading, error } = useCarPreview(); // Fetch car data
+    const [isMenuVisible, setIsMenuVisible] = useState(false); // State to control MenuBar visibility
+
+    const toggleMenu = () => {
+        setIsMenuVisible((prev) => !prev);
+    };
+
+
 
     return (
-        <div className="mt-4">
+        <div className="mt-2 overflow-x-hidden">
             <main>
-                <div className="grid grid-cols-2 gap-[10px] h-[633px]" style={{ gridTemplateColumns: '250px 740px' }}>
-                    <div className="col-span-1 w-[250px]">
-                        <MenuBar showCarCount />
-                    </div>
-                    <div>
+                <div className="flex">
+                    <ExtendedMenuBar showCarCount={true} isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
+                    <div className={`flex-grow transition-all duration-300 ${isMenuVisible ? 'ml-[50px]' : 'ml-0'}`}>
+                        <div className="flex items-center mb-2">
+                            <button
+                                className="border border-gray-500 border-1 px-2 py-1 mt-2 flex items-center md:hidden"
+                                onClick={toggleMenu}
+                            >
+                                <FontAwesomeIcon icon={faSlidersH} className="h-5 w-5 mr-1 text-gray-500" />
+                                Filtrid
+                            </button>
+                        </div>
+
                         <div className="flex border-l-2 cursor-pointer">
                             <p className="border-r-2 p-2 border-t-2 border-t-[#06c]">Müügikuulutused</p>
                             <p className="p-2 border-b-2 flex-grow hover:text-blue-600 mt-[2px]">Ostukuulutused</p>
@@ -33,14 +48,12 @@ const Page: React.FC = () => {
                                 </div>
                             ))}
                         </div>
-                        <div className="pt-6">
-                            <CarGrid
-                                columns={5}
-                                carCount={10}
-                                cars={cars || []}
-                                carImages={carImages || {}}
-                                loading={loading}
-                                error={error}
+                        <div>
+                            <ListingPage
+                                carCount={15}
+                                columns={{ sm: 3, md: 5, lg: 5 }}
+                                imageHeight="h-36"
+                                imageWidth="w-full"
                             />
                         </div>
                     </div>

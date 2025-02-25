@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import S3Image from "@/app/components/S3Image";
+import S3Image from "@/app/components/common/S3Image";
 import { CarDetailsDTO } from "@/app/types/types";
 
 const CarImages: React.FC<{ images: string[], car: CarDetailsDTO }> = ({ images, car }) => {

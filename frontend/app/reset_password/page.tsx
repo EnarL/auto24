@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import useVerifyToken from "../hooks/useVerifyToken";
+import useVerifyToken from "@/app//hooks/useVerifyToken";
 import useResetPassword from "../hooks/useResetPassword";
 import {useSearchParams} from "next/navigation";
 

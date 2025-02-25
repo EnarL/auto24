@@ -1,12 +1,14 @@
 import Image from 'next/image';
+import React from "react";
 
 interface S3ImageProps {
-    src: string;
-    alt: string;
-    className?: string;
+    src: string,
+    alt: string,
+    className?: string,
+    style?: React.CSSProperties
 }
 
-const S3Image: React.FC<S3ImageProps> = ({ src, alt, className }) => {
+const S3Image: React.FC<S3ImageProps> = ({src, alt, className, style}) => {
     return (
         <Image
             src={src}
@@ -14,7 +16,7 @@ const S3Image: React.FC<S3ImageProps> = ({ src, alt, className }) => {
             width={240}
             height={150}
             className={className}
-            priority
+            style={{ ...style, objectFit: 'cover' }}
         />
     );
 };

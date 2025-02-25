@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import UserLayout from "@/app/components/UserLayout";
-import FormInput from "@/app/components/FormInput";
+import UserLayout from "@/app/components/user/UserLayout";
+import FormInput from "@/app/components/user/FormInput";
 import CheckboxInput from "@/app/components/CheckBoxInput";
 import { useAuthUser } from "@/app/context/AuthUserContext";
 import useUpdateUser from "@/app/hooks/useUpdateUserData";

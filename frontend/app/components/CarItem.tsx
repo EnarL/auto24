@@ -1,6 +1,6 @@
 // app/components/CarItem.tsx
 
-import S3Image from "@/app/components/S3Image";
+import S3Image from "@/app/components/common/S3Image";
 
 interface CarDetail {
     id: string;

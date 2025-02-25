@@ -3,22 +3,24 @@ import Link from 'next/link';
 
 interface SidebarProps {
     activeSection: string;
+    isMenuVisible: boolean;
+    toggleMenu: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeSection }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeSection, isMenuVisible }) => {
     const getLinkClass = (section: string) =>
         section === activeSection ? 'bg-orange-500 text-white hover:underline ' : 'hover:text-blue-600 hover:underline';
 
     return (
-        <div className="mt-2 space-y-4 text-[14px]">
+        <div className={`mt-2 space-y-4 text-[14px] ${isMenuVisible ? 'block' : 'hidden md:block'}`}>
             <section className="w-[250px] border-2 border-gray-100 rounded-md">
                 <h2 className="border-gray-100 border-b-2 p-2 text-[#06c] font-semibold">MINU KUULUTUSED</h2>
                 <div className="break-words from-white to-gray-50 opacity-80 bg-gradient-to-t p-2">
                     <Link href="/users/minu" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Kõik')}`}>Kõik</Link>
                     <Link href="/users/kuulutused" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Sõidukite kuulutused')}`}>Sõidukite kuulutused</Link>
-                    <Link href="/users/kaubad_varuosad" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Kaubad ja varuosad')}`}>Kaubad ja varuosad</Link>
-                    <Link href="/users/firmad_teenused" className={`block pl-2  mb-1 rounded-[2px] ${getLinkClass('Firmad ja teenused')}`}>Firmad ja teenused</Link>
-                    <Link href="/users/reklaamid_bannerid" className={`block pl-2  mb-1 rounded-[2px] ${getLinkClass('Reklaam-bännerid')}`}>Reklaam-bännerid</Link>
+                    <Link href="/users/kaubad_varuosad" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Kaubad_varuosad')}`}>Kaubad ja varuosad</Link>
+                    <Link href="/users/firmad_teenused" className={`block pl-2  mb-1 rounded-[2px] ${getLinkClass('Firmad_teenused')}`}>Firmad ja teenused</Link>
+                    <Link href="/users/reklaamid_bannerid" className={`block pl-2  mb-1 rounded-[2px] ${getLinkClass('Reklaamid_bannerid')}`}>Reklaam-bännerid</Link>
                     <Link href="/users/kuuluta">
                         <button className="border-2 mt-2 border-gray-100 w-full p-2 flex cursor-pointer hover:bg-gray-200">
                             <p className="mx-auto">LISA KUULUTUS</p>
@@ -30,7 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection }) => {
             <section className="w-[250px] border-2 border-gray-100 rounded-md">
                 <h2 className="border-gray-100 border-b-2 p-2 text-[#06c] font-semibold">MUUD TEENUSED</h2>
                 <div className="break-words from-white to-gray-50 opacity-80 bg-gradient-to-t p-2">
-                    <Link href="/users/ordered_others" className={`block ${getLinkClass('Tellitud muud teenused')}`}>Tellitud muud teenused</Link>
+                    <Link href="/users/ordered_others" className={`block ${getLinkClass('Ordered_others')}`}>Tellitud muud teenused</Link>
                     <Link href="/users/vpc" className={`block ${getLinkClass('Vpc')}`}>Telli sõidukite hinnapäring</Link>
                 </div>
             </section>

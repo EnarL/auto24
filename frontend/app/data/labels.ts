@@ -1,37 +1,9 @@
-
-
-export const contactFields = [
-    {
-        name: "phone",
-        label: "Telefon",
-        type: "text",
-        placeholder: "XXX XXXX",
-        required: true,
-        readOnly: false
-    },
-    {
-        name: "name",
-        label: "Nimi",
-        type: "text",
-        placeholder: "",
-        required: false,
-        readOnly: true
-    },
-    {
-        name: "email",
-        label: "Meiliaadress",
-        type: "email",
-        placeholder: "",
-        required: false,
-        readOnly: true
-    }
-];
 export const vehicleFields=[
     {name: "vehicleType", label: "Liik ja keretüüp", type: "text", required: true},
     {name: "bodyType", label: "Keretüüp (täpsustus)", type: "text"},
     {name: "make", label: "Mark", type: "text"},
     {name: "model", label: "Mudel", type: "text"},
-    {name: "modelName", label: "Mudeli nimi", type: "text"},
+    {name: "modelTrim", label: "Mudeli nimi", type: "text"},
     {name: "modelGeneration", label: "Mudeli põlvkond", type: "text"},
     {name: "price", label: "Hind EUR", type: "text"},
     {name: "mileage", label: "Läbisõidumõõdiku näit km", type: "text"},

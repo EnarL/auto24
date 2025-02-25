@@ -6,7 +6,6 @@ interface CarSpecsProps {
 }
 
 const CarSpecs: React.FC<CarSpecsProps> = ({ car }) => {
-    // Check if any property has a value to decide whether to render the component
 
 
     return (
@@ -86,8 +85,6 @@ const CarSpecs: React.FC<CarSpecsProps> = ({ car }) => {
                     </ul>
                 </div>
             ) : null}
-
-            {/* Teljed Section */}
             {car.numberOfAxles > 0 ? (
                 <div className="spec-section p-4 border rounded-lg shadow-md bg-gray-50">
                     <h4 className="text-lg font-semibold mb-2">TELJED</h4>

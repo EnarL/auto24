@@ -2,7 +2,6 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 
-
 interface AuthUserContextType {
     isLoggedIn: boolean;
     username: string;
@@ -10,12 +9,9 @@ interface AuthUserContextType {
     lastname: string;
     email: string;
     newsletter: boolean;
-    active:boolean;
+    active: boolean;
     phoneNumber: string;
     loading: boolean;
-    accessToken: string;
-    tokenExpiration: number;
-
     setIsLoggedIn: (isLoggedIn: boolean) => void;
     setUsername: (username: string) => void;
     setFirstname: (firstname: string) => void;
@@ -23,10 +19,9 @@ interface AuthUserContextType {
     setNewsletter: (newsletter: boolean) => void;
     setPhoneNumber: (phoneNumber: string) => void;
     setEmail: (email: string) => void;
-    setActive: (email: boolean) => void;
-    setTokenExpiration: (tokenExpiration: number) => void;
-    setAccessToken: (accessToken: string) => void;
+    setActive: (active: boolean) => void;
     updateUserData: () => void;
+    logout: () => Promise<void>; // Add logout method
 }
 
 const AuthUserContext = createContext<AuthUserContextType | undefined>(undefined);
@@ -38,11 +33,9 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [newsletter, setNewsletter] = useState(false);
-    const [active, setActive] = useState(false)
+    const [active, setActive] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [loading, setLoading] = useState(true);
-    const [accessToken, setAccessToken] = useState('');
-    const [tokenExpiration, setTokenExpiration] = useState(0);
     const router = useRouter();
 
     const fetchUserData = async () => {
@@ -58,18 +51,37 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 setLastname(data.lastname);
                 setEmail(data.email);
                 setNewsletter(data.newsletter);
-                setActive(data.active)
+                setActive(data.active);
                 setPhoneNumber(data.phoneNumber);
                 setIsLoggedIn(true);
-                setAccessToken(data.accessToken);
-                setTokenExpiration(Date.now() + data.expiresIn * 1000);
             } else {
-                console.error("Failed to fetch user data");
+                console.info("User is not logged in");
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const logout = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/auth/logout", {
+                method: "POST",
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                setIsLoggedIn(false);
+                setUsername("");
+                setFirstname("");
+                setLastname("");
+                router.push("/login");
+            } else {
+                console.error("Failed to log out");
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
         }
     };
 
@@ -89,8 +101,6 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 active,
                 phoneNumber,
                 loading,
-                accessToken,
-                tokenExpiration,
                 setIsLoggedIn,
                 setUsername,
                 setFirstname,
@@ -99,9 +109,8 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 setNewsletter,
                 setActive,
                 setPhoneNumber,
-                setAccessToken,
-                setTokenExpiration,
                 updateUserData: fetchUserData,
+                logout, // Provide the logout method
             }}
         >
             {children}
@@ -116,4 +125,3 @@ export const useAuthUser = (): AuthUserContextType => {
     }
     return context;
 };
-

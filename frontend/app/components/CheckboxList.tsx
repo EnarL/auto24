@@ -16,7 +16,7 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ info, parent, handleChange 
 
                 Object.keys(info).forEach((key) => {
                     if (info[`${key}Lisainfo`] !== undefined && !(key in prevState)) {
-                        newState[`${parent}.${key}Lisainfo`] = prevState[`${parent}.${key}Lisainfo`] ?? false; // Preserve existing state
+                        newState[`${parent}.${key}Lisainfo`] = prevState[`${parent}.${key}Lisainfo`] ?? false;
                     }
                 });
 

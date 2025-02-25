@@ -8,7 +8,6 @@ const Kuuluta: React.FC = () => {
     const { isLoggedIn } = useAuthUser();
 
     const handleClick = () => {
-
         if (isLoggedIn) {
             router.push('/users/kuuluta');
         } else {
@@ -18,13 +17,15 @@ const Kuuluta: React.FC = () => {
 
     return (
         <div className="flex flex-col">
-            <div
-                className="text-white pl-2 text-l bg-[#06c] cursor-pointer"
-                onClick={handleClick}
-            >
-                kuuluta
-            </div>
-            <div className="bg-[#06c] h-[2px] mt-[1px] lg:hidden"></div>
+
+                <div
+                    className="text-white pl-2 text-[14px] bg-[#06c] cursor-pointer hidden md:block"
+                    onClick={handleClick}
+                >
+                    kuuluta
+                </div>
+
+            <div className="bg-[#06c] h-[2px] lg:hidden"></div>
         </div>
     );
 };

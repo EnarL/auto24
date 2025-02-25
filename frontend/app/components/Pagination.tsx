@@ -6,8 +6,7 @@ interface PaginationProps {
 }
 
 const Pagination = ({ currentPage, totalCars, onPageChange, carsPerPage }: PaginationProps) => {
-    const totalPages = Math.ceil(totalCars / carsPerPage);
-
+    Math.ceil(totalCars / carsPerPage);
     return (
         <div>
             <button

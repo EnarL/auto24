@@ -8,7 +8,7 @@ const SortSelect = ({ sortOption, onSortChange }: SortSelectProps) => {
         <select
             value={sortOption}
             onChange={(e) => onSortChange(e.target.value)}
-            className="mb-4 p-1 border border-gray-300"
+            className=" p-2 border border-gray-300"
         >
             <option value="">Järjesta</option>
             <option value="price-asc">Hind kasvav</option>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import UserLayout from "@/app/components/UserLayout";
+import UserLayout from "@/app/components/user/UserLayout";
 import useChangePassword from "@/app/hooks/useChangePassword";
 
 const ChangePasswordPage: React.FC = () => {

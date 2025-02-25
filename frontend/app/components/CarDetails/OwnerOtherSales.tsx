@@ -1,7 +1,7 @@
 import React from "react";
 import useOwnerOtherSales from "@/app/hooks/useOwnerOtherSales";
 import Link from "next/link";
-import S3Image from "@/app/components/S3Image";
+import S3Image from "@/app/components/common/S3Image";
 
 interface Props {
     carId: string;

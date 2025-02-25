@@ -1,12 +1,11 @@
-// app/BrandPage.tsx
-
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import MenuBar from "@/app/components/common/menubar";
+import React, { useEffect, useState } from "react";
+import ExtendedMenuBar from "@/app/components/common/ExtendedMenuBar";
 import CarList from "@/app/components/CarList";
-import Pagination from "@/app/components/Pagination";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SortSelect from "@/app/components/SortSelect";
+import { faSlidersH, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 interface CarDetail {
     id: string;
@@ -30,7 +29,6 @@ const BrandPage = () => {
     const [sortOption, setSortOption] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
     const carsPerPage = 10;
-    const make = searchParams.get("make") || "";
 
     const fetchCarDetails = async () => {
         setLoading(true);
@@ -69,7 +67,6 @@ const BrandPage = () => {
         fetchCarDetails();
     }, [searchParams]);
 
-    // Sorting logic
     const sortedCars = [...carDetails].sort((a, b) => {
         if (sortOption === "price-asc") return a.price - b.price;
         if (sortOption === "price-desc") return b.price - a.price;
@@ -83,36 +80,55 @@ const BrandPage = () => {
     const handleCarClick = (carId: string) => {
         router.push(`/cars/${carId}`);
     };
-
     const handlePageChange = (newPage: number) => {
         if (newPage < 1 || newPage > Math.ceil(carDetails.length / carsPerPage)) return;
         setCurrentPage(newPage);
     };
-
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const toggleMenu = () => {
+        setIsMenuVisible((prev) => !prev);
+    };
     const paginatedCars = sortedCars.slice((currentPage - 1) * carsPerPage, currentPage * carsPerPage);
-
     return (
-        <div className="flex gap-[10px]">
-            <div className="w-[250px]">
-                <MenuBar showCarCount />
-            </div>
-            <div className="flex-grow">
-                <div className="mt-2 flex justify-between items-center">
+        <div className="mt-2 flex overflow-x-hidden">
+            <ExtendedMenuBar showCarCount={true} isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
+            <main className="flex flex-col flex-grow">
+                <div className="flex items-center mb-2">
+                    <button
+                        className="border border-gray-500 px-2 py-1 mt-2 ml-4 flex items-center md:hidden"
+                        onClick={toggleMenu}
+                    ><FontAwesomeIcon icon={faSlidersH} className="h-5 w-5 mr-1 text-gray-500"/>
+                        Filtrid
+                    </button>
+                </div>
+                <div className="flex items-center justify-between w-full px-4 mt-2 bg-gray-200 py-2">
+                    <span className="text-lg font-semibold">Kokku: {carDetails.length}</span>
                     <SortSelect sortOption={sortOption} onSortChange={setSortOption} />
-                    <div>
-                        <span className="mr-4">Kokku: {carDetails.length}</span>
-                        <Pagination
-                            currentPage={currentPage}
-                            totalCars={carDetails.length}
-                            onPageChange={handlePageChange}
-                            carsPerPage={carsPerPage}
-                        />
+                    <div className="flex items-center">
+                        <button
+                            className="p-2 border border-gray-500 rounded-md mx-1"
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            <FontAwesomeIcon icon={faChevronLeft} />
+                        </button>
+
+                        <span className="px-3">{currentPage} / {Math.ceil(carDetails.length / carsPerPage)}</span>
+
+                        <button
+                            className="p-2 border border-gray-500 rounded-md mx-1"
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === Math.ceil(carDetails.length / carsPerPage)}
+                        ><FontAwesomeIcon icon={faChevronRight} />
+                        </button>
                     </div>
                 </div>
-                {loading && <div>Loading...</div>}
-                {error && <div className="text-red-500">Error: {error}</div>}
-                <CarList cars={paginatedCars} carImages={carImages} onCarClick={handleCarClick} />
-            </div>
+                <div className="w-full px-4 mt-2">
+                    {loading && <div>Loading...</div>}
+                    {error && <div className="text-red-500">Error: {error}</div>}
+                    <CarList cars={paginatedCars} carImages={carImages} onCarClick={handleCarClick}/>
+                </div>
+            </main>
         </div>
     );
 };

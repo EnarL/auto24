@@ -1,10 +1,7 @@
 "use client";
 import { useEffect } from "react";
-import { useAuthUser } from "@/app/context/AuthUserContext";
 
 const useTokenRefresh = () => {
-    const { setAccessToken, setTokenExpiration } = useAuthUser();
-
     useEffect(() => {
         const refreshAccessToken = async () => {
             try {
@@ -13,20 +10,17 @@ const useTokenRefresh = () => {
                     credentials: "include",
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setAccessToken(data.accessToken);
-                    setTokenExpiration(Date.now() + data.expiresIn * 1000);
-                } else {
+                if (!response.ok) {
                     console.error("Failed to refresh token, logging out...");
                 }
             } catch (error) {
                 console.error("Error refreshing token:", error);
             }
         };
-        const interval = setInterval(() => {
-            refreshAccessToken();
-        }, 9 * 60 * 1000);
+        refreshAccessToken();
+
+        // Set interval to refresh the token every 8 minutes
+        const interval = setInterval(refreshAccessToken, 8 * 60 * 1000);
 
         return () => clearInterval(interval);
     }, []);

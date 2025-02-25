@@ -1,6 +1,6 @@
 import React from 'react';
-import { vehicleFields } from "@/app/data/labels"; // Ensure this path is correct
-import Field from "@/app/components/VehicleDetailsFields"; // Ensure this path is correct
+import { vehicleFields } from "@/app/data/labels";
+import Field from "@/app/components/CarRegistrationForm/VehicleDetailsFields";
 
 export interface VehicleDetailsProps {
     formData: Record<string, any>;

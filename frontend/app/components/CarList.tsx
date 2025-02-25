@@ -1,5 +1,3 @@
-// app/components/CarList.tsx
-
 import CarItem from "./CarItem";
 
 interface CarDetail {

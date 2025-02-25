@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
-import UserLayout from "@/app/components/UserLayout"; // Using UserLayout
-import useCarPreviewForUser from "@/app/hooks/useCarPreviewForUser"; // Hook for user preview
-import CarGrid from "@/app/components/CarGrid"; // Unified CarGrid component
+import UserLayout from "@/app/components/user/UserLayout";
+import useCarPreviewForUser from "@/app/hooks/useCarPreviewForUser";
+import CarGrid from "@/app/components/common/CarGrid";
 import Link from "next/link";
 
 const KuulutusedPage: React.FC = () => {
-    const { cars, carImages, loading, error } = useCarPreviewForUser(); // Fetch user cars
+    const { cars, carImages, loading, error } = useCarPreviewForUser();
 
     return (
         <UserLayout activeTab="Sõidukite kuulutused">
@@ -19,13 +19,13 @@ const KuulutusedPage: React.FC = () => {
             ) : (
                 <div className="mt-4 ml-2">
                     <CarGrid
-                        columns={3}
-                        carCount={30}
+                        columns={{ sm:2, md: 3, lg: 3 }}
+                        carCount={3}
                         cars={cars}
                         carImages={carImages}
                         loading={loading}
                         error={error}
-                    />
+                     />
                 </div>
             )}
         </UserLayout>

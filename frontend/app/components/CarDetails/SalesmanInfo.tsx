@@ -7,7 +7,7 @@ interface Props {
 }
 
 const SalesmanInfo: React.FC<Props> = ({ carId }) => {
-    const [salesman, setSalesman] = useState<any>(null); // Use a proper type here based on your API response
+    const [salesman, setSalesman] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 

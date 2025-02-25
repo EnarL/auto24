@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import UserLayout from "@/app/components/UserLayout";
+import React, { useState } from "react";
+import UserLayout from "@/app/components/user/UserLayout";
 import useRequireAuth from "@/app/hooks/useRequireAuth";
 import useUserCars from "@/app/hooks/useUserCars";
 import useCarActions from "@/app/hooks/useCarActions";
@@ -9,6 +9,11 @@ const MinuPage: React.FC = () => {
     const { isLoggedIn } = useRequireAuth();
     const { userCars, setUserCars, loading } = useUserCars();
     const { handleToggleActive, handleDeleteCar, handleEditCar } = useCarActions(userCars, setUserCars);
+    const [isMenuVisible, setIsMenuVisible] = useState(false); // State to control MenuBar visibility
+
+    const toggleMenu = () => {
+        setIsMenuVisible((prev) => !prev);
+    };
 
     if (!isLoggedIn) return null;
 
