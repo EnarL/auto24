@@ -7,8 +7,4 @@ run:
   web:
     command: "docker-compose up"  # Command to run both services
 
-formation:
-  web:
-    quantity: 1  # Number of dynos for the frontend
-  backend:
-    quantity: 1  # Number of dynos for the backend
+# You don't need the `.formation` section in Docker-based apps
