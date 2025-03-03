@@ -1,8 +1,8 @@
 import React from 'react';
-import CheckboxList from '@/app/components/CheckboxList';
-
+import CheckboxList from '@/app/components/CarRegistrationForm/CheckboxList';
+import { Sport as SportFeaturesType } from '@/app/types/types';
 interface SportFeaturesProps {
-    formData: any;
+    formData: { sportFeatures: SportFeaturesType };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 

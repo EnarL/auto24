@@ -1,11 +1,10 @@
-// components/CarDetailsForm.tsx
 "use client";
 import React from 'react';
 import { useParams } from 'next/navigation';
 import { useCarEditDetails } from '@/app/hooks/useCarEditDetails';
 import StepNavigation from '@/app/components/user/CarRegistrationProgress';
-import CarFormSection from '@/app/components/CarFormSection';
-import SubmissionButtons from '@/app/components/SubmissionButtons';
+import CarFormSection from '@/app/components/CarDetails/CarFormSection';
+import SubmissionButtons from '@/app/components/user/SubmissionButtons';
 
 const CarDetailsForm: React.FC = () => {
     const { id } = useParams();

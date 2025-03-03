@@ -1,8 +1,8 @@
 import React from 'react';
-import CheckboxList from '@/app/components/CheckboxList';
-
+import CheckboxList from '@/app/components/CarRegistrationForm/CheckboxList';
+import {TiresAndWheels as TiresType} from '@/app/types/types';
 interface TiresProps {
-    formData: any;
+    formData: { tiresAndWheels: TiresType };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 

@@ -21,7 +21,8 @@ const useVerifyToken = (token: string | null) => {
                 } else {
                     setError("Vigane või aegunud link.");
                 }
-            } catch (error) {
+            } catch (err) {
+                console.error("Error:", err);
                 setError("Midagi läks valesti. Palun proovige uuesti.");
             }
         };

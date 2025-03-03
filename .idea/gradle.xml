@@ -5,6 +5,7 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
+        <option name="gradleHome" value="$USER_HOME$/Downloads/tt/gradle-8.4-all/gradle-8.4" />
         <option name="gradleJvm" value="corretto-21" />
         <option name="modules">
           <set>

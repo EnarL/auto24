@@ -9,7 +9,7 @@ interface MenuBarProps {
     showCarCount: boolean;
 }
 
-const MenuBar: React.FC<MenuBarProps> = ({ showCarCount}) => {
+const Menubar: React.FC<MenuBarProps> = ({ showCarCount }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -79,7 +79,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ showCarCount}) => {
     const handleSearch = () => {
         const queryParams = new URLSearchParams(
             Object.entries(filters)
-                .filter(([_, value]) => value.trim() !== "")
+                .filter(([, value]) => value.trim() !== "")
                 .reduce((acc, [key, value]) => {
                     if (key === "yearFrom" || key === "yearTo") {
                         acc["firstRegistrationDate"] = `${filters.yearFrom}-${filters.yearTo}`;
@@ -97,7 +97,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ showCarCount}) => {
         ).toString();
 
         if (queryParams) {
-            router.push(`search/cars?${queryParams}`);
+            router.push(`/search/cars?${queryParams}`);
         }
     };
 
@@ -112,15 +112,15 @@ const MenuBar: React.FC<MenuBarProps> = ({ showCarCount}) => {
 
             <div className="h-[570px] overflow-y-auto flex flex-col">
                 <form className="text-sm text-black bg-[#f4f4f4] p-4 shadow-lg flex-1 flex flex-col">
-                    <InputField name="make" placeholder="Mark" value={filters.make} onChange={handleInputChange}  />
-                    <InputField name="model" placeholder="Mudel" value={filters.model} onChange={handleInputChange}/>
-                    <RangeInput label="Aasta" fromName="yearFrom" toName="yearTo" filters={filters} onChange={handleInputChange}  />
+                    <InputField name="make" placeholder="Mark" value={filters.make} onChange={handleInputChange} />
+                    <InputField name="model" placeholder="Mudel" value={filters.model} onChange={handleInputChange} />
+                    <RangeInput label="Aasta" fromName="yearFrom" toName="yearTo" filters={filters} onChange={handleInputChange} />
                     <RangeInput label="Hind" fromName="priceFrom" toName="priceTo" filters={filters} onChange={handleInputChange} />
-                    <RangeInput label="Võimsus (kW)" fromName="powerFrom" toName="powerTo" filters={filters} onChange={handleInputChange}  />
+                    <RangeInput label="Võimsus (kW)" fromName="powerFrom" toName="powerTo" filters={filters} onChange={handleInputChange} />
                     <RangeInput label="Läbisõidumõõdiku näit (km)" fromName="mileageFrom" toName="mileageTo" filters={filters} onChange={handleInputChange} />
-                    <InputField name="fuelType" placeholder="Kütus" value={filters.fuelType} onChange={handleInputChange}  />
-                    <InputField name="transmission" placeholder="Käigukast" value={filters.transmission} onChange={handleInputChange}  />
-                    <InputField name="driveType" placeholder="Vedav sild" value={filters.driveType} onChange={handleInputChange}  />
+                    <InputField name="fuelType" placeholder="Kütus" value={filters.fuelType} onChange={handleInputChange} />
+                    <InputField name="transmission" placeholder="Käigukast" value={filters.transmission} onChange={handleInputChange} />
+                    <InputField name="driveType" placeholder="Vedav sild" value={filters.driveType} onChange={handleInputChange} />
 
                     <button
                         type="button"
@@ -140,17 +140,16 @@ interface InputFieldProps {
     placeholder: string;
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    isExtended?: boolean; // New prop to determine field length
 }
 
-const InputField: React.FC<InputFieldProps> = ({ name, placeholder, value, onChange, isExtended }) => (
+const InputField: React.FC<InputFieldProps> = ({ name, placeholder, value, onChange }) => (
     <input
         type="text"
         name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`block ${isExtended ? "w-full" : "w-[100%]"} text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mb-1.5`} // Adjust width based on isExtended
+        className="block w-[100%] text-[12px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mb-1.5"
     />
 );
 
@@ -165,11 +164,11 @@ interface RangeInputProps {
 const RangeInput: React.FC<RangeInputProps> = ({ label, fromName, toName, filters, onChange }) => (
     <div>
         <label className="block text-[12px] text-gray-700">{label}</label>
-        <div className={`grid grid-cols-2 gap-2 mb-1.5`}>
+        <div className="grid grid-cols-2 gap-2 mb-1.5">
             <InputField name={fromName} placeholder="Alates" value={filters[fromName]} onChange={onChange} />
             <InputField name={toName} placeholder="Kuni" value={filters[toName]} onChange={onChange} />
         </div>
     </div>
 );
 
-export default MenuBar;
+export default Menubar;

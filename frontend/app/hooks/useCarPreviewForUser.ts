@@ -53,7 +53,8 @@ const useCarPreviewForUser = () => {
                 } else {
                     setError('Failed to fetch car details');
                 }
-            } catch (error) {
+            
+            } catch  {
                 setError('An error occurred while fetching data');
             } finally {
                 setLoading(false);

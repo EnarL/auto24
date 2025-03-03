@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import TopBar from "./components/common/Topbar";
-import Header from "./components/common/header";
-import Kuuluta from "./components/common/kuuluta";
-import Foobar from "./components/common/foobar";
-import Logo from "./components/common/logo";
-import Sublogos from "./components/common/sublogos";
+import Header from "@/app/components/common/Header";
+import Kuuluta from "@/app/components/common/Kuuluta";
+import Foobar from "@/app/components/common/Foobar";
+import Logo from "@/app/components/common/Logo";
+import Sublogos from "@/app/components/common/Sublogos";
 import React from "react";
-import Banner from "@/app/components/common/banner";
-import FooterSection from "@/app/components/common/footersection";
+import Banner from "@/app/components/common/Banner";
+import Footersection from "@/app/components/common/Footersection";
 import { AuthUserProvider } from "@/app/context/AuthUserContext";
 import ClientOnlyLayout from "@/app/ClientOnlyLayout";
 import AuthWrapper from "@/app/components/auth/AuthWrapper";
@@ -45,7 +45,7 @@ export default function RootLayout({
                         </div>
                     </div>
                     <Foobar />
-                    <FooterSection />
+                    <Footersection />
                 </ClientOnlyLayout>
             </AuthWrapper>
         </AuthUserProvider>

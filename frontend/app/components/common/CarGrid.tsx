@@ -43,7 +43,6 @@ const CarGrid: React.FC<CarGridProps> = ({
         return <div className="text-red-500">{error}</div>;
     }
 
-    // Map the columns to CSS classes
     const columnClasses: Record<string, string> = {
         "1": 'grid-cols-1',
         "2": 'grid-cols-2',

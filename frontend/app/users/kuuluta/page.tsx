@@ -2,7 +2,7 @@
 import React from 'react';
 import { useCarForm } from "@/app/hooks/useCarForm";
 import StepNavigation from "@/app/components/user/CarRegistrationProgress";
-import CarFormSection from "@/app/components/CarFormSection";
+import CarFormSection from "@/app/components/CarDetails/CarFormSection";
 
 const CarDetailsForm: React.FC = () => {
     const {

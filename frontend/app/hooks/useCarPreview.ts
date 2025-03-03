@@ -7,11 +7,13 @@ interface CarPreviewDTO {
     firstRegistrationDate: string;
     imageKeys?: string[];
 }
+
 const useCarPreview = () => {
     const [cars, setCars] = useState<CarPreviewDTO[]>([]);
     const [carImages, setCarImages] = useState<Record<string, string[]>>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchCarDetails = async () => {
             setLoading(true);
@@ -39,7 +41,13 @@ const useCarPreview = () => {
                 } else {
                     setError('Failed to fetch car details');
                 }
-            } catch (error) {
+                //eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    console.error('Error:', error.message);
+                } else {
+                    console.error('Unknown error occurred');
+                }
                 setError('An error occurred while fetching data');
             } finally {
                 setLoading(false);

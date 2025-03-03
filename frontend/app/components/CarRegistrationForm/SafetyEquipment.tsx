@@ -1,8 +1,8 @@
 import React from 'react';
-import CheckboxList from '@/app/components/CheckboxList';
-
+import CheckboxList from '@/app/components/CarRegistrationForm/CheckboxList';
+import { SafetyAndSecurity as SafetyAndSecurityType } from '@/app/types/types';
 interface SafetyEquipmentProps {
-    formData: any;
+    formData: { safetyAndSecurity: SafetyAndSecurityType };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 

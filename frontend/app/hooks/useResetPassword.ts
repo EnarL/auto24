@@ -28,7 +28,8 @@ const useResetPassword = (token: string | null) => {
             } else {
                 setError("Parooli muutmine ebaõnnestus. Palun proovige uuesti.");
             }
-        } catch (error) {
+        } catch (err) {
+            console.error("Error:", err);
             setError("Viga. Palun proovige hiljem uuesti.");
         }
     };

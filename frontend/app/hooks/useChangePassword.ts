@@ -8,12 +8,11 @@ const useChangePassword = () => {
         try {
             const response = await fetch('http://localhost:8080/users/change-password', {
                 method: 'POST',
-                body: JSON.stringify(
-                    {
-                        currentPassword: curPassword,
-                        newPassword: newPassword,
-                        confirmationPassword: confirmationPassword
-                    }),
+                body: JSON.stringify({
+                    currentPassword: curPassword,
+                    newPassword: newPassword,
+                    confirmationPassword: confirmationPassword
+                }),
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include'
             });
@@ -24,8 +23,9 @@ const useChangePassword = () => {
 
             setSuccess('Password changed successfully');
         } catch (err) {
-            // @ts-ignore
-            setError(err.message);
+            const errorMessage = (err as Error).message;
+            console.error('Error:', errorMessage);
+            setError(errorMessage);
         }
     };
 

@@ -1,5 +1,3 @@
-// app/components/CarItem.tsx
-
 import S3Image from "@/app/components/common/S3Image";
 
 interface CarDetail {

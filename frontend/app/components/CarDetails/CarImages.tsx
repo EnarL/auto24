@@ -25,18 +25,18 @@ const CarImages: React.FC<{ images: string[], car: CarDetailsDTO }> = ({ images,
         );
     };
 
-    const visibleImages = images.slice(0, 4); // Get the first four images
-    const additionalImagesCount = images.length > 4 ? images.length - 4 : 0; // Count additional images
+    const visibleImages = images.slice(0, 4);
+    const additionalImagesCount = images.length > 4 ? images.length - 4 : 0;
 
     return (
         <div>
             <div className="mb-4">
                 <div
-                    onClick={() => openModal(0)} // Click on the big image opens the modal with the first image
+                    onClick={() => openModal(0)}
                     className="cursor-pointer"
                 >
                     <S3Image
-                        src={images[0]} // Always display the first image
+                        src={images[0]}
                         alt={`Main image of ${car.make} ${car.model}`}
                         className="w-full md:pr-0 pr-4 h-auto max-h-[40vh] md:max-h-[60vh] mx-auto border rounded-lg shadow-md"
                     />
@@ -47,7 +47,7 @@ const CarImages: React.FC<{ images: string[], car: CarDetailsDTO }> = ({ images,
                     <div
                         key={index}
                         className="relative cursor-pointer transition-transform transform hover:scale-105"
-                        onClick={() => openModal(index)} // Click on thumbnails opens the modal with the clicked image
+                        onClick={() => openModal(index)}
                     >
                         <S3Image
                             src={imageUrl}
@@ -68,7 +68,7 @@ const CarImages: React.FC<{ images: string[], car: CarDetailsDTO }> = ({ images,
                     <div className="relative w-full max-w-4xl h-auto p-4">
                         <button
                             onClick={closeModal}
-                            className="absolute top-0 right-0 text-white bg-black rounded-full p-2"
+                            className="absolute top-0 right-0 text-white bg-black rounded-full p-3"
                         >
                             X
                         </button>

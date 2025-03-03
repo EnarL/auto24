@@ -3,7 +3,7 @@ import {CarDetailsDTO, CarExtraInfoDTO} from "@/app/types/types";
 
 
 
-const useCarDetails = (id: string) => {
+const useCarDetails = (id: string | Array<string> | undefined) => {
     const [car, setCar] = useState<CarDetailsDTO | null>(null);
     const [carExtraInfo, setCarExtraInfo] = useState<CarExtraInfoDTO | null>(null);
     const [images, setImages] = useState<string[]>([]);

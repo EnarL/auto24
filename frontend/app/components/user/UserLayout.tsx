@@ -5,7 +5,7 @@ import Tabs from "@/app/components/user/Tabs";
 import { useAuthUser } from "@/app/context/AuthUserContext";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons"; // Updated icon
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 const UserLayout: React.FC<{ activeTab: string; children: React.ReactNode }> = ({ activeTab, children }) => {
     const { isLoggedIn } = useAuthUser();

@@ -1,11 +1,11 @@
 "use client";
 import React from 'react';
-import MenuBar from '../app/components/common/menubar';
-import Placeholder from './components/homepage/placeholder';
+import Menubar from './components/common/Menubar';
+import Placeholder from '@/app/components/homepage/Placeholder';
 
-import SearchSection from "@/app/components/homepage/searchsection";
-import PopularBrands from "@/app/components/homepage/popularbrands";
-import ListingPage from "./components/homepage/kuulutused";
+import Searchsection from "@/app/components/homepage/Searchsection";
+import Popularbrands from "@/app/components/homepage/Popularbrands";
+import ListingPage from "@/app/components/homepage/Kuulutused";
 
 const Page: React.FC = () => {
     return (
@@ -15,14 +15,14 @@ const Page: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-[10px] h-[633px]" style={{ gridTemplateColumns: '1fr 740px' }}>
                         <div className="col-span-1 md:w-[250px]">
                             <h1 className="text-[18px] font-sans opacity-60">SÕIDUKIKUULUTUSED</h1>
-                            <MenuBar showCarCount={true} />
+                            <Menubar showCarCount={true} />
 
                         </div>
                         <div className="col-span-1">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
-                                <SearchSection />
+                                <Searchsection />
                                 <div className="md:col-span-1">
-                                    <PopularBrands />
+                                    <Popularbrands />
                                 </div>
                             </div>
                             <div className="col-span-2 row-span-2 w-full h-[116px] mt-4 flex justify-between items-center invisible md:visible md:flex">

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { CarDetailsDTO, CarExtraInfoDTO } from '@/app/types/types';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { CarDetailsDTO, CarExtraInfoDTO } from "@/app/types/types";
 import carExtraInfoFormData from "@/app/utils/CarExtraInfoFormData";
 import carDetailsFormData from "@/app/utils/CarDetailsFormData";
 
@@ -16,10 +16,8 @@ export const useCarEditDetails = (id?: string | string[]) => {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Normalize the carId
     const carId = id ? (Array.isArray(id) ? id[0] : id) : undefined;
 
-    // Fetch car data if editing an existing car
     useEffect(() => {
         if (!carId) return;
 
@@ -36,13 +34,13 @@ export const useCarEditDetails = (id?: string | string[]) => {
                     setCarDetails(prev => ({ ...prev, ...carDetailsDTO }));
                     setCarExtraInfo(prev => ({ ...prev, ...carExtraInfoDTO }));
                 } else {
-                    setError('Failed to fetch car listing data');
-                    alert('Failed to fetch car listing data');
+                    setError("Failed to fetch car listing data");
+                    alert("Failed to fetch car listing data");
                 }
             } catch (error) {
-                console.error('Error:', error);
-                setError('An error occurred while fetching the car listing data');
-                alert('An error occurred while fetching the car listing data');
+                console.error("Error fetching car listing:", error);
+                setError("An error occurred while fetching the car listing data");
+                alert("An error occurred while fetching the car listing data");
             } finally {
                 setIsLoading(false);
             }
@@ -58,7 +56,7 @@ export const useCarEditDetails = (id?: string | string[]) => {
 
         setCarDetails(prevState => ({
             ...prevState,
-            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value || '',
+            [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value || "",
         }));
     };
 
@@ -66,7 +64,7 @@ export const useCarEditDetails = (id?: string | string[]) => {
     const handleExtraInfoChange = (e: React.ChangeEvent<HTMLElement>, category: keyof CarExtraInfoDTO) => {
         e.preventDefault();
         const { name, type, value } = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-        const updatedValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+        const updatedValue = type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
 
         console.log(`Changing ${category} -> ${name}:`, updatedValue);
 
@@ -74,19 +72,19 @@ export const useCarEditDetails = (id?: string | string[]) => {
             ...prevState,
             [category]: {
                 ...(prevState[category] || {}),
-                [name.split('.').pop() as string]: updatedValue,
+                [name.split(".").pop() as string]: updatedValue,
             },
         }));
     };
 
     // Submit the form
     const submitForm = async () => {
-        if (!carId) return { success: false, message: 'No car ID provided' };
+        if (!carId) return { success: false, message: "No car ID provided" };
 
         setIsSubmitting(true);
         try {
-            console.log('Updating car with ID:', carId);
-            console.log('Data being sent:', {
+            console.log("Updating car with ID:", carId);
+            console.log("Data being sent:", {
                 carDetailsDTO: carDetails,
                 carExtraInfoDTO: carExtraInfo,
             });
@@ -98,30 +96,19 @@ export const useCarEditDetails = (id?: string | string[]) => {
                     carExtraInfoDTO: carExtraInfo,
                 },
                 {
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { "Content-Type": "application/json" },
                     withCredentials: true,
                 }
             );
 
             if (response.status === 200) {
-                return { success: true, message: 'Car listing updated successfully' };
+                return { success: true, message: "Car listing updated successfully" };
             } else {
-                return { success: false, message: 'Failed to update car listing' };
+                return { success: false, message: "Failed to update car listing" };
             }
-        } catch (error: any) {
-            console.error('Error:', error);
-
-            let errorMessage = 'An error occurred while updating the car listing';
-            if (error.response) {
-                console.error('Response status:', error.response.status);
-                console.error('Response data:', error.response.data);
-            } else if (error.request) {
-                console.error('No response received');
-            } else {
-                console.error('Error message:', error.message);
-            }
-
-            return { success: false, message: errorMessage };
+        } catch (error) {
+            console.error("Error updating car listing:", error);
+            return { success: false, message: "An error occurred while updating the car listing" };
         } finally {
             setIsSubmitting(false);
         }
@@ -135,7 +122,8 @@ export const useCarEditDetails = (id?: string | string[]) => {
         error,
         handleCarDetailsChange,
         handleExtraInfoChange,
-        submitForm
+        submitForm,
     };
 };
+
 export default useCarEditDetails;

@@ -2,9 +2,9 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ExtendedMenuBar from "@/app/components/common/ExtendedMenuBar";
-import CarList from "@/app/components/CarList";
+import CarList from "@/app/components/search/CarList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SortSelect from "@/app/components/SortSelect";
+import SortSelect from "@/app/components/search/SortSelect";
 import { faSlidersH, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 interface CarDetail {
@@ -25,47 +25,45 @@ const BrandPage = () => {
     const [carDetails, setCarDetails] = useState<CarDetail[]>([]);
     const [carImages, setCarImages] = useState<CarImage>({});
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
     const carsPerPage = 10;
 
-    const fetchCarDetails = async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const queryParams = new URLSearchParams(searchParams.toString());
-            const response = await fetch(`http://localhost:8080/car-details/search?${queryParams.toString()}`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch car details");
-            }
-            const data: CarDetail[] = await response.json();
-            setCarDetails(data);
-            const imageRequests = data.map((car) =>
-                fetch(`http://localhost:8080/productImages/getCarImages/${car.id}`)
-                    .then((res) => (res.ok ? res.json() : []))
-                    .catch(() => [])
-            );
-
-            const imageResults = await Promise.all(imageRequests);
-            const newCarImages: CarImage = {};
-            data.forEach((car, index) => {
-                newCarImages[car.id] = imageResults[index];
-            });
-
-            setCarImages(newCarImages);
-        } catch (error) {
-            setError("An error occurred while fetching data");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchCarDetails = async () => {
+            setLoading(true);
+
+            try {
+                const queryParams = new URLSearchParams(searchParams.toString());
+                const response = await fetch(`http://localhost:8080/car-details/search?${queryParams.toString()}`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                });
+                if (!response.ok) {
+                    throw new Error("Failed to fetch car details");
+                }
+                const data: CarDetail[] = await response.json();
+                setCarDetails(data);
+                const imageRequests = data.map((car) =>
+                    fetch(`http://localhost:8080/productImages/getCarImages/${car.id}`)
+                        .then((res) => (res.ok ? res.json() : []))
+                        .catch(() => [])
+                );
+
+                const imageResults = await Promise.all(imageRequests);
+                const newCarImages: CarImage = {};
+                data.forEach((car, index) => {
+                    newCarImages[car.id] = imageResults[index];
+                });
+
+                setCarImages(newCarImages);
+            } catch (error) {
+                console.error("An error occurred while fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchCarDetails();
     }, [searchParams]);
 
@@ -78,14 +76,15 @@ const BrandPage = () => {
             return new Date(a.firstRegistrationDate).getTime() - new Date(b.firstRegistrationDate).getTime();
         return 0;
     });
-
+    const totalPages = Math.ceil(carDetails.length / carsPerPage);
     const handleCarClick = (carId: string) => {
         router.push(`/cars/${carId}`);
     };
     const handlePageChange = (newPage: number) => {
-        if (newPage < 1 || newPage > Math.ceil(carDetails.length / carsPerPage)) return;
+        if (newPage < 1 || newPage > totalPages) return;
         setCurrentPage(newPage);
     };
+
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const toggleMenu = () => {
         setIsMenuVisible((prev) => !prev);
@@ -112,22 +111,21 @@ const BrandPage = () => {
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
                         >
-                            <FontAwesomeIcon icon={faChevronLeft} />
+                            <FontAwesomeIcon icon={faChevronLeft}/>
                         </button>
 
-                        <span className="px-3">{currentPage} / {Math.ceil(carDetails.length / carsPerPage)}</span>
+                        <span className="px-3">{currentPage} / {totalPages}</span>
 
                         <button
                             className="p-2 border border-gray-500 rounded-md mx-1"
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === Math.ceil(carDetails.length / carsPerPage)}
-                        ><FontAwesomeIcon icon={faChevronRight} />
+                        ><FontAwesomeIcon icon={faChevronRight}/>
                         </button>
                     </div>
                 </div>
                 <div className="w-full px-4 mt-2">
                     {loading && <div>Loading...</div>}
-                    {error && <div className="text-red-500">Error: {error}</div>}
                     <CarList cars={paginatedCars} carImages={carImages} onCarClick={handleCarClick}/>
                 </div>
             </main>

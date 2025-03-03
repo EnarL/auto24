@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from "next/navigation";
 
-const PopularBrands: React.FC = () => {
+const Popularbrands: React.FC = () => {
     const router = useRouter();
     const handleBrandClick = (brand: string) => {
         router.push(`search/cars?make=${brand}`);
@@ -65,4 +65,4 @@ const PopularBrands: React.FC = () => {
     );
 };
 
-export default PopularBrands;
+export default Popularbrands;

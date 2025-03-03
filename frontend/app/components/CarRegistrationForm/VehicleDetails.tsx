@@ -1,11 +1,16 @@
 import React from 'react';
 import { vehicleFields } from "@/app/data/labels";
 import Field from "@/app/components/CarRegistrationForm/VehicleDetailsFields";
+import { CarDetailsDTO } from '@/app/types/types';
 
 export interface VehicleDetailsProps {
-    formData: Record<string, any>;
+    formData: CarDetailsDTO;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
+
+const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => {
+    return path.split('.').reduce<unknown>((o, i) => (o ? (o as Record<string, unknown>)[i] : ''), obj);
+};
 
 const VehicleDetails: React.FC<VehicleDetailsProps> = ({ formData, handleChange }) => {
     return (
@@ -24,11 +29,11 @@ const VehicleDetails: React.FC<VehicleDetailsProps> = ({ formData, handleChange 
             </div>
             {vehicleFields.map((field) => {
                 const value = field.name.includes('.')
-                    ? field.name.split('.').reduce((o, i) => o[i], formData)
-                    : formData[field.name] || '';
+                    ? getNestedValue(formData, field.name)
+                    : formData[field.name as keyof CarDetailsDTO] || '';
 
                 return (
-                    <Field key={field.name} field={field} value={value} handleChange={handleChange} />
+                    <Field key={field.name} field={field} value={value as string | number | boolean | undefined} handleChange={handleChange} />
                 );
             })}
         </div>

@@ -20,7 +20,7 @@ const KuulutusedPage: React.FC = () => {
                 <div className="mt-4 ml-2">
                     <CarGrid
                         columns={{ sm:2, md: 3, lg: 3 }}
-                        carCount={3}
+                        carCount={6}
                         cars={cars}
                         carImages={carImages}
                         loading={loading}

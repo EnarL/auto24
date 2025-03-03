@@ -26,6 +26,7 @@ const ForgotPassword: React.FC = () => {
                 setMessage("Midagi läks valesti, proovige uuesti.");
             }
         } catch (error) {
+            console.error("Error:", error);
             setMessage("Viga. Palun proovige hiljem uuesti.");
         } finally {
             setIsLoading(false);

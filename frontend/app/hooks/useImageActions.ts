@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 interface ImageData {
@@ -12,7 +12,7 @@ const useImageActions = (id: string | Array<string> | undefined) => {
     const [imageData, setImageData] = useState<(ImageData | null)[]>(Array(30).fill(null));
     const [loading, setLoading] = useState(false);
 
-    const fetchImages = async () => {
+    const fetchImages = useCallback(async () => {
         if (!id) {
             console.error("id is undefined");
             return;
@@ -40,7 +40,7 @@ const useImageActions = (id: string | Array<string> | undefined) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -147,7 +147,7 @@ const useImageActions = (id: string | Array<string> | undefined) => {
 
     useEffect(() => {
         fetchImages();
-    }, [id]);
+    }, [fetchImages]);
 
     return {
         imageData,

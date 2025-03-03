@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React from "react";
 
 interface S3ImageProps {
@@ -10,7 +9,7 @@ interface S3ImageProps {
 
 const S3Image: React.FC<S3ImageProps> = ({src, alt, className, style}) => {
     return (
-        <Image
+        <img
             src={src}
             alt={alt}
             width={240}

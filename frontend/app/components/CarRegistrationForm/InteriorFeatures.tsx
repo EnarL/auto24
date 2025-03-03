@@ -1,8 +1,9 @@
 import React from 'react';
-import CheckboxList from '@/app/components/CheckboxList';
+import CheckboxList from '@/app/components/CarRegistrationForm/CheckboxList';
+import {Interior as InteriorFeaturesType} from "@/app/types/types";
 
 interface InteriorFeaturesProps {
-    formData: any;
+    formData: { interiorFeatures: InteriorFeaturesType };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 

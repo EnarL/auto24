@@ -1,4 +1,22 @@
-export const useCarActions = (userCars: any[], setUserCars: Function) => {
+import { Dispatch, SetStateAction } from "react";
+
+interface CarPreview {
+    id: string;
+    title: string;
+    expirationDate: string;
+    isActive: boolean;
+}
+
+interface CarActions {
+    handleToggleActive: (id: string) => Promise<void>;
+    handleDeleteCar: (id: string) => Promise<void>;
+    handleEditCar: (carId: string) => void;
+}
+
+export const useCarActions = (
+    userCars: CarPreview[],
+    setUserCars: Dispatch<SetStateAction<CarPreview[]>>
+): CarActions => {
     const handleToggleActive = async (id: string) => {
         try {
             const response = await fetch(`http://localhost:8080/cars/activate/${id}`, {
@@ -8,9 +26,11 @@ export const useCarActions = (userCars: any[], setUserCars: Function) => {
 
             if (response.ok) {
                 alert(await response.text());
-                setUserCars(userCars.map(car =>
-                    car.id === id ? { ...car, isActive: !car.isActive } : car
-                ));
+                setUserCars((prevCars) =>
+                    prevCars.map((car) =>
+                        car.id === id ? { ...car, isActive: !car.isActive } : car
+                    )
+                );
             } else {
                 alert(`Failed to update listing status: ${await response.text()}`);
             }
@@ -29,7 +49,7 @@ export const useCarActions = (userCars: any[], setUserCars: Function) => {
                 });
 
                 if (response.ok) {
-                    setUserCars(userCars.filter(car => car.id !== id));
+                    setUserCars((prevCars) => prevCars.filter((car) => car.id !== id));
                     alert("Car sale deleted successfully");
                 } else {
                     alert("Failed to delete the car sale");

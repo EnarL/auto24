@@ -1,6 +1,7 @@
 package com.example.auto24.email;
 
 import com.example.auto24.users.Users;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class EmailService implements EmailSender {
     private final String fromEmail;
     private final String appBaseUrl;
 
-    public EmailService(JavaMailSender mailSender, @Value("enar.leini00@gmail.com") String fromEmail, @Value("${app.base.url}")String appBaseUrl) {
+    public EmailService(JavaMailSender mailSender, @Value("${app.base.url}") String appBaseUrl, @Value("${MAIL_USERNAME}") String fromEmail) {
         this.mailSender = mailSender;
         this.fromEmail = fromEmail;
         this.appBaseUrl = appBaseUrl;

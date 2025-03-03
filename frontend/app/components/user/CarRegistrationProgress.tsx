@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 interface StepNavigationProps {
-    currentStep: number; // Include the current step
+    currentStep: number;
     carId?: string;
 }
 

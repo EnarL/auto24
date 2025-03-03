@@ -2,7 +2,7 @@ import React from "react";
 import { CarExtraInfoDTO } from "@/app/types/types";
 
 const CarExtraInfo: React.FC<{ carExtraInfo: CarExtraInfoDTO | null }> = ({ carExtraInfo }) => {
-    const extractBooleanProperties = <T extends Record<string, any>>(obj: T): Record<string, boolean> => {
+    const extractBooleanProperties = <T extends Record<string, boolean | string>>(obj: T): Record<string, boolean> => {
         return Object.keys(obj).reduce((acc, key) => {
             if (typeof obj[key] === 'boolean') {
                 acc[key] = obj[key];
@@ -22,7 +22,7 @@ const CarExtraInfo: React.FC<{ carExtraInfo: CarExtraInfoDTO | null }> = ({ carE
         ).filter(Boolean);
     };
 
-    const renderSection = (title: string, info: any) => {
+    const renderSection = (title: string, info: Record<string, boolean | string> | undefined) => {
         const list = info ? renderList(extractBooleanProperties(info)) : [];
         return list.length > 0 ? (
             <div className="flex flex-col p-4 border rounded-lg shadow-md bg-gray-50 mb-4 h-full">

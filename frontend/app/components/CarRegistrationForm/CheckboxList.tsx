@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 interface CheckboxListProps {
-    info: Record<string, any> | undefined;
+    info: Record<string, string | boolean> | undefined;
     parent: string;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
@@ -25,7 +25,6 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ info, parent, handleChange 
         }
     }, [info, parent]);
 
-
     const toggleVisibility = (key: string) => {
         setVisibleFields((prevState) => ({
             ...prevState,
@@ -33,19 +32,18 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ info, parent, handleChange 
         }));
     };
 
-    const renderCheckboxList = (info: Record<string, any> | undefined, parent: string) => {
+    const renderCheckboxList = (info: Record<string, string | boolean> | undefined, parent: string) => {
         if (!info) return null;
 
         return Object.entries(info).map(([key, value]) => {
-            if (key.endsWith("Lisainfo")) return null; // Prevent rendering checkboxes for text fields
-
+            if (key.endsWith("Lisainfo")) return null;
             return (
                 <div key={key} className="flex flex-col bg-gray-50 p-2 border-b border-gray-200">
                     <label className="flex items-center">
                         <input
                             type="checkbox"
                             name={`${parent}.${key}`}
-                            checked={!!value} // Ensure boolean check
+                            checked={!!value}
                             onChange={handleChange}
                             className="h-4 w-4 square-checkbox focus:border-blue-600 focus:outline-none mr-2"
                         />
@@ -65,10 +63,11 @@ const CheckboxList: React.FC<CheckboxListProps> = ({ info, parent, handleChange 
                         <input
                             type="text"
                             name={`${parent}.${key}Lisainfo`}
-                            value={info[`${key}Lisainfo`] || ""}
+                            value={String(info[`${key}Lisainfo`] ?? "")}
                             onChange={handleChange}
                             className="mt-2 p-1 border border-gray-300"
                         />
+
                     )}
                 </div>
             );

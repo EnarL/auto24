@@ -10,7 +10,7 @@ interface Props {
 const OwnerOtherSales: React.FC<Props> = ({ carId }) => {
     const { cars, carImages, loading, error } = useOwnerOtherSales(carId);
 
-    if (loading) return <p>Loading owner's other cars...</p>;
+    if (loading) return <p>Loading owner&apos;s other cars...</p>;
     if (error) return <p>Error: {error}</p>;
 
     const displayedCars = cars.slice(0, 4);

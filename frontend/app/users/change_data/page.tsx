@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import UserLayout from "@/app/components/user/UserLayout";
 import FormInput from "@/app/components/user/FormInput";
-import CheckboxInput from "@/app/components/CheckBoxInput";
+import CheckboxInput from "@/app/components/user/CheckBoxInput";
 import { useAuthUser } from "@/app/context/AuthUserContext";
 import useUpdateUser from "@/app/hooks/useUpdateUserData";
 import { UserDTO } from "@/app/types/types";

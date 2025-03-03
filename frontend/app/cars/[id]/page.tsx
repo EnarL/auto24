@@ -1,4 +1,4 @@
-"use client"; // Ensure the component can be used client-side
+"use client";
 import React from "react";
 import { useParams } from "next/navigation";
 import useCarDetails from "@/app/hooks/useCarDetails";
@@ -12,11 +12,11 @@ import CarAdditionalInformation from "@/app/components/CarDetails/CarAdditionalI
 
 const CarDetails: React.FC = () => {
     const { id } = useParams();
+    const { car, carExtraInfo, images, isLoading } = useCarDetails(id);
+
     if (typeof id !== "string") {
         return <p>Invalid car slug or car not found</p>;
     }
-
-    const { car, carExtraInfo, images, isLoading } = useCarDetails(id);
 
     if (isLoading) {
         return <p>Loading...</p>;
@@ -65,7 +65,6 @@ const CarDetails: React.FC = () => {
                 <p className="bg-gray-100 font-semibold p-2">MÜÜJA</p>
                 <SalesmanInfo carId={id} />
             </div>
-
 
             <div className="pt-10">
                 <p className="bg-gray-100 font-semibold p-2">VAATA MÜÜJA TEISI PAKKUMISI</p>

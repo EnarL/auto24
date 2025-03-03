@@ -1,4 +1,3 @@
-// CarFormSection.tsx
 import React from 'react';
 import VehicleDetails from '@/app/components/CarRegistrationForm/VehicleDetails';
 import SafetyEquipment from '@/app/components/CarRegistrationForm/SafetyEquipment';

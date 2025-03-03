@@ -13,6 +13,7 @@ const ConfirmListing: React.FC = () => {
     const { handleToggleActive } = useCarActions(userCars, setUserCars);
     const selectedCar = userCars.find((car) => car.id === id);
 
+
     return (
         <div className="p-4 md:p-6">
             <StepNavigation currentStep={3} carId={id as string} />

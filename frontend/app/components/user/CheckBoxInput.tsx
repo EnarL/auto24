@@ -23,7 +23,7 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
                 id={id}
                 checked={checked}
                 onChange={onChange}
-                className="ml-2" // Space between label and checkbox
+                className="ml-2"
             />
         </div>
     );

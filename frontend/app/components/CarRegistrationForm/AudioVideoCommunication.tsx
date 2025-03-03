@@ -1,8 +1,9 @@
 import React from 'react';
-import CheckboxList from '@/app/components/CheckboxList';
+import CheckboxList from '@/app/components/CarRegistrationForm/CheckboxList';
+import { AudioVideoCommunication as AudioVideoCommunicationType } from '@/app/types/types';
 
 interface AudioVideoCommunicationProps {
-    formData: Record<string, any>;
+    formData: { audioVideoCommunication: AudioVideoCommunicationType };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import CheckboxList from '@/app/components/CheckboxList';
-
+import CheckboxList from '@/app/components/CarRegistrationForm/CheckboxList';
+import { Steering as SteeringType } from '@/app/types/types';
 interface SteeringProps {
-    formData: any;
+    formData: { steering: SteeringType };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 

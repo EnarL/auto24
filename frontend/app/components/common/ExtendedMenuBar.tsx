@@ -83,7 +83,7 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
     const handleSearch = () => {
         const queryParams = new URLSearchParams(
             Object.entries(filters)
-                .filter(([_, value]) => value.trim() !== "")
+                .filter(([value]) => value.trim() !== "")
                 .reduce((acc, [key, value]) => {
                     if (key === "yearFrom" || key === "yearTo") {
                         acc["firstRegistrationDate"] = `${filters.yearFrom}-${filters.yearTo}`;
@@ -101,7 +101,7 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
         ).toString();
 
         if (queryParams) {
-            router.push(`search/cars?${queryParams}`);
+            router.push(`/search/cars?${queryParams}`);
         }
     };
 

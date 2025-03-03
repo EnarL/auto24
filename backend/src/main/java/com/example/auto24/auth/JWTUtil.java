@@ -56,7 +56,7 @@ public class JWTUtil {
 
     // Extract all claims from the token
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
+        return Jwts.parser()  // This method is deprecated but still works
                 .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)

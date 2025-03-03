@@ -4,7 +4,7 @@ interface SearchSectionProps {
     className?: string;
 }
 
-const SearchSection: React.FC<SearchSectionProps> = ({ className }) => {
+const Searchsection: React.FC<SearchSectionProps> = ({ className }) => {
     return (
         <div className={`mx-left ${className}`}>
             <h1 className="text-[18px] mb-2 w-full font-sans opacity-60">MINU OTSINGUD</h1>
@@ -16,4 +16,4 @@ const SearchSection: React.FC<SearchSectionProps> = ({ className }) => {
     );
 };
 
-export default SearchSection;
+export default Searchsection;

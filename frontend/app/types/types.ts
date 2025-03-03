@@ -1,4 +1,3 @@
-
 export interface CarDetailsDTO {
     vehicleType: string;
     bodyType: string;
@@ -45,7 +44,7 @@ export interface CarDetailsDTO {
     length: number;
     width: number;
     height: number;
-    numberOfAxles:number;
+    numberOfAxles: number;
     acceleration0To100: number;
     topSpeed: number;
     locationCountry: string;
@@ -58,6 +57,7 @@ export interface CarDetailsDTO {
     exchangePossible: boolean;
     exchangeDetails: string;
     description: string;
+    [key: string]: string | number | boolean | undefined; // Index signature
 }
 
 export interface CarExtraInfoDTO {
@@ -81,64 +81,22 @@ export interface UserDTO {
     newsletter: boolean;
     active: boolean;
 }
-
-export interface TiresAndWheels {
-    suverehvid: boolean;
-    talverehvid: boolean;
-    valuveljed: boolean;
-    ilukilbid: boolean;
-    tagavararatas: boolean;
-    rehvirõhuKontrollsüsteem: boolean;
-    autogaKaasaSuverehvid: boolean;
-    autogaKaasaTalverehvid: boolean;
-    autogaKaasaValuveljed: boolean;
-    autogaKaasaIlukilbid: boolean;
-}
-
-export interface Steering {
-    reguleeritavRoolisammas: boolean;
-    multifunktsionaalneRool: boolean;
-    nahkkattegaRool: boolean;
-    sportrool: boolean;
-    soojendusegaRool: boolean;
-    käiguvahetusRoolilt: boolean;
-    parempoolneRool: boolean;
-}
-
-export interface Sport {
-    tagaspoiler: boolean;
-    esispoiler: boolean;
-    spoileriring: boolean;
-    sportvedrustus: boolean;
-    sportsummuti: boolean;
-}
-
-export interface Seats {
-    nahkpolster: boolean;
-    nahkpolsterLisainfo: string;
-    poolnahkpolster: boolean;
-    poolnahkpolsterLisainfo: string;
-    veluurpolster: boolean;
-    veluurpolsterLisainfo: string;
-    tekstiilpolster: boolean;
-    tekstiilpolsterLisainfo: string;
-    elektriliseltReguleeritavadIstmed: boolean;
-    ohugaReguleeritavIste: boolean;
-    istmedReguleeritavaKorgusega: boolean;
-    istmesoojendused: boolean;
-    reguleeritavaKumerusegaSeljatugi: boolean;
-    massaazifunktsioonigaIstmed: boolean;
-    massaazifunktsioonigaIstmedLisainfo: string;
-    ventileeritavadIstmed: boolean;
-    kaetugiEes: boolean;
-    kaetugiTaga: boolean;
-    kaassoitjaIstmeSeljatugiAllaklapitav: boolean;
-    tagaistmeSeljatugiAllaklapitav: boolean;
-    comfortIstmed: boolean;
-    sportistmed: boolean;
+export interface Lights {
+    [key: string]: string | boolean;
+    xenon: boolean;
+    laser: boolean;
+    led: boolean;
+    esituledePesurid: boolean;
+    kurvituled: boolean;
+    päevasõidutuledeAutomaatneLülitus: boolean;
+    kaugtuledeÜmberlülitamiseAssistent: boolean;
+    udutuled: boolean;
+    tuledeKorrektor: boolean;
+    lisatuled: boolean;
 }
 
 export interface SafetyAndSecurity {
+    [key: string]: string | boolean;
     roolivoimendi: boolean;
     kesklukustus: boolean;
     absPidurid: boolean;
@@ -169,33 +127,59 @@ export interface SafetyAndSecurity {
     mägipidur: boolean;
 }
 
-export interface Lights {
-    xenon: boolean;
-    laser: boolean;
-    led: boolean;
-    esituledePesurid: boolean;
-    kurvituled: boolean;
-    päevasõidutuledeAutomaatneLülitus: boolean;
-    kaugtuledeÜmberlülitamiseAssistent: boolean;
-    udutuled: boolean;
-    tuledeKorrektor: boolean;
-    lisatuled: boolean;
+export interface TiresAndWheels {
+    [key: string]: string | boolean;
+    suverehvid: boolean;
+    talverehvid: boolean;
+    valuveljed: boolean;
+    ilukilbid: boolean;
+    tagavararatas: boolean;
+    rehvirõhuKontrollsüsteem: boolean;
+    autogaKaasaSuverehvid: boolean;
+    autogaKaasaTalverehvid: boolean;
+    autogaKaasaValuveljed: boolean;
+    autogaKaasaIlukilbid: boolean;
 }
 
-export interface Interior {
-    iluliistudSalongis: boolean;
-    iluliistudSalongisLisainfo: string;
-    taskudEsiistmeteSeljatugedes: boolean;
-    jalamatid: boolean;
-    sahtlidEsiistmeteAll: boolean;
-    pagasiruumiMatt: boolean;
-    topsihoidjad: boolean;
-    nahkkattegaKaigukanginupp: boolean;
-    nahkkattegaKasipidurikang: boolean;
-    tumeLaepolster: boolean;
+export interface Steering {
+    [key: string]: string | boolean;
+    reguleeritavRoolisammas: boolean;
+    multifunktsionaalneRool: boolean;
+    nahkkattegaRool: boolean;
+    sportrool: boolean;
+    soojendusegaRool: boolean;
+    käiguvahetusRoolilt: boolean;
+    parempoolneRool: boolean;
+}
+
+export interface Seats {
+    [key: string]: string | boolean;
+    nahkpolster: boolean;
+    nahkpolsterLisainfo: string;
+    poolnahkpolster: boolean;
+    poolnahkpolsterLisainfo: string;
+    veluurpolster: boolean;
+    veluurpolsterLisainfo: string;
+    tekstiilpolster: boolean;
+    tekstiilpolsterLisainfo: string;
+    elektriliseltReguleeritavadIstmed: boolean;
+    ohugaReguleeritavIste: boolean;
+    istmedReguleeritavaKorgusega: boolean;
+    istmesoojendused: boolean;
+    reguleeritavaKumerusegaSeljatugi: boolean;
+    massaazifunktsioonigaIstmed: boolean;
+    massaazifunktsioonigaIstmedLisainfo: string;
+    ventileeritavadIstmed: boolean;
+    kaetugiEes: boolean;
+    kaetugiTaga: boolean;
+    kaassoitjaIstmeSeljatugiAllaklapitav: boolean;
+    tagaistmeSeljatugiAllaklapitav: boolean;
+    comfortIstmed: boolean;
+    sportistmed: boolean;
 }
 
 export interface Comfort {
+    [key: string]: string | boolean;
     kliimaseade: boolean;
     elektrilisedValispeeglid: boolean;
     virtuaalsedValispeeglid: boolean;
@@ -234,33 +218,8 @@ export interface Comfort {
     telefoniJuhtmevabaLaadimine: boolean;
 }
 
-export interface AudioVideoCommunication {
-    stereo: boolean;
-    stereoLisainfo: string;
-    helivoimendi: boolean;
-    helivoimendiLisainfo: string;
-    kolarid: boolean;
-    kolaridLisainfo: string;
-    subwoofer: boolean;
-    subwooferLisainfo: string;
-    cdBox: boolean;
-    cdBoxLisainfo: string;
-    appleCarPlay: boolean;
-    androidAuto: boolean;
-    dvd: boolean;
-    elektrilineAntenn: boolean;
-    ekraan: boolean;
-    ekraanLisainfo: string;
-    navigatsiooniseade: boolean;
-    autokompuuter: boolean;
-    autotelefon: boolean;
-    autotelefonLisainfo: string;
-    kaedVabadSusteem: boolean;
-    kaedVabadSusteemLisainfo: string;
-    gsmAntenn: boolean;
-}
-
 export interface additionalFeatures {
+    [key: string]: string | boolean;
     reguleeritavVedrustus: boolean;
     ohkvedrustus: boolean;
     startStoppSusteem: boolean;
@@ -290,5 +249,55 @@ export interface additionalFeatures {
     neljarattaPooramine: boolean;
     arvelKuiN1Kaubik: boolean;
     muudLisad: string;
+}
+
+export interface AudioVideoCommunication {
+    [key: string]: string | boolean;
+    stereo: boolean;
+    stereoLisainfo: string;
+    helivoimendi: boolean;
+    helivoimendiLisainfo: string;
+    kolarid: boolean;
+    kolaridLisainfo: string;
+    subwoofer: boolean;
+    subwooferLisainfo: string;
+    cdBox: boolean;
+    cdBoxLisainfo: string;
+    appleCarPlay: boolean;
+    androidAuto: boolean;
+    dvd: boolean;
+    elektrilineAntenn: boolean;
+    ekraan: boolean;
+    ekraanLisainfo: string;
+    navigatsiooniseade: boolean;
+    autokompuuter: boolean;
+    autotelefon: boolean;
+    autotelefonLisainfo: string;
+    kaedVabadSusteem: boolean;
+    kaedVabadSusteemLisainfo: string;
+    gsmAntenn: boolean;
+}
+
+export interface Interior {
+    [key: string]: string | boolean;
+    iluliistudSalongis: boolean;
+    iluliistudSalongisLisainfo: string;
+    taskudEsiistmeteSeljatugedes: boolean;
+    jalamatid: boolean;
+    sahtlidEsiistmeteAll: boolean;
+    pagasiruumiMatt: boolean;
+    topsihoidjad: boolean;
+    nahkkattegaKaigukanginupp: boolean;
+    nahkkattegaKasipidurikang: boolean;
+    tumeLaepolster: boolean;
+}
+
+export interface Sport {
+    [key: string]: string | boolean;
+    tagaspoiler: boolean;
+    esispoiler: boolean;
+    spoileriring: boolean;
+    sportvedrustus: boolean;
+    sportsummuti: boolean;
 }
 

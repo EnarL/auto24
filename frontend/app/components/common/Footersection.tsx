@@ -1,6 +1,7 @@
 import React from 'react';
 
-const FooterSection: React.FC = () => {
+
+const Footersection: React.FC = () => {
     const websites = [
         { url: "https://auto24.ee", name: "auto24.ee" },
         { url: "https://www.kv.ee/", name: "kv.ee" },
@@ -40,4 +41,4 @@ const FooterSection: React.FC = () => {
     );
 };
 
-export default FooterSection;
+export default Footersection;

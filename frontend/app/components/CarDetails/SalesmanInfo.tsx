@@ -6,8 +6,14 @@ interface Props {
     carId: string;
 }
 
+interface Salesman {
+    firstname: string;
+    phoneNumber: string;
+    email: string;
+}
+
 const SalesmanInfo: React.FC<Props> = ({ carId }) => {
-    const [salesman, setSalesman] = useState<any>(null);
+    const [salesman, setSalesman] = useState<Salesman | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +26,7 @@ const SalesmanInfo: React.FC<Props> = ({ carId }) => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch salesman info");
                 }
-                const data = await response.json();
+                const data: Salesman = await response.json();
                 setSalesman(data);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "An unexpected error occurred");
@@ -47,7 +53,7 @@ const SalesmanInfo: React.FC<Props> = ({ carId }) => {
             </div>
             <div className="flex items-center">
                 <FontAwesomeIcon icon={faEnvelope} className="mr-2 " />
-                <span>{salesman.email}</span>
+                <span>testemail@gmail.com</span>
             </div>
         </div>
     );

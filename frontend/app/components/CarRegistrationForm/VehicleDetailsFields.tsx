@@ -2,7 +2,7 @@ import React from 'react';
 
 const Field: React.FC<{
     field: { name: string; label: string; type: string };
-    value: any;
+    value: string | boolean | number | undefined;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }> = ({ field, value, handleChange }) => {
     return (
@@ -22,7 +22,7 @@ const Field: React.FC<{
             ) : field.type === "textarea" ? (
                 <textarea
                     name={field.name}
-                    value={value || ""}
+                    value={value ? String(value) : ""}
                     onChange={handleChange}
                     className="w-[300px] border border-gray-300 px-2 py-1 resize-none h-[80px] focus:border-blue-600 focus:outline-none"
                     id={field.name}
@@ -31,7 +31,7 @@ const Field: React.FC<{
                 <input
                     type={field.type}
                     name={field.name}
-                    value={value || ""}
+                    value={value ? String(value) : ""}
                     onChange={handleChange}
                     className="w-[300px] border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mr-2"
                     id={field.name}

@@ -1,8 +1,9 @@
 import React from 'react';
-import CheckboxList from '@/app/components/CheckboxList';
+import CheckboxList from '@/app/components/CarRegistrationForm/CheckboxList';
+import { Comfort as ComfortFeaturesType } from '@/app/types/types';
 
 interface FeaturesProps {
-    formData: any;
+    formData: { comfortFeatures: ComfortFeaturesType };
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 
