@@ -11,15 +11,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class Auto24Application {
 	public static void main(String[] args) {
 
-		// Default to using backend directory
-		String envDirectory = "backend";
 
-		// Check if running in Docker (you can use an environment variable set by Docker, like HOSTNAME)
-		if (System.getenv("HOSTNAME") != null) {
-			envDirectory = "/app"; // For Docker, use '/app'
-		}
 
-		// Load environment variables from the determined directory
+		String envDirectory = "/app";
+
+
+
 		Dotenv dotenv = Dotenv.configure().directory(envDirectory).load();
 
 		// Set the system properties from .env
@@ -39,7 +36,6 @@ public class Auto24Application {
 		System.setProperty("APP_FRONTEND_URL", dotenv.get("APP_FRONTEND_URL"));
 		System.setProperty("APP_BACKEND_URL", dotenv.get("APP_BACKEND_URL"));
 
-		// Start the Spring Boot application
 		SpringApplication.run(Auto24Application.class, args);
 	}
 }
