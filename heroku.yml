@@ -1,0 +1,14 @@
+build:
+  docker:
+    backend: backend/Dockerfile  # Path to the backend Dockerfile
+    frontend: frontend/Dockerfile  # Path to the frontend Dockerfile
+
+run:
+  web:
+    command: "docker-compose up"  # Command to run both services
+
+formation:
+  web:
+    quantity: 1  # Number of dynos for the frontend
+  backend:
+    quantity: 1  # Number of dynos for the backend
