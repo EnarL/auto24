@@ -54,7 +54,7 @@ export const useCarForm = () => {
             carExtraInfoDTO: carExtraInfo,
         };
         try {
-            const response = await axios.post('http://localhost:8080/cars/create', carListingRequest, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/cars/create`, carListingRequest, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

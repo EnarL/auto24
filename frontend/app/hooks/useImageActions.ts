@@ -20,7 +20,7 @@ const useImageActions = (id: string | Array<string> | undefined) => {
 
         setLoading(true);
         try {
-            const response = await axios.get<string[]>(`http://localhost:8080/productImages/getCarImages/${id}`, {
+            const response = await axios.get<string[]>(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${id}`, {
                 withCredentials: true,
             });
 
@@ -77,7 +77,7 @@ const useImageActions = (id: string | Array<string> | undefined) => {
             });
             formDataToSend.append("id", id as string);
 
-            const response = await axios.post<string[]>(`http://localhost:8080/productImages/upload`, formDataToSend, {
+            const response = await axios.post<string[]>(`${process.env.NEXT_PUBLIC_API_URL}/productImages/upload`, formDataToSend, {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true,
             });
@@ -125,7 +125,7 @@ const useImageActions = (id: string | Array<string> | undefined) => {
         }
 
         try {
-            const response = await axios.delete(`http://localhost:8080/productImages/delete/${id}/${imageToDelete.fileKey}`, {
+            const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/productImages/delete/${id}/${imageToDelete.fileKey}`, {
                 withCredentials: true,
             });
 

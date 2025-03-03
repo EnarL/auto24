@@ -35,7 +35,7 @@ const BrandPage = () => {
 
             try {
                 const queryParams = new URLSearchParams(searchParams.toString());
-                const response = await fetch(`http://localhost:8080/car-details/search?${queryParams.toString()}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-details/search?${queryParams.toString()}`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 });
@@ -45,7 +45,7 @@ const BrandPage = () => {
                 const data: CarDetail[] = await response.json();
                 setCarDetails(data);
                 const imageRequests = data.map((car) =>
-                    fetch(`http://localhost:8080/productImages/getCarImages/${car.id}`)
+                    fetch(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${car.id}`)
                         .then((res) => (res.ok ? res.json() : []))
                         .catch(() => [])
                 );

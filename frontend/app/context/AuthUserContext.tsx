@@ -21,7 +21,7 @@ interface AuthUserContextType {
     setEmail: (email: string) => void;
     setActive: (active: boolean) => void;
     updateUserData: () => void;
-    logout: () => Promise<void>; // Add logout method
+    logout: () => Promise<void>; 
 }
 
 const AuthUserContext = createContext<AuthUserContextType | undefined>(undefined);
@@ -40,7 +40,7 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const fetchUserData = async () => {
         try {
-            const response = await fetch("http://localhost:8080/users/me", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
                 method: "GET",
                 credentials: "include",
             });
@@ -66,7 +66,7 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const logout = async () => {
         try {
-            const response = await fetch("http://localhost:8080/auth/logout", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
                 method: "POST",
                 credentials: "include",
             });

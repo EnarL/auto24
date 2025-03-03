@@ -17,7 +17,7 @@ export const useUserCars = () => {
         const fetchUserCars = async () => {
             if (isLoggedIn && username) {
                 try {
-                    const response = await fetch("http://localhost:8080/car-details/users", {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-details/users`, {
                         method: "GET",
                         credentials: "include",
                     });

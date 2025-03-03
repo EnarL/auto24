@@ -9,7 +9,7 @@ const useUpdateUser = (initialUserData: UserDTO) => {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/users/update', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

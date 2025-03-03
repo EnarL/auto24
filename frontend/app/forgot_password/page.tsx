@@ -14,7 +14,7 @@ const ForgotPassword: React.FC = () => {
 
         try {
             const response = await fetch(
-                `http://localhost:8080/auth/forgot-password?email=${encodeURIComponent(email)}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password?email=${encodeURIComponent(email)}`,
                 {
                     method: "POST",
                 }

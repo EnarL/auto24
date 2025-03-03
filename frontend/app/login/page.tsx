@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:8080/auth/login', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,10 +56,7 @@ const LoginPage: React.FC = () => {
     const handleAddListingClick = () => {
         if (!username || !password) {
             setInfoMessage("Logi esmalt sisse.");
-            setTimeout(() => setInfoMessage(''), 3000); // Clear message after 3 seconds
-        } else {
-            // Navigate to the add listing page if logged in
-            router.push('/add-listing'); // Adjust this path as needed
+            setTimeout(() => setInfoMessage(''), 3000);
         }
     };
 

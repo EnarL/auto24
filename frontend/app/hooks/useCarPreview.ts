@@ -20,13 +20,13 @@ const useCarPreview = () => {
             setError(null);
 
             try {
-                const response = await fetch('http://localhost:8080/car-details/preview');
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-details/preview`);
                 if (response.ok) {
                     const carDetails: CarPreviewDTO[] = await response.json();
                     setCars(carDetails);
                     for (const car of carDetails) {
                         if (car.id) {
-                            const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${car.id}`);
+                            const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${car.id}`);
                             if (imageResponse.ok) {
                                 const imageUrls: string[] = await imageResponse.json();
                                 setCarImages((prevImages) => ({

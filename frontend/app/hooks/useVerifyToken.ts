@@ -12,7 +12,7 @@ const useVerifyToken = (token: string | null) => {
             }
 
             try {
-                const response = await fetch(`http://localhost:8080/auth/reset-password?token=${token}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password?token=${token}`, {
                     method: "GET",
                 });
 

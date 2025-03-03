@@ -22,7 +22,7 @@ const SalesmanInfo: React.FC<Props> = ({ carId }) => {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://localhost:8080/users/SalesmanInfo/${carId}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/SalesmanInfo/${carId}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch salesman info");
                 }

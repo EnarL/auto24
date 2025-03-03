@@ -68,7 +68,7 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
 
     const fetchCarCount = async () => {
         try {
-            const response = await fetch('http://localhost:8080/cars/count');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/count`);
             if (response.ok) {
                 const data = await response.json();
                 setCarCount(data);

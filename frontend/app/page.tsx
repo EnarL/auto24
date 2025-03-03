@@ -12,7 +12,7 @@ const Page: React.FC = () => {
         <>
             <div className="mt-4">
                 <main>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-[10px] h-[633px]" style={{ gridTemplateColumns: '1fr 740px' }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-[10px] h-[633px] overflow-hidden" style={{ gridTemplateColumns: '1fr 740px' }}>
                         <div className="col-span-1 md:w-[250px]">
                             <h1 className="text-[18px] font-sans opacity-60">SÕIDUKIKUULUTUSED</h1>
                             <Menubar showCarCount={true} />

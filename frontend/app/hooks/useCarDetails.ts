@@ -14,14 +14,14 @@ const useCarDetails = (id: string | Array<string> | undefined) => {
 
         const fetchCarDetails = async () => {
             try {
-                const carResponse = await fetch(`http://localhost:8080/cars/carlisting/${id}`);
+                const carResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/carlisting/${id}`);
                 if (carResponse.ok) {
                     const carData = await carResponse.json();
                     setCar(carData.carDetailsDTO);
                     setCarExtraInfo(carData.carExtraInfoDTO);
                 }
 
-                const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${id}`);
+                const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${id}`);
                 if (imageResponse.ok) {
                     const imageData: string[] = await imageResponse.json();
                     setImages(imageData);

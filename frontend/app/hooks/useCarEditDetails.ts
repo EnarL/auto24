@@ -25,7 +25,7 @@ export const useCarEditDetails = (id?: string | string[]) => {
             setIsLoading(true);
             try {
                 const response = await axios.get<CarListingResponse>(
-                    `http://localhost:8080/cars/carlisting/${carId}`,
+                    `${process.env.NEXT_PUBLIC_API_URL}/cars/carlisting/${carId}`,
                     { withCredentials: true }
                 );
 
@@ -90,7 +90,7 @@ export const useCarEditDetails = (id?: string | string[]) => {
             });
 
             const response = await axios.put(
-                `http://localhost:8080/cars/update/${carId}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/cars/update/${carId}`,
                 {
                     carDetailsDTO: carDetails,
                     carExtraInfoDTO: carExtraInfo,

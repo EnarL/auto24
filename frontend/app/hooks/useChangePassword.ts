@@ -6,7 +6,7 @@ const useChangePassword = () => {
 
     const changePassword = async (curPassword: string, newPassword: string, confirmationPassword: string) => {
         try {
-            const response = await fetch('http://localhost:8080/users/change-password', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/change-password`, {
                 method: 'POST',
                 body: JSON.stringify({
                     currentPassword: curPassword,

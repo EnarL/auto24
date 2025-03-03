@@ -12,7 +12,7 @@ const useAuth = () => {
                 return;
             }
             try {
-                const response = await fetch('http://localhost:8080/auth/check-session', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-session`, {
                     method: 'GET',
                     credentials: 'include',
                 });

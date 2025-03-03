@@ -22,7 +22,7 @@ const useCarPreviewForUser = () => {
             setError(null);
 
             try {
-                const response = await fetch('http://localhost:8080/car-details/user/preview', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-details/user/preview`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
@@ -35,7 +35,7 @@ const useCarPreviewForUser = () => {
                     setCars(carDetails);
                     for (const car of carDetails) {
                         if (car.id) {
-                            const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${car.id}`, {
+                            const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${car.id}`, {
                                 method: 'GET',
                                 credentials: 'include',
                             });

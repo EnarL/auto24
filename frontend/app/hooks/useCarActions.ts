@@ -19,7 +19,7 @@ export const useCarActions = (
 ): CarActions => {
     const handleToggleActive = async (id: string) => {
         try {
-            const response = await fetch(`http://localhost:8080/cars/activate/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/activate/${id}`, {
                 method: "PATCH",
                 credentials: "include",
             });
@@ -43,7 +43,7 @@ export const useCarActions = (
     const handleDeleteCar = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this car sale?")) {
             try {
-                const response = await fetch(`http://localhost:8080/cars/${id}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${id}`, {
                     method: "DELETE",
                     credentials: "include",
                 });

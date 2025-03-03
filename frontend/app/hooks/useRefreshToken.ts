@@ -5,7 +5,7 @@ const useTokenRefresh = () => {
     useEffect(() => {
         const refreshAccessToken = async () => {
             try {
-                const response = await fetch("http://localhost:8080/auth/refresh-token", {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`, {
                     method: "POST",
                     credentials: "include",
                 });

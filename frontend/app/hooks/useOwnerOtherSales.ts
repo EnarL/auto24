@@ -22,7 +22,7 @@ const useOwnerOtherSales = (carId: string) => {
             setError(null);
 
             try {
-                const response = await fetch(`http://localhost:8080/cars/OwnerOtherSales/${carId}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/OwnerOtherSales/${carId}`);
                 if (!response.ok) throw new Error("Failed to fetch owner sales");
 
                 const carPreviews: CarPreviewDTO[] = await response.json();
@@ -31,7 +31,7 @@ const useOwnerOtherSales = (carId: string) => {
                 await Promise.all(
                     carPreviews.map(async (car) => {
                         if (car.id) {
-                            const imageResponse = await fetch(`http://localhost:8080/productImages/getCarImages/${car.id}`);
+                            const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${car.id}`);
                             if (imageResponse.ok) {
                                 imagesMap[car.id] = await imageResponse.json();
                             }
