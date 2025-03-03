@@ -6,6 +6,7 @@ import com.example.auto24.users.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +19,16 @@ public class AuthController {
     private final EmailVerificationService emailVerificationService;
     private final UserService userService;
     private final TokenService tokenService;
+    private final String frontendUrl;
 
-    public AuthController(AuthService authService, PasswordResetService passwordResetService, EmailVerificationService emailVerificationService, UserService userService, TokenService tokenService) {
+    public AuthController(AuthService authService, PasswordResetService passwordResetService, EmailVerificationService emailVerificationService, UserService userService, TokenService tokenService,
+                          @Value("${APP_FRONTEND_URL}") String frontendUrl) {
         this.authService = authService;
         this.passwordResetService = passwordResetService;
         this.emailVerificationService = emailVerificationService;
         this.userService = userService;
         this.tokenService = tokenService;
+        this.frontendUrl = frontendUrl;
     }
 
     // ALL
@@ -51,7 +55,7 @@ public class AuthController {
     @GetMapping("/confirm")
     public ResponseEntity<Void> confirmEmail(@RequestParam("token") String token, HttpServletResponse response) {
         emailVerificationService.confirmEmail(token);
-        response.setHeader("Location", "http://localhost:3000/login?confirmed=true");
+        response.setHeader("Location", frontendUrl+ "/login?confirmed=true");
         return new ResponseEntity<>(HttpStatus.FOUND);
     }
 

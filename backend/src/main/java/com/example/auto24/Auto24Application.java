@@ -27,6 +27,8 @@ public class Auto24Application {
 		System.setProperty("MAIL_DEBUG", dotenv.get("MAIL_DEBUG"));
 		System.setProperty("MONGODB_URI_PASSWORD", dotenv.get("MONGODB_URI_PASSWORD"));
 		System.setProperty("MONGODB_URI_USERNAME", dotenv.get("MONGODB_URI_USERNAME"));
+		System.setProperty("APP_FRONTEND_URL", dotenv.get("APP_FRONTEND_URL"));
+		System.setProperty("APP_BACKEND_URL", dotenv.get("APP_BACKEND_URL"));
 
 
 		SpringApplication.run(Auto24Application.class, args);

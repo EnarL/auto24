@@ -20,12 +20,18 @@ public class EmailService implements EmailSender {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private final JavaMailSender mailSender;
     private final String fromEmail;
-    private final String appBaseUrl;
+    private final String frontendUrl;
+    private final String backendUrl;
 
-    public EmailService(JavaMailSender mailSender, @Value("${app.base.url}") String appBaseUrl, @Value("${MAIL_USERNAME}") String fromEmail) {
+    public EmailService(JavaMailSender mailSender,
+                        @Value("${APP_BACKEND_URL}") String backendUrl,
+                        @Value("${MAIL_USERNAME}") String fromEmail,
+                        @Value("${APP_FRONTEND_URL}") String frontendUrl) {
         this.mailSender = mailSender;
         this.fromEmail = fromEmail;
-        this.appBaseUrl = appBaseUrl;
+        this.frontendUrl = frontendUrl;
+        this.backendUrl = backendUrl;
+
     }
 
     @Override
@@ -48,7 +54,7 @@ public class EmailService implements EmailSender {
     @Async
     public void sendConfirmationEmail(Users user, String token) throws MessagingException {
         String subject = "Confirm your email";
-        String confirmationUrl = "http://localhost:8080" + "/auth/confirm?token=" + token;
+        String confirmationUrl = backendUrl + "/auth/confirm?token=" + token;
         String emailContent = buildEmailContent(
                 "Welcome to Auto24, " + user.getFirstname() + "!",
                 "Thank you for registering. Please confirm your email address by clicking the link below:",
@@ -61,7 +67,7 @@ public class EmailService implements EmailSender {
     @Async
     public void sendPasswordResetEmail(String to, String token) {
         String subject = "Password Reset Request";
-        String resetUrl = appBaseUrl + "/reset_password?token=" + token;
+        String resetUrl = frontendUrl + "/reset_password?token=" + token;
         String message = buildEmailContent(
                 "Password Reset Request",
                 "Click the link below to reset your password:",
