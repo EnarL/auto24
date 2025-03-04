@@ -20,13 +20,13 @@ const useCarPreview = () => {
             setError(null);
 
             try {
-                const response = await fetch(`https://car24-backend-356893635177.herokuapp.com/car-details/preview`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-details/preview`);
                 if (response.ok) {
                     const carDetails: CarPreviewDTO[] = await response.json();
                     setCars(carDetails);
                     for (const car of carDetails) {
                         if (car.id) {
-                            const imageResponse = await fetch(`https://car24-backend-356893635177.herokuapp.com/productImages/getCarImages/${car.id}`);
+                            const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${car.id}`);
                             if (imageResponse.ok) {
                                 const imageUrls: string[] = await imageResponse.json();
                                 setCarImages((prevImages) => ({

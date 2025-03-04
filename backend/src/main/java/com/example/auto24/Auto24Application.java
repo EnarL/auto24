@@ -11,15 +11,15 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class Auto24Application {
 	public static void main(String[] args) {
 
+		// Use the following line when starting backend locally
+		 String envDirectory = "backend";
 
-
-		String envDirectory = "/app";
-
+		// Use the following line when using docker-compose
+		// String envDirectory = "/app";
 
 
 		Dotenv dotenv = Dotenv.configure().directory(envDirectory).load();
 
-		// Set the system properties from .env
 		System.setProperty("AWS_SECRET_ACCESS_KEY", dotenv.get("AWS_SECRET_ACCESS_KEY"));
 		System.setProperty("AWS_ACCESS_KEY_ID", dotenv.get("AWS_ACCESS_KEY_ID"));
 		System.setProperty("AWS_REGION", dotenv.get("AWS_REGION"));

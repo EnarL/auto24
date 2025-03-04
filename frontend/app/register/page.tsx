@@ -12,9 +12,16 @@ const RegisterPage: React.FC = () => {
     const [terms, setTerms] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-
+    const [, setUsernameError] = useState("");
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (username.length < 3) {
+            setUsernameError("Kasutajanimi peab olema vähemalt 3 tähemärki pikk.");
+            return;
+        } else {
+            setUsernameError(""); // Reset error if valid
+        }
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
                 method: "POST",
