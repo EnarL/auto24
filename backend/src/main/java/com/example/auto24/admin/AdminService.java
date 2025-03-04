@@ -25,11 +25,12 @@ public class AdminService {
                 stream().map(usersDTOMapper).
                 collect(Collectors.toList());
     }
-    public UsersDTO getUserById(String UserId) {
-        return userRepository.findById(UserId).
-                map(usersDTOMapper).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    public UsersDTO getUserById(String id) {
+        return userRepository.findById(id)
+                .map(usersDTOMapper)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
+
     public void deleteUser(String userId) {
         userRepository.findById(userId)
                 .ifPresentOrElse(user -> {

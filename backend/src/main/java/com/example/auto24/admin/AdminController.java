@@ -17,9 +17,9 @@ private final AdminService adminService;
     public List<UsersDTO> getAllUsers() {
         return adminService.getAllUsers();
     }
-    @GetMapping("/{userId}")
-    public UsersDTO getUserById(@PathVariable("userId") String userId) {
-        return adminService.getUserById(userId);
+    @GetMapping("{id}")
+    public ResponseEntity<UsersDTO> getUserById(@PathVariable String id) {
+        return ResponseEntity.ok(adminService.getUserById(id));
     }
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable String userId) {

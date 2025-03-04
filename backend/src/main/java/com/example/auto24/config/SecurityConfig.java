@@ -44,15 +44,22 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/createAdmin", "/users").hasRole("ADMIN")
-                        .anyRequest().permitAll()
+                        .requestMatchers("/auth/register", "/auth/login", "/auth/confirm", "/auth/forgot-password","/auth/reset-password",
+                                "/cars/count", "/cars/OwnerOtherSales/",
+                                "/car-details/search","/car-details/preview",
+                                "productImages/getCarImages/**", "users/SalesmanInfo/", "users/change-password").permitAll()
+                        .requestMatchers("/users/createAdmin", "/users",
+                                "/admin/**").hasRole("ADMIN")
+                        .anyRequest().hasAnyRole("USER", "ADMIN")
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ✅ Stateless for JWT
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+
         return http.build();
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

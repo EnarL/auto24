@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -135,12 +138,24 @@ public class CarDetailsService {
     }
 
     public String extractYearFromFirstRegistrationDate(CarDetailsDTO carDetailsDTO) {
-        if (carDetailsDTO.firstRegistrationDate() != null && carDetailsDTO.firstRegistrationDate().length() >= 4) {
-            return carDetailsDTO.firstRegistrationDate().substring(0, 4);
+        if (carDetailsDTO.firstRegistrationDate() != null) {
+            try {
+                DateTimeFormatter fullFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate fullDate = LocalDate.parse(carDetailsDTO.firstRegistrationDate(), fullFormatter);
+                return String.valueOf(fullDate.getYear());
+            } catch (DateTimeException e) {
+                try {
+                    DateTimeFormatter partialFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                    LocalDate partialDate = LocalDate.parse(carDetailsDTO.firstRegistrationDate() + "-01", partialFormatter);
+                    return String.valueOf(partialDate.getYear());
+                } catch (DateTimeException ignored) {
+
+                    return "";
+                }
+            }
         }
         return "";
     }
-
 
     public List<CarDTO> getCarDetailsForUser() {
         String userId = SecurityUtils.getAuthenticatedUserId();
