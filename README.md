@@ -22,12 +22,3 @@ This project is a simplified version of the Auto24 website, a popular online mar
 - **Heroku**: Deployment
 
 ---
-
-## 🚀 Live Demo
-[Car24 Frontend](https://car24-frontend-b1b904c1c0a6.herokuapp.com/)
-
-### Test account
-
-username: enar
-
-password: enar
