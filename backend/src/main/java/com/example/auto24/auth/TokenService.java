@@ -26,16 +26,17 @@ public class TokenService {
 
     public void generateAndSetTokens(Users user, HttpServletResponse response) {
         String accessToken = jwtUtil.generateToken(user.getUsername());
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId());
 
-        if (refreshToken == null || refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            String newRefreshToken = jwtUtil.generateRefreshToken(user.getUsername());
-            refreshToken = new RefreshToken();
-            refreshToken.setUserId(user.getId());
-            refreshToken.setToken(newRefreshToken);
-            refreshToken.setExpiryDate(LocalDateTime.now().plusWeeks(1));
-            refreshTokenRepository.save(refreshToken);
-        }
+        // Delete all existing refresh tokens for this user
+        refreshTokenRepository.deleteAllByUserId(user.getId());
+
+        // Create a new refresh token
+        String newRefreshToken = jwtUtil.generateRefreshToken(user.getUsername());
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setUserId(user.getId());
+        refreshToken.setToken(newRefreshToken);
+        refreshToken.setExpiryDate(LocalDateTime.now().plusWeeks(1));
+        refreshTokenRepository.save(refreshToken);
 
         addHttpOnlyCookie(response, "accessToken", accessToken, 600);
     }

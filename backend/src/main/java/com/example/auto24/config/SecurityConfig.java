@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/register", "/auth/login",  "/auth/confirm", "/auth/forgot-password","/auth/reset-password",
+                        .requestMatchers("/auth/register", "/auth/login", "/auth/confirm", "/auth/forgot-password","/auth/reset-password",
                                 "/cars/count", "/cars/OwnerOtherSales/",
                                 "/car-details/search","/car-details/preview",
                                 "productImages/getCarImages/**", "users/SalesmanInfo/", "users/change-password").permitAll()

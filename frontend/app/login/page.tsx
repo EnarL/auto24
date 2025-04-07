@@ -39,7 +39,7 @@ const LoginPage: React.FC = () => {
                 setError('');
                 setIsLoggedIn(true);
                 updateUserData();
-                router.push('/users/minu/');
+                router.push('/users/my');
             } else {
                 setError("Vigased sisselogimisandmed. Palun proovi uuesti.");
             }

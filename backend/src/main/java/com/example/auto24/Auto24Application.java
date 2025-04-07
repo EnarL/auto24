@@ -12,7 +12,7 @@ public class Auto24Application {
 	public static void main(String[] args) {
 
 		// Set the directory to the location of your .env file
-		String envDirectory = "app";
+		String envDirectory = "/app";
 
 		Dotenv dotenv = Dotenv.configure().directory(envDirectory).load();
 
