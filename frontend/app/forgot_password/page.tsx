@@ -6,7 +6,7 @@ const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    useRouter();
+    const router = useRouter();  // You weren't using this properly
 
     const handlePasswordReset = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,7 +23,7 @@ const ForgotPassword: React.FC = () => {
             if (response.ok) {
                 setMessage("Taastamislink saadetud e-posti aadressile.");
             } else {
-                setMessage("Midagi läks valesti, proovige uuesti.");
+                setMessage("Kasutajat ei leitud. Kontrollige e-posti aadressi.");
             }
         } catch (error) {
             console.error("Error:", error);
@@ -33,18 +33,15 @@ const ForgotPassword: React.FC = () => {
         }
     };
 
+
     return (
         <div className="flex justify-center items-start min-h-screen bg-gray-100">
-
-            {/* Main container for the form */}
             <div className="w-full max-w-md p-8 shadow-sm border bg-white mt-10 rounded-lg">
-
                 <h2 className="text-2xl font-bold mb-6 text-center">Unustasin parooli</h2>
                 <p className="text-gray-600 text-center mb-6">
                     Sisesta oma e-posti aadress ja saadame taastamislingi.
                 </p>
 
-                {/* Form */}
                 <form onSubmit={handlePasswordReset}>
                     <div className="mb-6">
                         <input
@@ -56,15 +53,15 @@ const ForgotPassword: React.FC = () => {
                             required
                         />
                     </div>
-
-                    {/* Loading message */}
                     {isLoading ? (
                         <p className="text-center mt-4 text-gray-600">E-kirja saatmine...</p>
                     ) : (
                         message && (
                             <p
                                 className={`text-center mt-4 ${
-                                    message.includes("õnnestunud") ? "text-green-600" : "text-red-600"
+                                    message.includes("ei leitud") || message.includes("valesti") || message.includes("Viga")
+                                        ? "text-red-600"
+                                        : "text-green-600"
                                 }`}
                             >
                                 {message}
@@ -72,11 +69,10 @@ const ForgotPassword: React.FC = () => {
                         )
                     )}
 
-                    {/* Submit Button */}
                     <div className="mt-6">
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white p-2 hover:bg-blue-700 transition"
+                            className="w-full bg-blue-600 text-white p-1 hover:bg-blue-700 transition"
                         >
                             Saada link
                         </button>

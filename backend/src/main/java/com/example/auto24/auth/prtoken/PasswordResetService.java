@@ -30,6 +30,10 @@ public class PasswordResetService {
 
     @Transactional
     public void requestPasswordReset(String email) {
+        Users user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Kasutajat ei leitud");
+        }
         String token = UUID.randomUUID().toString();
         PasswordResetToken resetToken = PasswordResetToken.builder()
                 .token(token)
@@ -39,23 +43,29 @@ public class PasswordResetService {
                 .isVerified(false)
                 .build();
         passwordResetTokenRepository.save(resetToken);
-        try{
+        try {
             emailService.sendPasswordResetEmail(email, token);
         } catch (Exception e) {
             throw new RuntimeException("Failed to save password reset token", e);
         }
     }
+
     @Transactional
     public void resetPassword(String token, ResetPasswordRequest request) {
         PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
 
         if (resetToken.isTokenExpired()) {
-            throw new RuntimeException("Token has expired");
+            throw new IllegalStateException("Token has expired");
         }
+
         if (!request.newPassword().equals(request.confirmationPassword())) {
-            throw new RuntimeException("Passwords do not match");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirmation password do not match");
         }
+        if (request.newPassword().length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must have minimum 8 characters");
+        }
+
         Users user = userRepository.findByEmail(resetToken.getEmail());
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);

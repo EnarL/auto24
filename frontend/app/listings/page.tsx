@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import ListingPage from '@/app/components/homepage/Kuulutused';
+import Listings from '@/app/components/homepage/Listings';
 import ExtendedMenuBar from "@/app/components/common/ExtendedMenuBar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
@@ -48,14 +48,10 @@ const Page: React.FC = () => {
                                 </div>
                             ))}
                         </div>
-                        <div>
-                            <ListingPage
-                                carCount={15}
-                                columns={{ sm: 3, md: 5, lg: 5 }}
-                                imageHeight="h-36"
-                                imageWidth="w-full"
-                            />
-                        </div>
+                        <Listings
+                            carCount={8}
+                            columns={{ sm: 2, md: 4, lg: 6 }}
+                        />
                     </div>
                 </div>
             </main>

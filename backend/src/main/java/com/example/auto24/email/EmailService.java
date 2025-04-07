@@ -56,7 +56,7 @@ public class EmailService implements EmailSender {
         String subject = "Confirm your email";
         String confirmationUrl = backendUrl + "/auth/confirm?token=" + token;
         String emailContent = buildEmailContent(
-                "Welcome to Auto24, " + user.getFirstname() + "!",
+                "Welcome to Car sales platform, " + user.getFirstname() + "!",
                 "Thank you for registering. Please confirm your email address by clicking the link below:",
                 confirmationUrl,
                 "Confirm your email"
@@ -87,7 +87,6 @@ public class EmailService implements EmailSender {
                 null,
                 null
         );
-
         send(user.getEmail(), message, subject);
     }
 

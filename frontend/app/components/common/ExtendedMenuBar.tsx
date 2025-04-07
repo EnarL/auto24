@@ -49,7 +49,7 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
                 const [powerFrom, powerTo] = value.split("-");
                 newFilters["powerFrom"] = powerFrom;
                 newFilters["powerTo"] = powerTo;
-            } else if (key === "odometerReadingKM") {
+            } else if (key === "odometerReading") {
                 const [mileageFrom, mileageTo] = value.split("-");
                 newFilters["mileageFrom"] = mileageFrom;
                 newFilters["mileageTo"] = mileageTo;
@@ -83,7 +83,7 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
     const handleSearch = () => {
         const queryParams = new URLSearchParams(
             Object.entries(filters)
-                .filter(([value]) => value.trim() !== "")
+                .filter(([, value]) => value.trim() !== "")
                 .reduce((acc, [key, value]) => {
                     if (key === "yearFrom" || key === "yearTo") {
                         acc["firstRegistrationDate"] = `${filters.yearFrom}-${filters.yearTo}`;
@@ -92,7 +92,7 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
                     } else if (key === "powerFrom" || key === "powerTo") {
                         acc["enginePowerKW"] = `${filters.powerFrom}-${filters.powerTo}`;
                     } else if (key === "mileageFrom" || key === "mileageTo") {
-                        acc["odometerReadingKM"] = `${filters.mileageFrom}-${filters.mileageTo}`;
+                        acc["odometerReading"] = `${filters.mileageFrom}-${filters.mileageTo}`;
                     } else {
                         acc[key] = value;
                     }

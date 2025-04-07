@@ -32,7 +32,6 @@ public class CarService {
         this.carExtraInfoService = carExtraInfoService;
     }
 
-
     public void deleteCarsByUserId(String userId) {
         List<Car> cars = carRepository.findByOwnerId(userId);
         for (Car car : cars) {
@@ -68,8 +67,6 @@ public class CarService {
         return savedCar.getId();
     }
 
-
-
     public void updateUserCarIds(String userId, String carId) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.getCarIds().add(carId);
@@ -92,7 +89,6 @@ public class CarService {
         carRepository.save(car);
     }
 
-
     public Optional<CarListingResponse> getCarListingById(String id) {
         Optional<CarDetailsDTO> carDetailsOpt = carDetailsService.getCarDetailsById(id);
         Optional<CarExtraInfoDTO> carExtraInfoOpt = carExtraInfoService.getCarExtraInfoByCarId(id);
@@ -100,7 +96,6 @@ public class CarService {
         if (carDetailsOpt.isEmpty() || carExtraInfoOpt.isEmpty()) {
             return Optional.empty();
         }
-
         CarDetailsDTO carDetailsDTO = carDetailsOpt.get();
         CarExtraInfoDTO carExtraInfoDTO = carExtraInfoOpt.get();
         return Optional.of(new CarListingResponse(carDetailsDTO, carExtraInfoDTO));
@@ -119,17 +114,14 @@ public class CarService {
         return carRepository.countByIsActiveTrue();
     }
 
-
     public boolean toggleCarListingStatus(String carId) {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
 
         car.setActive(!car.isActive());
         carRepository.save(car);
-
         return car.isActive();
     }
-
 
     public List<CarPreviewDTO> getOwnerOtherSales(String carId) {
         String ownerId = findUserIdFromCarId(carId);

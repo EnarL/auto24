@@ -3,7 +3,7 @@ import React from "react";
 interface FormInputProps {
     id: string;
     label: string;
-    value: string;
+    value: string | null; // Allow null here to handle the case where value might be null
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: string;
     className?: string;
@@ -26,7 +26,7 @@ const FormInput: React.FC<FormInputProps> = ({
                 type={type}
                 id={id}
                 className={`border border-gray-300 w-full text-[12px] p-2 ${className}`}
-                value={value}
+                value={value || ""} // Use empty string if value is null
                 onChange={onChange}
             />
         </div>

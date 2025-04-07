@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,14 +32,12 @@ public class AuthController {
         this.frontendUrl = frontendUrl;
     }
 
-    // ALL
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest request){
         userService.register(request);
         return ResponseEntity.ok("User registered successfully");
     }
 
-    // ALL
     @PostMapping(value = "/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody UserLoginRequest request, HttpServletResponse response) {
         authService.login(request, response);
@@ -51,7 +50,6 @@ public class AuthController {
         return ResponseEntity.ok("User logged out successfully");
     }
 
-    // cur user or ADMIN
     @GetMapping("/confirm")
     public ResponseEntity<Void> confirmEmail(@RequestParam("token") String token, HttpServletResponse response) {
         emailVerificationService.confirmEmail(token);
@@ -59,31 +57,29 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.FOUND);
     }
 
-    // cur user or ADMIN
     @PostMapping("/forgot-password")
     public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
         passwordResetService.requestPasswordReset(email);
         return ResponseEntity.ok("Password reset link sent to your email");
     }
-    // cur user or ADMIN
     @GetMapping("/reset-password")
     public ResponseEntity<String> validateResetPasswordToken(@RequestParam String token) {
         passwordResetService.validateResetToken(token);
         return ResponseEntity.ok("Token is valid. Please enter your new password.");
     }
 
-    // cur user or ADMIN
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestBody ResetPasswordRequest request) {
         passwordResetService.resetPassword(token, request);
         return ResponseEntity.ok("Password has been reset successfully");
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(HttpServletResponse response) {
         tokenService.refreshToken(response);
         return ResponseEntity.ok("Access token refreshed.");
     }
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/check-session")
     public ResponseEntity<?> checkSession(HttpServletRequest request) {
         authService.checkSession(request);

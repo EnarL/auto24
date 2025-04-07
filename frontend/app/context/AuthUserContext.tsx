@@ -110,7 +110,7 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 setActive,
                 setPhoneNumber,
                 updateUserData: fetchUserData,
-                logout, // Provide the logout method
+                logout,
             }}
         >
             {children}

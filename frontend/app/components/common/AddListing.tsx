@@ -3,7 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthUser } from '@/app/context/AuthUserContext';
 
-const Kuuluta: React.FC = () => {
+const AddListing: React.FC = () => {
     const router = useRouter();
     const { isLoggedIn } = useAuthUser();
 
@@ -30,4 +30,4 @@ const Kuuluta: React.FC = () => {
     );
 };
 
-export default Kuuluta;
+export default AddListing;

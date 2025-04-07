@@ -39,7 +39,6 @@ public class AuthService {
         tokenService.clearTokens(response);
     }
 
-
     public void checkSession(HttpServletRequest request) {
         String accessToken = null;
         Cookie[] cookies = request.getCookies();

@@ -5,7 +5,7 @@ import Placeholder from '@/app/components/homepage/Placeholder';
 
 import Searchsection from "@/app/components/homepage/Searchsection";
 import Popularbrands from "@/app/components/homepage/Popularbrands";
-import ListingPage from "@/app/components/homepage/Kuulutused";
+import Listings from "@/app/components/homepage/Listings";
 
 const Page: React.FC = () => {
     return (
@@ -54,7 +54,7 @@ const Page: React.FC = () => {
                     </div>
                     <div className="pt-6">
                         <h1 className="text-1xl font-extralight opacity-65">VALIK KUULUTUSI</h1>
-                        <ListingPage
+                        <Listings
                             carCount={30}
                             columns={{ sm: 2, md: 4, lg: 6 }}
                         />

@@ -102,29 +102,31 @@ const BrandPage = () => {
                         Filtrid
                     </button>
                 </div>
-                <div className="flex items-center justify-between w-full px-4 mt-2 bg-gray-200 py-2">
+                <div className="flex items-center justify-between w-full px-4 bg-gray-200 py-2">
                     <span className="text-lg font-semibold">Kokku: {carDetails.length}</span>
                     <SortSelect sortOption={sortOption} onSortChange={setSortOption} />
-                    <div className="flex items-center">
-                        <button
-                            className="p-2 border border-gray-500 rounded-md mx-1"
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            <FontAwesomeIcon icon={faChevronLeft}/>
-                        </button>
+                    {carDetails.length > 0 && (
+                        <div className="flex items-center">
+                            <button
+                                className="p-2 border border-gray-500 rounded-md mx-1"
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft}/>
+                            </button>
 
-                        <span className="px-3">{currentPage} / {totalPages}</span>
+                            <span className="px-3">{currentPage} / {totalPages}</span>
 
-                        <button
-                            className="p-2 border border-gray-500 rounded-md mx-1"
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === Math.ceil(carDetails.length / carsPerPage)}
-                        ><FontAwesomeIcon icon={faChevronRight}/>
-                        </button>
-                    </div>
+                            <button
+                                className="p-2 border border-gray-500 rounded-md mx-1"
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                            ><FontAwesomeIcon icon={faChevronRight}/>
+                            </button>
+                        </div>
+                    )}
                 </div>
-                <div className="w-full px-4 mt-2">
+                <div className="w-full mt-2">
                     {loading && <div>Loading...</div>}
                     <CarList cars={paginatedCars} carImages={carImages} onCarClick={handleCarClick}/>
                 </div>

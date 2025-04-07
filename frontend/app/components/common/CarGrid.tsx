@@ -72,6 +72,7 @@ const CarGrid: React.FC<CarGridProps> = ({
                                     alt={`Car ${car.title} - Image 1`}
                                     className={`${imageWidth} ${imageHeight}`}
                                     style={{ objectFit: "cover" }}
+                                    loading="lazy"
                                 />
                             ) : (
                                 <p>No images available</p>

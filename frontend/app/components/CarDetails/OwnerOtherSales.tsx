@@ -23,7 +23,7 @@ const OwnerOtherSales: React.FC<Props> = ({ carId }) => {
                         <S3Image
                             src={carImages[car.id][0]}
                             alt={car.title}
-                            className="rounded-md mx-auto mb-2"
+                            className="rounded-md mx-auto mb-2 w-full h-36 object-cover"
                         />
                     )}
                     <div className="flex-grow">

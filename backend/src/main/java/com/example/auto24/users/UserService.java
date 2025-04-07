@@ -36,12 +36,16 @@ public class UserService {
         this.userDataUpdateMapper = userDataUpdateMapper;
     }
 
-    public void changePassword( ChangePasswordRequest request) {
-        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+    public void changePassword(ChangePasswordRequest request) {
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated"));
+
         Users user = userRepository.findByUsername(userPrincipal.getUsername());
+
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+
         if (!encoder.matches(request.currentPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current password is incorrect");
         }
@@ -49,16 +53,37 @@ public class UserService {
         if (!request.newPassword().equals(request.confirmationPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirmation password do not match");
         }
+        if (request.newPassword().length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must have minimum 8 characters");
+        }
 
         user.setPassword(encoder.encode(request.newPassword()));
         userRepository.save(user);
     }
-    @Transactional
+
     public void register(UserRegistrationRequest request) {
-        if (userRepository.existsByUsernameOrEmail(request.username(), request.email())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with provided credentials already exists");
+        if (request.username().length() < 3) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username must be at least 3 characters long");
         }
-        Users user = Users.builder().username(request.username())
+
+        if (request.password().length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 8 characters long");
+        }
+
+        if (!request.password().equals(request.confirmationPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password and confirmation password do not match");
+        }
+
+        if (userRepository.existsByUsername(request.username())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with this username already exists");
+        }
+
+        if (userRepository.existsByEmail(request.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with this email already exists");
+        }
+
+        Users user = Users.builder()
+                .username(request.username())
                 .firstname(request.firstname())
                 .lastname(request.lastname())
                 .email(request.email())
@@ -67,6 +92,10 @@ public class UserService {
                 .active(false)
                 .build();
         userRepository.save(user);
+
+        if (request.newsletter()) {
+            emailService.sendNewsLetterEmail(user);
+        }
 
         sendVerificationEmail(user);
     }
@@ -86,34 +115,51 @@ public class UserService {
             throw new RuntimeException("Failed to send confirmation email", e);
         }
     }
+
     public UsersDTO getUserProfile() {
-        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated"));
+
         Users user = userRepository.findByUsername(userPrincipal.getUsername());
+
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+
         return usersDTOMapper.apply(user);
     }
 
+
     public void updateUser(UpdateUserDataRequest updateUserDataRequest) {
-        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated"));
+
         Users user = userRepository.findByUsername(userPrincipal.getUsername());
-        userDataUpdateMapper.updateUserDetailsFromDto(updateUserDataRequest, user);
+
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+
+        userDataUpdateMapper.updateUserDetailsFromDto(updateUserDataRequest, user);
         userRepository.save(user);
     }
 
+
     public void deleteUser() {
-        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser();
+        UserPrincipal userPrincipal = SecurityUtils.getAuthenticatedUser()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated"));
+
         Users user = userRepository.findByUsername(userPrincipal.getUsername());
+
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+
+
         userRepository.delete(user);
         carService.deleteCarsByUserId(user.getId());
     }
+
 
     public SalesmanDTO getSalesmanInfo(String carId) {
         String ownerId = carService.findUserIdFromCarId(carId);

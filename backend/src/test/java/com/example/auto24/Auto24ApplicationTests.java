@@ -9,7 +9,6 @@ class Auto24ApplicationTests {
 
     @Test
     void contextLoads() {
-        // This test simply checks if the application context is loading correctly
     }
 
 }

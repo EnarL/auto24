@@ -15,7 +15,7 @@ const Topbar: React.FC = () => {
     const menuItems = [
         { href: "/vali", label: "Vali automark" },
         { href: "/uued", label: "Uued sõidukid" },
-        { href: "/kuulutused", label: "Sõidukite kuulutused" },
+        { href: "/listings", label: "Sõidukite kuulutused" },
         { href: "/products/kaubad_ja_varuosad", label: "Kaubad ja varuosad" },
         { href: "/rent", label: "Rent" },
         { href: "/firmadjateenused", label: "Firmad ja teenused" },
@@ -23,7 +23,7 @@ const Topbar: React.FC = () => {
         { href: "/forums", label: "Foorumid" },
         { href: "/financing", label: "Finantseerimine" },
         { href: "/ostuabi", label: "Ostuabi" },
-        { href: "/users/minu/", label: "Minu konto" },
+        { href: "/users/my/", label: "Minu konto" },
     ];
 
     useEffect(() => {
@@ -55,8 +55,6 @@ const Topbar: React.FC = () => {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
-
-    // Callback to close sidebar
     const handleAuthLinkClick = () => {
         setIsSidebarOpen(false);
     };
@@ -79,8 +77,6 @@ const Topbar: React.FC = () => {
                         </li>
                     ))}
                 </ul>
-
-                {/* Show menu icon if not all items are visible */}
                 {visibleItems < menuItems.length && (
                     <button
                         className="ml-2 bg-[#FCBA3C] p-3 rounded-t shadow-md hover:brightness-110 transition-all duration-300 flex items-center justify-center"

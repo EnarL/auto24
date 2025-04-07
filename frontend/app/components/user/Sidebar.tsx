@@ -16,17 +16,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, isMenuVisible }) => {
             <section className="w-[250px] border-2 border-gray-100 rounded-md">
                 <h2 className="border-gray-100 border-b-2 p-2 text-[#06c] font-semibold">MINU KUULUTUSED</h2>
                 <div className="break-words from-white to-gray-50 opacity-80 bg-gradient-to-t p-2">
-                    <Link href="/users/minu" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Kõik')}`}>Kõik</Link>
-                    <Link href="/users/kuulutused" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Sõidukite kuulutused')}`}>Sõidukite kuulutused</Link>
+                    <Link href="/users/my" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Kõik')}`}>Kõik</Link>
+                    <Link href="/users/listings" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Sõidukite kuulutused')}`}>Sõidukite kuulutused</Link>
                     <Link href="/users/kaubad_varuosad" className={`block pl-2 mb-1 rounded-[2px] ${getLinkClass('Kaubad_varuosad')}`}>Kaubad ja varuosad</Link>
                     <Link href="/users/firmad_teenused" className={`block pl-2  mb-1 rounded-[2px] ${getLinkClass('Firmad_teenused')}`}>Firmad ja teenused</Link>
                     <Link href="/users/reklaamid_bannerid" className={`block pl-2  mb-1 rounded-[2px] ${getLinkClass('Reklaamid_bannerid')}`}>Reklaam-bännerid</Link>
-                    <Link href="/users/kuuluta">
+                    <Link href="/users/add_listing">
                         <button className="border-2 mt-2 border-gray-100 w-full p-2 flex cursor-pointer hover:bg-gray-200">
                             <p className="mx-auto">LISA KUULUTUS</p>
                         </button>
                     </Link>
-                    <Link href="#" className="flex cursor-pointer hover:text-blue-600"><p className="mx-auto">hinnakiri</p></Link>
                 </div>
             </section>
             <section className="w-[250px] border-2 border-gray-100 rounded-md">

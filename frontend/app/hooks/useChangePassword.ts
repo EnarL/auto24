@@ -18,14 +18,27 @@ const useChangePassword = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Error changing password');
+                const data = await response.json();
+                throw new Error(data.message || 'Error changing password');
             }
 
-            setSuccess('Password changed successfully');
+            setSuccess('Parool muudetud');
+            setError(null);  // Clear any existing errors when successful
         } catch (err) {
             const errorMessage = (err as Error).message;
-            console.error('Error:', errorMessage);
-            setError(errorMessage);
+
+            // Simplified Estonian error messages for user notifications
+            if (errorMessage === 'Current password is incorrect') {
+                setError('Vale praegune parool');
+            } else if (errorMessage === 'New password and confirmation password do not match') {
+                setError('Paroolid ei ühti');
+            } else if (errorMessage === 'Password must have minimum 8 characters') {
+                setError('Parool on liiga lühike');
+            } else {
+                setError('Viga parooli muutmisel');
+            }
+
+            // We no longer log the error in the console as it is a user-facing message
         }
     };
 

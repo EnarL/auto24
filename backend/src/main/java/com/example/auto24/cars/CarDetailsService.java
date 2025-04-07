@@ -30,10 +30,12 @@ public class CarDetailsService {
         this.carDetailsUpdateMapper = carDetailsUpdateMapper;
     }
 
-
     public List<CarPreviewDTO> searchCars(Map<String, String> searchParams) {
-        Query query = CarDetailsSpecification.buildQuery(searchParams);
+        if (searchParams == null || searchParams.isEmpty()) {
+            return getAllCarsPreview();
+        }
 
+        Query query = CarDetailsSpecification.buildQuery(searchParams);
         List<CarDetails> carDetailsList = mongoTemplate.find(query, CarDetails.class);
 
         return carDetailsList.stream()
@@ -41,6 +43,7 @@ public class CarDetailsService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
     public List<CarPreviewDTO> getCarPreviewsForUser() {
         String userId = SecurityUtils.getAuthenticatedUserId();
         List<Car> cars = carRepository.findByOwnerId(userId);
@@ -50,6 +53,7 @@ public class CarDetailsService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
     public CarPreviewDTO createCarPreviewDTOFromDetails(CarDetails carDetails) {
         Optional<Car> carOptional = carRepository.findById(carDetails.getCarId());
         if (carOptional.isEmpty() || !carOptional.get().isActive()) {
@@ -75,7 +79,7 @@ public class CarDetailsService {
 
     public Optional<CarDetailsDTO> getCarDetailsById(String id) {
         return carDetailsRepository.findByCarId(id)
-                .map(carDetailsDTOMapper::apply);
+                .map(carDetailsDTOMapper);
     }
 
     public List<CarPreviewDTO> getAllCarsPreview() {
@@ -103,6 +107,7 @@ public class CarDetailsService {
                 imageKeys
         );
     }
+
     public CarDTO createCarDTO(Car car) {
         Optional<CarDetails> carDetailsOptional = carDetailsRepository.findByCarId(car.getId());
         if (carDetailsOptional.isEmpty()) {
@@ -124,8 +129,6 @@ public class CarDetailsService {
         String make = Optional.ofNullable(carDetailsDTO.make()).orElse("");
         String model = Optional.ofNullable(carDetailsDTO.model()).orElse("");
         String modelTrim = Optional.ofNullable(carDetailsDTO.modelTrim()).map(trim -> " " + trim).orElse("");
-
-
         if (!make.isEmpty()) {
             return make + modelTrim;
         } else if (!model.isEmpty()) {
@@ -163,7 +166,6 @@ public class CarDetailsService {
         return cars.stream().
                 map(this::createCarDTO).
                 collect(Collectors.toList());
-
     }
 
     public void deleteCarDetailsByCarId(String carId) {

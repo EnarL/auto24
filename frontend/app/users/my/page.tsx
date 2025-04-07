@@ -4,6 +4,7 @@ import useRequireAuth from "@/app/hooks/useRequireAuth";
 import useUserCars from "@/app/hooks/useUserCars";
 import useCarActions from "@/app/hooks/useCarActions";
 import React from "react";
+import NoListingsMessage from "@/app/components/user/NoListingsMessage";
 
 
 const MinuPage: React.FC = () => {
@@ -25,8 +26,7 @@ const MinuPage: React.FC = () => {
                                     <h3 className="font-bold text-lg">{car.title || "Unknown Title"}</h3>
                                     <span
                                         onClick={() => handleToggleActive(car.id)}
-                                        className={`cursor-pointer font-semibold ${car.isActive ? "text-green-500" : "text-red-500"}`}
-                                    >
+                                        className={`cursor-pointer font-semibold ${car.isActive ? "text-green-500" : "text-red-500"}`}>
                                         {car.isActive ? "Aktiivne" : "Mitteaktiivne"}
                                     </span>
                                 </div>
@@ -45,11 +45,7 @@ const MinuPage: React.FC = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="border-l-4 border-[#91d5ff] mt-4 ml-[10px] w-[740px] text-[#06c] mx-auto p-3 bg-[#f2faff] text-[14px] flex items-center">
-                        <img src="https://www.auto24.ee/images/icons/msg/info.svg" alt="Info" className="mr-2" />
-                        <span>Teil ei ole praegu sisestatud ühtegi kuulutust.</span>
-                        <a href="#" className="underline ml-1">Sisesta kuulutus</a>
-                    </div>
+                    <NoListingsMessage />
                 )}
             </div>
         </UserLayout>

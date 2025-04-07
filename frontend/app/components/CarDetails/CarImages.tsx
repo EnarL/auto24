@@ -1,11 +1,23 @@
-import React, { useState } from "react";
-import S3Image from "@/app/components/common/S3Image";
+import React, {useEffect, useState} from "react";
+import S3Image from "@/app/components/common/S3Image"; // Import your S3Image component
 import { CarDetailsDTO } from "@/app/types/types";
 
 const CarImages: React.FC<{ images: string[], car: CarDetailsDTO }> = ({ images, car }) => {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    // Disable scrolling when modal opens
+    useEffect(() => {
+        if (isModalOpen) {
+            document.body.style.overflow = "hidden"; // Prevent scrolling
+        } else {
+            document.body.style.overflow = "auto"; // Restore scroll
+        }
 
+        // Cleanup to reset the overflow when the component is unmounted
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [isModalOpen]);
     const openModal = (index: number) => {
         setSelectedImageIndex(index);
         setIsModalOpen(true);
@@ -65,18 +77,19 @@ const CarImages: React.FC<{ images: string[], car: CarDetailsDTO }> = ({ images,
 
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="relative w-full max-w-4xl h-auto p-4">
+                    <div className="relative w-full max-w-5xl h-auto sm:p-3 pr-4">
                         <button
                             onClick={closeModal}
-                            className="absolute top-0 right-0 text-white bg-black rounded-full p-3"
+                            className="absolute top-2 right-2 text-white bg-black rounded-full p-3 z-10"
                         >
                             X
                         </button>
+
                         <div className="relative">
-                            <img
+                            <S3Image
                                 src={images[selectedImageIndex]}
                                 alt={`Enlarged view of ${car.make} ${car.model}`}
-                                className="w-full h-auto object-contain max-h-[80vh] mx-auto"
+                                className=" sm:h-[60vh] h-[30vh] w-[100vw] mx-auto object-cover"
                             />
                             <button
                                 onClick={goToPreviousImage}

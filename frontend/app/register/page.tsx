@@ -5,6 +5,7 @@ import React, { useState } from "react";
 const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmationPassword, setConfirmationPassword] = useState("");
     const [firstname, setFirstName] = useState("");
     const [lastname, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -12,16 +13,25 @@ const RegisterPage: React.FC = () => {
     const [terms, setTerms] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-    const [, setUsernameError] = useState("");
+
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (username.length < 3) {
-            setUsernameError("Kasutajanimi peab olema vähemalt 3 tähemärki pikk.");
+            setError("Kasutajanimi peab olema vähemalt 3 tähemärki.");
             return;
-        } else {
-            setUsernameError(""); // Reset error if valid
         }
+
+        if (password.length < 8) {
+            setError("Parool peab olema vähemalt 8 tähemärki.");
+            return;
+        }
+
+        if (password !== confirmationPassword) {
+            setError("Paroolid ei ühti.");
+            return;
+        }
+
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
                 method: "POST",
@@ -33,6 +43,7 @@ const RegisterPage: React.FC = () => {
                     firstname,
                     lastname,
                     password,
+                    confirmationPassword,
                     email,
                     newsletter,
                     terms,
@@ -43,8 +54,18 @@ const RegisterPage: React.FC = () => {
                 setSuccess("Registreerumine õnnestus! Kontrolli oma e-posti aadressi kinnitamiseks.");
                 setError("");
             } else {
-                const errorMessage = await response.text();
-                setError(errorMessage || "Registreerumine ebaõnnestus. Palun proovi uuesti.");
+                const errorData = await response.json();
+                if (errorData.status === 409) {
+                    if (errorData.message.includes("Username")) {
+                        setError("Kasutajanimi on juba kasutuses.");
+                    } else if (errorData.message.includes("Email")) {
+                        setError("Meiliaadress on juba kasutuses.");
+                    } else {
+                        setError("Kasutaja antud andmetega on juba olemas.");
+                    }
+                } else {
+                    setError(errorData.error || "Registreerumine ebaõnnestus. Palun proovi uuesti.");
+                }
                 setSuccess("");
             }
         } catch (error) {
@@ -111,8 +132,8 @@ const RegisterPage: React.FC = () => {
                             type="password"
                             id="passwordConfirm"
                             className="border border-gray-300 w-full sm:w-[300px] p-1"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={confirmationPassword}
+                            onChange={(e) => setConfirmationPassword(e.target.value)}
                             required
                         />
                     </div>
@@ -153,7 +174,6 @@ const RegisterPage: React.FC = () => {
                             id="newsletter"
                             checked={newsletter}
                             onChange={(e) => setNewsletter(e.target.checked)}
-
                         />
                     </div>
                     <div className="mb-4 flex items-center justify-between  md:w-[90%]">
@@ -174,9 +194,17 @@ const RegisterPage: React.FC = () => {
                         />
                     </div>
 
+                    {error && (
+                        <div className="mb-4 text-sm text-orange-600 rounded-lg text-center">
+                            ⚠️ {error}
+                        </div>
+                    )}
+                    {success && (
+                        <div className="mb-4 text-sm text-green-700 rounded-lg text-center">
+                            ✅ {success}
+                        </div>
+                    )}
 
-                    {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-                    {success && <p className="text-green-500 mb-4 text-center">{success}</p>}
                     <button
                         type="submit"
                         className="w-[250px] mt-4 bg-blue-500 text-white hover:bg-blue-600 transition duration-300 p-2 text-[14px] mx-auto block"

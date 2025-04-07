@@ -11,12 +11,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class Auto24Application {
 	public static void main(String[] args) {
 
-		// Use the following line when starting backend locally
-		 String envDirectory = "backend";
-
-		// Use the following line when using docker-compose
-		// String envDirectory = "/app";
-
+		// Set the directory to the location of your .env file
+		String envDirectory = "C:\\Users\\enarl\\Desktop\\Projektid\\auto24-master\\auto24-master\\backend";
 
 		Dotenv dotenv = Dotenv.configure().directory(envDirectory).load();
 

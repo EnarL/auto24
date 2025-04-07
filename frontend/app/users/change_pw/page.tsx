@@ -31,7 +31,6 @@ const ChangePasswordPage: React.FC = () => {
                 </p>
 
                 <div className="border-l-4 border-gray-300 w-full p-3 bg-gray-50 text-[12px] text-gray-700">
-                    <p>Parool peab sisaldama vähemalt ühte numbrit ja ühte tähte.</p>
                     <p>Parool peab olema vähemalt 8 märki pikk.</p>
                 </div>
 

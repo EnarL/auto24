@@ -1,6 +1,7 @@
 package com.example.auto24.users;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +24,7 @@ public class UserController {
         userService.updateUser(userDataRequest);
         return ResponseEntity.ok("User updated successfully");
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<UsersDTO> getCurrentUser() {
         return ResponseEntity.ok(userService.getUserProfile());

@@ -38,7 +38,7 @@ public class CarExtraInfoService {
     public Optional<CarExtraInfoDTO> getCarExtraInfoByCarId(String id) {
         Optional<CarExtraInfo> carExtraInfoOpt = carExtraInfoRepository.findByCarId(id);
 
-        return carExtraInfoOpt.map(carExtraInfoDTOMapper::apply);
+        return carExtraInfoOpt.map(carExtraInfoDTOMapper);
     }
 
     public void deleteCarExtraInfoByCarId(String carId) {

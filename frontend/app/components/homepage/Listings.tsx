@@ -9,14 +9,14 @@ interface ListingPageProps {
         md?: number;
         lg?: number;
     };
-    imageHeight?: string; // New prop for image height
-    imageWidth?: string; // New prop for image width
+    imageHeight?: string;
+    imageWidth?: string;
 }
 
 const ListingPage: React.FC<ListingPageProps> = ({
                                                      carCount = 30,
                                                      columns = { sm: 2, lg: 6 },
-                                                     imageHeight = "h-32", // Default height
+                                                     imageHeight = "h-32",
                                                      imageWidth = "w-full"
                                                  }) => {
     const { cars, carImages, loading, error } = useCarPreview();

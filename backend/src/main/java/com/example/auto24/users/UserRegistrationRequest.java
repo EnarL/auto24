@@ -14,6 +14,8 @@ public record UserRegistrationRequest(
         String lastname,
         @NotBlank(message = "Password is required")
         String password,
+        @NotBlank(message = "Confirmation password is required")
+        String confirmationPassword,
         @NotBlank(message = "Email is required")
         @Email(message = "Email should be valid")
         String email,
