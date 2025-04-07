@@ -9,7 +9,7 @@ const AddListing: React.FC = () => {
 
     const handleClick = () => {
         if (isLoggedIn) {
-            router.push('/users/kuuluta');
+            router.push('/users/add_listing');
         } else {
             router.push('/login');
         }

@@ -1,6 +1,7 @@
 export const vehicleFields=[
-    {name: "vehicleType", label: "Liik ja keretüüp", type: "text", required: true},
-    {name: "bodyType", label: "Keretüüp (täpsustus)", type: "text"},
+    {name: "vehicleType", label: "Liik", type: "text", required: true},
+    {name: "bodyType", label: "Keretüüp", type: "text"},
+    {name: "bodyTypeDetail", label: "Keretüüp (täpsustus)", type: "text"},
     {name: "make", label: "Mark", type: "text"},
     {name: "model", label: "Mudel", type: "text"},
     {name: "modelTrim", label: "Mudeli nimi", type: "text"},

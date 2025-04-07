@@ -30,7 +30,7 @@ const UserLayout: React.FC<{ activeTab: string; children: React.ReactNode }> = (
             <div className={`flex-grow transition-all duration-300 ${isMenuVisible ? "ml-0" : "ml-0"}`}>
                 <div className="flex items-center mb-2">
                     <button
-                        className="border border-gray-500 border-1 px-2 py-1 mt-2 ml-4 flex items-center md:hidden"
+                        className="border border-gray-500 border-1 px-2 py-1 mt-2 flex items-center md:hidden"
                         onClick={toggleMenu}
                     >
                         <FontAwesomeIcon icon={faBars} className="h-5 w-5 text-gray-500" />

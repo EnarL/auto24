@@ -19,7 +19,7 @@ const MinuPage: React.FC = () => {
                 {loading ? (
                     <div className="text-center p-3">Loading cars...</div>
                 ) : userCars.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4 mt-4 ml-3">
+                    <div className="grid grid-cols-1 gap-4 mt-4 md:ml-3">
                         {userCars.map((car) => (
                             <div key={car.id} className="border rounded-md shadow-md p-4 bg-white">
                                 <div className="flex justify-between items-center">

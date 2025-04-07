@@ -4,14 +4,28 @@ import Link from 'next/link';
 interface StepNavigationProps {
     currentStep: number;
     carId?: string;
-    isFormValid?: boolean;  // Pass the form validation result as a prop
+    isFormValid?: boolean;
+    isAddListingPage?: boolean;
+    handleStepClick?: () => void;
 }
 
-const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, carId, isFormValid }) => {
+const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, carId, isFormValid, isAddListingPage, handleStepClick }) => {
+
+    const handleLinkClick = (e: React.MouseEvent) => {
+        if (isAddListingPage && !isFormValid) {
+            e.preventDefault();
+            alert('Lisa kõigepealt liik, keretüüp ja mark!');
+        } else {
+            handleStepClick?.();
+        }
+    };
+
     return (
         <div className="h-[60px] w-full text-[14px] flex justify-start items-center mt-4 mb-4">
             <span className="flex items-center ml-[50px]">
-                <Link href={`/users/edit/${carId}`} className={`flex items-center ${currentStep === 1 ? '' : ''}`}>
+                <Link href={`/users/edit/${carId}`}
+                      className={`flex items-center ${currentStep === 1 ? '' : ''}`}
+                      onClick={(e) => handleLinkClick(e)}>
                     <span className={`flex items-center justify-center w-[25px] h-[25px] rounded-full ${currentStep === 1 ? 'bg-lime-600' : 'bg-gray-200'} text-white mr-2`}>
                         1
                     </span>
@@ -19,7 +33,9 @@ const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, carId, isF
                 <span>Sõiduki sisestamine</span>
             </span>
             <span className="flex items-center ml-16">
-                <Link href={`/users/lisa_pildid/${carId}`} className={`flex items-center`}>
+                <Link href={`/users/lisa_pildid/${carId}`}
+                      className={`flex items-center`}
+                      onClick={(e) => handleLinkClick(e)}>
                     <span className={`flex items-center justify-center w-[25px] h-[25px] rounded-full ${currentStep === 2 ? 'bg-lime-600' : 'bg-gray-200'} text-white mr-2`}>
                         2
                     </span>
@@ -27,7 +43,9 @@ const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, carId, isF
                 </Link>
             </span>
             <span className="flex items-center ml-16">
-                <Link href={`/users/confirm_listing/${carId}`} className={`flex items-center`}>
+                <Link href={`/users/confirm_listing/${carId}`}
+                      className={`flex items-center`}
+                      onClick={(e) => handleLinkClick(e)}>
                     <span className={`flex items-center justify-center w-[25px] h-[25px] rounded-full ${currentStep === 3 ? 'bg-lime-600' : 'bg-gray-200'} text-white mr-2`}>
                         3
                     </span>

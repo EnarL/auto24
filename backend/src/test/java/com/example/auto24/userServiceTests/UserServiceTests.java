@@ -53,12 +53,11 @@ public class UserServiceTests {
     private UserService userService;
 
     private Users mockUser;
-    private UserPrincipal mockUserPrincipal;
 
     @BeforeEach
     void setUp() {
         mockUser = MockUserGenerator.createMockUser();
-        mockUserPrincipal = new UserPrincipal(mockUser);
+        UserPrincipal mockUserPrincipal = new UserPrincipal(mockUser);
 
         // Setup security context
         UsernamePasswordAuthenticationToken authentication =
@@ -89,14 +88,13 @@ public class UserServiceTests {
 
     @Test
     void register_ShouldCreateNewUser() throws MessagingException {
-        // Arrange
-        when(userRepository.existsByUsernameOrEmail(any(), any())).thenReturn(false);
 
         UserRegistrationRequest request = new UserRegistrationRequest(
                 "newuser",
-                "password",
                 "John",
-                "Doe",
+                "John",
+                "password",
+                "password",
                 "john.doe@example.com",
                 false
         );
@@ -197,14 +195,14 @@ public class UserServiceTests {
 
     @Test
     void register_ShouldThrowException_WhenUserAlreadyExists() {
-        // Arrange
-        when(userRepository.existsByUsernameOrEmail(any(), any())).thenReturn(true);  // Simulate existing user
+
 
         UserRegistrationRequest request = new UserRegistrationRequest(
                 "existinguser",  // Username that already exists
-                "password",
+                "firstname",
+                "lastname",
                 "John",
-                "Doe",
+                "John",
                 "john.doe@example.com",
                 false
         );

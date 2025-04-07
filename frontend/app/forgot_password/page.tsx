@@ -1,12 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const router = useRouter();  // You weren't using this properly
 
     const handlePasswordReset = async (e: React.FormEvent) => {
         e.preventDefault();
