@@ -76,138 +76,104 @@ const RegisterPage: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col items-center px-4 sm:px-0">
-            <div className="w-full max-w-[500px]">
-                <h2 className="text-[24px] p-2 text-center">Kasutajaks registreerumine</h2>
-                <p className="italic text-[12px] text-center">Tärniga (*) tähistatud väljad on kohustuslikud!</p>
-                <form className="w-full flex flex-col mt-6" onSubmit={handleRegister}>
-                    <div className="mb-2 flex flex-col sm:flex-row items-center">
-                        <label className="block text-gray-700 w-full sm:w-[150px] text-[12px] text-center sm:text-left"
-                               htmlFor="email">
-                            Meiliaadress *
-                        </label>
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
+            <div className="bg-white shadow-lg rounded-lg p-8 md:p-12 w-full max-w-lg">
+                <h2 className="text-2xl font-bold text-blue-600 mb-4 text-center">Kasutajaks registreerumine</h2>
+                <p className="italic text-sm text-gray-600 text-center mb-6">Tärniga (*) tähistatud väljad on kohustuslikud!</p>
+                <form className="space-y-4" onSubmit={handleRegister}>
+                    <div>
+                        <label className="block text-gray-700 text-sm mb-1" htmlFor="email">Meiliaadress *</label>
                         <input
                             type="email"
                             id="email"
-                            className="border border-gray-300 w-full sm:w-[300px] p-1"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
-                    <div className="mb-2 flex flex-col sm:flex-row items-center">
-                        <label className="block text-gray-700 w-full sm:w-[150px] text-[12px] text-center sm:text-left"
-                               htmlFor="username">
-                            Kasutaja *
-                        </label>
+                    <div>
+                        <label className="block text-gray-700 text-sm mb-1" htmlFor="username">Kasutaja *</label>
                         <input
                             type="text"
                             id="username"
-                            className="border border-gray-300 w-full sm:w-[300px] p-1"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
                         />
                     </div>
-                    <div className="mb-2 flex flex-col sm:flex-row items-center">
-                        <label className="block text-gray-700 w-full sm:w-[150px] text-[12px] text-center sm:text-left"
-                               htmlFor="password">
-                            Parool
-                        </label>
+                    <div>
+                        <label className="block text-gray-700 text-sm mb-1" htmlFor="password">Parool *</label>
                         <input
                             type="password"
                             id="password"
-                            className="border border-gray-300 w-full sm:w-[300px] p-1"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </div>
-                    <div className="mb-2 flex flex-col sm:flex-row items-center">
-                        <label className="block text-gray-700 w-full sm:w-[150px] text-[12px] text-center sm:text-left"
-                               htmlFor="passwordConfirm">
-                            Parool uuesti *
-                        </label>
+                    <div>
+                        <label className="block text-gray-700 text-sm mb-1" htmlFor="passwordConfirm">Parool uuesti *</label>
                         <input
                             type="password"
                             id="passwordConfirm"
-                            className="border border-gray-300 w-full sm:w-[300px] p-1"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={confirmationPassword}
                             onChange={(e) => setConfirmationPassword(e.target.value)}
                             required
                         />
                     </div>
-                    <div className="mb-2 flex flex-col sm:flex-row items-center">
-                        <label className="block text-gray-700 w-full sm:w-[150px] text-[12px] text-center sm:text-left"
-                               htmlFor="firstname">
-                            Eesnimi *
-                        </label>
+                    <div>
+                        <label className="block text-gray-700 text-sm mb-1" htmlFor="firstname">Eesnimi *</label>
                         <input
                             type="text"
                             id="firstname"
-                            className="border border-gray-300 w-full sm:w-[300px] p-1"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={firstname}
                             onChange={(e) => setFirstName(e.target.value)}
                             required
                         />
                     </div>
-                    <div className="mb-4 flex flex-col sm:flex-row items-center">
-                        <label className="block text-gray-700 w-full sm:w-[150px] text-[12px] text-center sm:text-left"
-                               htmlFor="lastname">
-                            Perekonnanimi *
-                        </label>
+                    <div>
+                        <label className="block text-gray-700 text-sm mb-1" htmlFor="lastname">Perekonnanimi *</label>
                         <input
                             type="text"
                             id="lastname"
-                            className="border border-gray-300 w-full sm:w-[300px] p-1"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={lastname}
                             onChange={(e) => setLastName(e.target.value)}
                             required
                         />
                     </div>
-                    <div className="mb-4 flex items-center justify-between  md:w-[90%]">
-                        <label className="block text-gray-700 text-[12px]" htmlFor="newsletter">
-                            Soovin saada auto24.ee uudiskirja e-postiga
-                        </label>
+                    <div className="flex items-center">
                         <input
                             type="checkbox"
                             id="newsletter"
+                            className="mr-2"
                             checked={newsletter}
                             onChange={(e) => setNewsletter(e.target.checked)}
                         />
+                        <label htmlFor="newsletter" className="text-sm text-gray-700">Soovin saada auto24.ee uudiskirja e-postiga</label>
                     </div>
-                    <div className="mb-4 flex items-center justify-between  md:w-[90%]">
-                        <label className="block text-gray-700 text-[12px]" htmlFor="terms">
-                            Nõustun{" "}
-                            <a href="https://www.auto24.ee/users/kasutustingimused.php"
-                               className="underline hover:text-blue-600">
-                                andmekaitse- ja kasutusetingimustega
-                            </a>{" "}
-                            *
-                        </label>
+                    <div className="flex items-center">
                         <input
                             type="checkbox"
                             id="terms"
-                            className="ml-[-10px]" // Adjust the checkbox position
+                            className="mr-2"
                             checked={terms}
                             onChange={(e) => setTerms(e.target.checked)}
                         />
+                        <label htmlFor="terms" className="text-sm text-gray-700">
+                            Nõustun <a href="https://www.auto24.ee/users/kasutustingimused.php" className="text-blue-500 underline hover:text-blue-600">andmekaitse- ja kasutusetingimustega</a> *
+                        </label>
                     </div>
-
-                    {error && (
-                        <div className="mb-4 text-sm text-orange-600 rounded-lg text-center">
-                            ⚠️ {error}
-                        </div>
-                    )}
-                    {success && (
-                        <div className="mb-4 text-sm text-green-700 rounded-lg text-center">
-                            ✅ {success}
-                        </div>
-                    )}
-
+                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+                    {success && <p className="text-green-500 text-sm text-center">{success}</p>}
                     <button
                         type="submit"
-                        className="w-[250px] mt-4 bg-blue-500 text-white hover:bg-blue-600 transition duration-300 p-2 text-[14px] mx-auto block"
+                        className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
                     >
                         REGISTREERU
                     </button>

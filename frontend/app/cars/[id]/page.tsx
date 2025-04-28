@@ -46,26 +46,19 @@ const CarDetails: React.FC = () => {
             <div className="pt-10">
                 <p className="bg-gray-100 font-semibold p-2">VARUSTUS</p>
             </div>
-
             <CarExtraInfo carExtraInfo={carExtraInfo} />
-
             <div className="pt-10">
                 <p className="bg-gray-100 font-semibold p-2">TEHNILISED NÄITAJAD</p>
             </div>
-
             <CarSpecs car={car} />
-
             <div className="pt-10">
                 <p className="bg-gray-100 font-semibold p-2">MUU INFORMATSIOON</p>
             </div>
-
             <CarAdditionalInformation car={car} />
-
             <div className="pt-10">
                 <p className="bg-gray-100 font-semibold p-2">MÜÜJA</p>
                 <SalesmanInfo carId={id} />
             </div>
-
             <div className="pt-10">
                 <p className="bg-gray-100 font-semibold p-2">VAATA MÜÜJA TEISI PAKKUMISI</p>
                 <OwnerOtherSales carId={id} />

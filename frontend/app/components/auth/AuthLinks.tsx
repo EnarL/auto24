@@ -17,20 +17,20 @@ const AuthLinks: React.FC<AuthLinksProps> = ({ showUserInfo = false, onClick }) 
     };
 
     return (
-        <div className="flex flex-row items-center space-x-2">
+        <div className="flex flex-row items-center space-x-2 ">
             {isLoggedIn ? (
                 <>
                     {showUserInfo && (
-                        <Link href="/users/change_data" className="hover:text-blue-600" onClick={onClick}>
+                        <Link href="/users/change_data" className="hover:text-blue-600 " onClick={onClick}>
                             {firstname} {lastname} / {username}
                         </Link>
                     )}
-                    <a href="#" onClick={handleLogout} className="hover:text-blue-600">
+                    <a href="#" onClick={handleLogout} className="hover:text-green-500 text-[18px] ">
                         Logi välja
                     </a>
                 </>
             ) : (
-                <Link href="/login" className="hover:text-blue-600" onClick={onClick}>
+                <Link href="/login" className="hover:text-blue-600 " onClick={onClick}>
                     Logi sisse
                 </Link>
             )}

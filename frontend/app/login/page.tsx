@@ -8,7 +8,7 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [infoMessage, setInfoMessage] = useState(''); // New state for info message
+    const [infoMessage, setInfoMessage] = useState('');
     const { setIsLoggedIn, updateUserData } = useAuthUser();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -61,11 +61,11 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <div className="flex items-center justify-center">
-            <div className="bg-white p-8 md:p-16 w-full max-w-4xl flex flex-col md:flex-row">
-                <div className="w-full md:w-1/2 pr-0 md:pr-4 mb-8 md:mb-0">
-                    <h2 className="text-2xl mb-6 text-center">Logi sisse</h2>
-                    {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
+        <div className="flex items-center justify-center min-h-screen">
+            <div className="bg-white shadow-lg rounded-lg p-8 md:p-16 w-full max-w-4xl flex flex-col md:flex-row">
+                <div className="w-full md:w-1/2 pr-0 md:pr-8 mb-8 md:mb-0">
+                    <h2 className="text-3xl font-bold text-blue-600 mb-6 text-center">Logi sisse</h2>
+                    {successMessage && <p className="text-green-500 mb-4 text-center">{successMessage}</p>}
 
                     <form onSubmit={handleLogin}>
                         <div className="mb-4">
@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
                                 type="text"
                                 id="username"
                                 placeholder="Kasutajanimi"
-                                className="w-full p-2 border border-gray-300"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 required
@@ -85,49 +85,49 @@ const LoginPage: React.FC = () => {
                                 type="password"
                                 id="password"
                                 placeholder="Parool"
-                                className="w-full p-2 border border-gray-300"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
                         </div>
-                        <div className="flex justify-between items-center mt-2 mb-2 text-[12px]">
+                        <div className="flex justify-between items-center mt-2 mb-4 text-sm">
                             <div className="flex items-center">
-                                <input type="checkbox" />
-                                <p className="ml-2">Mäleta mind</p>
+                                <input type="checkbox" className="mr-2" />
+                                <p className="text-gray-600">Mäleta mind</p>
                             </div>
                             <p
-                                className="flex justify-end text-blue-500 cursor-pointer hover:underline"
+                                className="text-blue-500 cursor-pointer hover:underline"
                                 onClick={() => router.push('/forgot_password')}
                             >
                                 Unustasin parooli
                             </p>
                         </div>
 
-                        {error && <p className="text-red-500 mb-4">{error}</p>}
+                        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
                         <button
                             type="submit"
-                            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300"
+                            className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
                         >
                             SISENE
                         </button>
                     </form>
                 </div>
-                <div className="w-full md:w-1/2 pl-0 md:pl-4 flex flex-col justify-center items-center">
+                <div className="w-full md:w-1/2 pl-0 md:pl-8 flex flex-col justify-center items-center">
                     <button
-                        className="w-full bg-white border-[1px] border-black font-bold text-gray-500 p-2 mb-4 hover:border-blue-500 hover:text-blue-600 transition duration-300"
+                        className="w-full bg-white border border-blue-500 text-blue-500 font-bold p-3 mb-4 rounded-lg hover:bg-blue-500 hover:text-white transition duration-300"
                         onClick={handleRegisterRedirect}
                     >
                         REGISTREERU
                     </button>
                     <button
-                        className="w-full bg-lime-600 text-white p-2 hover:bg-lime-500 transition duration-300"
+                        className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-500 transition duration-300"
                         onClick={handleAddListingClick}
                     >
                         LISA KUULUTUS
                     </button>
-                    {infoMessage && <p className="text-xl mt-10">{infoMessage}</p>}
+                    {infoMessage && <p className="text-blue-600 mt-6 text-center">{infoMessage}</p>}
                 </div>
             </div>
         </div>

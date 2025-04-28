@@ -1,5 +1,6 @@
 package com.example.auto24.cars;
 
+import com.example.auto24.aws.ImageService;
 import com.example.auto24.users.SecurityUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -21,13 +22,15 @@ public class CarDetailsService {
     private final CarRepository carRepository;
     private final MongoTemplate mongoTemplate;
     private final CarDetailsUpdateMapper carDetailsUpdateMapper;
+    private final ImageService imageService;
 
-    public CarDetailsService(CarDetailsRepository carDetailsRepository, CarDetailsDTOMapper carDetailsDTOMapper, CarRepository carRepository, MongoTemplate mongoTemplate, CarDetailsUpdateMapper carDetailsUpdateMapper) {
+    public CarDetailsService(CarDetailsRepository carDetailsRepository, CarDetailsDTOMapper carDetailsDTOMapper, CarRepository carRepository, MongoTemplate mongoTemplate, CarDetailsUpdateMapper carDetailsUpdateMapper, ImageService imageService) {
         this.carDetailsRepository = carDetailsRepository;
         this.carDetailsDTOMapper = carDetailsDTOMapper;
         this.carRepository = carRepository;
         this.mongoTemplate = mongoTemplate;
         this.carDetailsUpdateMapper = carDetailsUpdateMapper;
+        this.imageService = imageService;
     }
 
     public List<CarPreviewDTO> searchCars(Map<String, String> searchParams) {
@@ -178,5 +181,38 @@ public class CarDetailsService {
         carDetailsUpdateMapper.updateCarDetailsFromDto(carDetailsDTO, carDetails);
         carDetailsRepository.save(carDetails);
     }
+
+    public List<CarPreviewDTO> getAllCarsPreviewWithImages() {
+        List<Car> cars = carRepository.findAll().stream()
+                .filter(Car::isActive)
+                .toList();
+
+        return cars.stream()
+                .map(car -> {
+                    Optional<CarDetails> carDetailsOptional = carDetailsRepository.findByCarId(car.getId());
+                    if (carDetailsOptional.isEmpty()) {
+                        return null;
+                    }
+                    CarDetails carDetails = carDetailsOptional.get();
+                    String title = createCarTitle(carDetailsDTOMapper.apply(carDetails));
+                    double price = carDetails.getPrice();
+                    String firstRegistrationDate = carDetails.getFirstRegistrationDate();
+
+                    List<String> imageUrls = car.getImageKeys().stream()
+                            .map(imageService::generatePresignedUrl)
+                            .collect(Collectors.toList());
+
+                    // Return combined DTO
+                    return new CarPreviewDTO(
+                            car.getId(),
+                            title,
+                            price,
+                            firstRegistrationDate,
+                            imageUrls
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
 
 }

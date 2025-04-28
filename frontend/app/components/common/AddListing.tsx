@@ -16,16 +16,30 @@ const AddListing: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col">
-
-                <div
-                    className="text-white pl-2 text-[14px] bg-[#06c] cursor-pointer hidden md:block"
-                    onClick={handleClick}
+        <div className="flex flex-col items-center">
+            <button
+                onClick={handleClick}
+                className="hidden md:flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-full px-6 py-3 shadow-lg transition-all duration-300 transform hover:scale-105"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                 >
-                    kuuluta
-                </div>
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                    />
+                </svg>
+                <span className="text-lg">Kuuluta</span>
+            </button>
 
-            <div className="bg-[#06c] h-[2px] lg:hidden"></div>
+            {/* Mobile indicator line */}
+            <div className="h-1 w-3/4 bg-gray-300 rounded-full mt-4 lg:hidden"></div>
         </div>
     );
 };

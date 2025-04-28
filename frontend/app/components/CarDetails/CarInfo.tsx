@@ -6,7 +6,7 @@ const CarInfo: React.FC<{ car: CarDetailsDTO }> = ({ car }) => {
         { label: "Liik", value: car.vehicleType },
         { label: "Keretüüp", value: car.bodyType },
         { label: "Esmane reg", value: car.firstRegistrationDate },
-        { label: "Mootor", value: `${car.engineCapacityLiters} ${car.enginePowerKW} kW` },
+        { label: "Mootor", value: `${car.engineCapacityLiters.toFixed(1)} ${car.enginePowerKW} kW` },
         { label: "Kütus", value: car.fuelType },
         { label: "Läbisõidumõõdiku näit", value: `${car.odometerReading} km` },
         { label: "Vedav sild", value: car.driveType },

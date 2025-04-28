@@ -1,135 +1,145 @@
-"use client"
-import React, { useState, useEffect } from "react";
+"use client";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthUser } from "@/app/context/AuthUserContext";
 import AuthLinks from "@/app/components/auth/AuthLinks";
 
-const Topbar: React.FC = () => {
-    useRouter();
+const MenuItem = ({ href, label, isActive, onClick }: { href: string; label: string; isActive: boolean; onClick?: () => void }) => (
+    <li className="relative group">
+        <Link
+            href={href}
+            className={`
+                flex justify-center items-center px-4 py-2 sm:px-6 sm:py-3
+                rounded-lg text-center font-semibold text-sm sm:text-lg
+                transition-all duration-300 transform hover:scale-105
+                ${isActive ? "bg-green-700 text-white shadow-lg" : "bg-gray-200 text-gray-800"}
+            `}
+            onClick={onClick}
+        >
+            {label}
+        </Link>
+    </li>
+);
+
+const Topbar = () => {
     const currentPath = usePathname();
+    const router = useRouter();
+    const { isLoggedIn } = useAuthUser();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [visibleItems, setVisibleItems] = useState(4);
 
-    const menuItems = [
+    const menuItems = useMemo(() => [
         { href: "/vali", label: "Vali automark" },
-        { href: "/uued", label: "Uued sõidukid" },
         { href: "/listings", label: "Sõidukite kuulutused" },
-        { href: "/products/kaubad_ja_varuosad", label: "Kaubad ja varuosad" },
-        { href: "/rent", label: "Rent" },
-        { href: "/firmadjateenused", label: "Firmad ja teenused" },
-        { href: "/uudised", label: "Uudised" },
-        { href: "/forums", label: "Foorumid" },
-        { href: "/financing", label: "Finantseerimine" },
-        { href: "/ostuabi", label: "Ostuabi" },
-        { href: "/users/my/", label: "Minu konto" },
-    ];
+    ], []);
 
-    useEffect(() => {
-        const handleResize = () => {
-            const width = window.innerWidth;
-            let newVisibleItems;
-
-            if (width < 640) {
-                newVisibleItems = 4;
-            } else if (width < 768) {
-                newVisibleItems = 5;
-            } else if (width < 1024) {
-                newVisibleItems = 7;
-            } else if (width < 1280) {
-                newVisibleItems = 9;
-            } else {
-                newVisibleItems = menuItems.length;
-            }
-
-            setVisibleItems(newVisibleItems);
-        };
-
-        window.addEventListener("resize", handleResize);
-        handleResize();
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, [menuItems.length]);
-
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
+    const handleAddListingClick = () => {
+        router.push(isLoggedIn ? "/users/add_listing" : "/login");
     };
-    const handleAuthLinkClick = () => {
-        setIsSidebarOpen(false);
-    };
+
+    const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
     return (
-        <nav className="text-white relative w-full max-w-screen-2xl mx-auto">
-            <div className="flex items-center justify-between">
-                <ul className="flex space-x-0.5">
-                    {menuItems.slice(0, visibleItems).map((item, index) => (
-                        <li
-                            key={index}
-                            className={`bg-[#FCBA3C] rounded-tl-[.714rem] rounded-tr-[.714rem] h-10 w-auto max-w-[94px] flex justify-center items-center overflow-hidden px-3 transition-all duration-200 hover:brightness-110 ${currentPath === item.href ? "bg-[#06c]" : ""}`}
-                        >
-                            <Link
-                                href={item.href}
-                                className="text-white no-underline block text-xs leading-tight text-center"
-                            >
-                                {item.label.replace(" ", "\n")}
-                            </Link>
-                        </li>
+        <nav className="relative w-full max-w-screen-2xl mx-auto bg-gray-100 shadow-md">
+            <div className="flex items-center justify-between px-6 py-4">
+                <ul className="flex space-x-4 sm:space-x-6">
+                    {menuItems.map((item) => (
+                        <MenuItem
+                            key={item.href}
+                            href={item.href}
+                            label={item.label}
+                            isActive={currentPath === item.href}
+                        />
                     ))}
-                </ul>
-                {visibleItems < menuItems.length && (
-                    <button
-                        className="ml-2 bg-[#FCBA3C] p-3 rounded-t shadow-md hover:brightness-110 transition-all duration-300 flex items-center justify-center"
-                        onClick={toggleSidebar}
-                        aria-label="Toggle Menu"
-                    >
-                        <FaBars className="text-white text-lg" />
-                    </button>
-                )}
-            </div>
-            <div
-                className={`fixed top-0 right-0 h-full w-64 bg-[#FCBA3C] z-50 shadow-lg transition-transform transform ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
-            >
-                <div className="flex justify-between items-center p-3 border-b border-yellow-400">
-                    <span className="font-medium"></span>
-                    <button
-                        onClick={toggleSidebar}
-                        aria-label="Close Menu"
-                        className="text-white hover:text-gray-200"
-                    >
-                        <FaTimes />
-                    </button>
-                </div>
-                <ul className="py-2">
-                    {menuItems.map((item, index) => (
-                        <li
-                            key={index}
-                            className={`hover:bg-yellow-500 transition-colors duration-200 ${currentPath === item.href ? "bg-[#06c]" : ""}`}
+                    <li className="relative group">
+                        <button
+                            onClick={handleAddListingClick}
+                            className="flex justify-center items-center px-4 py-2 sm:px-6 sm:py-3 rounded-lg text-center font-semibold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 bg-green-600 text-white hover:bg-green-700"
                         >
-                            <Link
-                                href={item.href}
-                                className="text-white no-underline block px-4 py-2 text-sm text-center"
-                                onClick={toggleSidebar}
-                            >
-                                {item.label}
-                            </Link>
-                        </li>
-                    ))}
-                    <li className="flex justify-center items-center h-full hover:bg-yellow-500 transition-colors px-4 py-2 text-sm duration-200">
-                        <AuthLinks onClick={handleAuthLinkClick} />
+                            Lisa kuulutus
+                        </button>
                     </li>
                 </ul>
+                <Link href="/users/my" className="hidden md:flex relative group">
+                    <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-105">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6 text-gray-800 group-hover:text-green-700"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                            />
+                        </svg>
+                    </div>
+                </Link>
+                <button
+                    className="relative group ml-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 md:hidden"
+                    onClick={toggleSidebar}
+                    aria-label="More options"
+                >
+                    <div className="flex flex-col space-y-1 items-center justify-center">
+                        <span className="block w-5 h-0.5 bg-gray-600 rounded"></span>
+                        <span className="block w-5 h-0.5 bg-gray-600 rounded"></span>
+                        <span className="block w-5 h-0.5 bg-gray-600 rounded"></span>
+                    </div>
+                </button>
             </div>
 
             {isSidebarOpen && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-30 z-40"
-                    onClick={toggleSidebar}
-                    aria-hidden="true"
-                />
+                <>
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40 transition-opacity duration-300"
+                        onClick={toggleSidebar}
+                        aria-hidden="true"
+                    />
+                    <div className="fixed top-0 right-0 h-full w-64 bg-gray-100 z-50 shadow-lg transform transition-transform duration-300">
+                        <div className="flex justify-end items-center p-4 border-b border-gray-300">
+                            <button
+                                onClick={toggleSidebar}
+                                aria-label="Close Menu"
+                                className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <ul className="py-3">
+                            {menuItems.map((item) => (
+                                <MenuItem
+                                    key={item.href}
+                                    href={item.href}
+                                    label={item.label}
+                                    isActive={currentPath === item.href}
+                                    onClick={toggleSidebar}
+                                />
+                            ))}
+                            <li className="mx-3 my-2 overflow-hidden rounded-md">
+                                <Link
+                                    href="/users/my"
+                                    className="flex items-center px-5 py-3 rounded-md text-gray-800 text-lg font-medium transition-all duration-200 transform hover:scale-105 hover:bg-green-600 hover:text-white"
+                                    onClick={toggleSidebar}
+                                >
+                                    Minu konto
+                                </Link>
+                            </li>
+                            <li className="mx-3 my-2 overflow-hidden rounded-md">
+                                <div className="px-5 py-3">
+                                    <AuthLinks onClick={toggleSidebar} />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </>
             )}
         </nav>
     );
 };
 
-export default Topbar;
+export default React.memo(Topbar);

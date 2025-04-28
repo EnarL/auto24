@@ -23,6 +23,7 @@ const ListingPage: React.FC<ListingPageProps> = ({
 
     return (
         <div className="flex flex-col">
+            <h1 className="text-2xl font-medium text-gray-700 mb-6">VALIK KUULUTUSI</h1>
             <CarGrid
                 columns={columns}
                 carCount={carCount}

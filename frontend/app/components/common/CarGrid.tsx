@@ -57,33 +57,39 @@ const CarGrid: React.FC<CarGridProps> = ({
         ${columnClasses[String(columns.sm || 2)]} 
         md:${columnClasses[String(columns.md || 4)]} 
         lg:${columnClasses[String(columns.lg || 6)]}
-        md:gap-2
+        gap-4
     `;
 
     return (
         <div className={columnClass}>
             {cars.slice(0, carCount).map((car) => (
                 <Link href={`/cars/${car.id}`} key={car.id}>
-                    <div className="flex flex-col border-2 border-gray-100 h-full">
-                        <div className="flex">
+                    <div className="flex flex-col border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div className="relative">
                             {carImages[car.id]?.length > 0 ? (
                                 <S3Image
                                     src={carImages[car.id][0]}
                                     alt={`Car ${car.title} - Image 1`}
-                                    className={`${imageWidth} ${imageHeight}`}
-                                    style={{ objectFit: "cover" }}
+                                    className={`${imageWidth} ${imageHeight} object-cover`}
                                     loading="lazy"
                                 />
                             ) : (
-                                <p>No images available</p>
+                                <div className={`${imageWidth} ${imageHeight} bg-gray-200 flex items-center justify-center`}>
+                                    <p className="text-gray-500">No image available</p>
+                                </div>
                             )}
-                        </div>
-                        <div className="flex flex-col p-2 flex-grow">
-                            <div className="flex-grow">{car.title}</div>
-                            <div className="flex justify-between items-center text-[12px]">
-                                <div className="text-gray-600">{car.firstRegistrationDate}</div>
-                                <div className="text-right">{car.price} €</div>
+                            <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-sm p-2">
+                                {car.title}
                             </div>
+                        </div>
+                        <div className="flex flex-col p-2">
+                            <div className="flex justify-between items-center">
+                                <span className="text-gray-600 text-sm">{car.firstRegistrationDate}</span>
+                                <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                    {car.price} €
+                                </span>
+                            </div>
+
                         </div>
                     </div>
                 </Link>

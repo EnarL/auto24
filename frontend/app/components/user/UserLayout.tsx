@@ -26,7 +26,7 @@ const UserLayout: React.FC<{ activeTab: string; children: React.ReactNode }> = (
 
     return (
         <div className="flex">
-            <Sidebar activeSection={activeTab} isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
+            <Sidebar activeSection={activeTab} isMenuVisible={isMenuVisible} />
             <div className={`flex-grow transition-all duration-300 ${isMenuVisible ? "ml-0" : "ml-0"}`}>
                 <div className="flex items-center mb-2">
                     <button
@@ -37,7 +37,7 @@ const UserLayout: React.FC<{ activeTab: string; children: React.ReactNode }> = (
                     </button>
                 </div>
                 <div className="flex flex-col w-full">
-                    <Tabs activeTab={activeTab} />
+
                     {children}
                 </div>
             </div>

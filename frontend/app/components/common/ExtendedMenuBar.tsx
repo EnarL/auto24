@@ -58,7 +58,6 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
             }
         });
         setFilters((prev) => ({ ...prev, ...newFilters }));
-        fetchCarCount();
     }, [searchParams]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,19 +65,7 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
-    const fetchCarCount = async () => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/count`);
-            if (response.ok) {
-                const data = await response.json();
-                setCarCount(data);
-            } else {
-                console.error("Failed to fetch car count");
-            }
-        } catch (error) {
-            console.error("Error fetching car count:", error);
-        }
-    };
+
 
     const handleSearch = () => {
         const queryParams = new URLSearchParams(
@@ -106,16 +93,18 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
     };
 
     return (
-        <div className={`relative inline-block mt-2 ${isMenuVisible ? 'block' : 'hidden md:block'}`}>
-            <div className="flex items-center">
-                <p className="inline-flex w-[400px] md:w-[300px] mr-0 md:mr-4 justify-start shadow-sm px-2 py-1 bg-gray-500 font-medium text-white focus:outline-none">
-                    <FontAwesomeIcon icon={faSearch} className="ml-0 size-5 pt-[1px] text-white pr-4"/>
+        <div className={`relative inline-block ${isMenuVisible ? 'block' : 'hidden md:block'}`}>
+            <div className="flex items-center mb-4">
+                <p className="inline-flex w-[400px] md:w-[300px] items-center shadow-md px-4 py-2 bg-green-600 text-white font-semibold rounded-md text-sm cursor-pointer transition-all hover:brightness-110">
+                    <span className="flex items-center justify-center mr-2">
+                        <FontAwesomeIcon icon={faSearch} className="text-white"/>
+                    </span>
                     Kõik liigid
                 </p>
             </div>
 
-            <div className="w-[400px] md:w-[300px] overflow-y-auto flex flex-col">
-                <form className="text-sm text-black bg-[#f4f4f4] p-4 shadow-lg flex-1 flex flex-col justify-between">
+            <div className="w-[400px] md:w-[300px] overflow-y-auto flex flex-col rounded-md shadow-lg">
+                <form className="text-sm text-black bg-gray-100 p-4 flex-1 flex flex-col justify-between rounded-md">
                     <InputField name="make" placeholder="Mark" value={filters.make} onChange={handleInputChange}/>
                     <InputField name="model" placeholder="Mudel" value={filters.model} onChange={handleInputChange}/>
                     <RangeInput label="Aasta" fromName="yearFrom" toName="yearTo" filters={filters}
@@ -138,9 +127,9 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
                     <button
                         type="button"
                         onClick={handleSearch}
-                        className="bg-[#8eb51e] hover:brightness-110 text-white text-lg p-1 justify-center w-[150px] mx-auto block transition duration-300"
+                        className="bg-green-600 hover:brightness-110 text-white text-lg p-2 rounded-md mx-auto block w-[150px] transition duration-300 shadow-md"
                     >
-                        OTSI {showCarCount && carCount > 0 ? `(${carCount})` : ""}
+                        OTSI
                     </button>
                 </form>
             </div>
@@ -148,21 +137,26 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
     );
 };
 
-const InputField: React.FC<{ name: string; placeholder: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }> = ({ name, placeholder, value, onChange }) => (
+const InputField: React.FC<{
+    name: string;
+    placeholder: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}> = ({name, placeholder, value, onChange}) => (
     <input
         type="text"
         name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="block w-full text-sm border border-gray-300 px-2 py-1 focus:border-blue-600 focus:outline-none mb-2"
+        className="block w-full text-sm border border-gray-300 px-3 py-2 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-500 mb-3 transition-all"
     />
 );
 
 const RangeInput: React.FC<{ label: string; fromName: string; toName: string; filters: Record<string, string>; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }> = ({ label, fromName, toName, filters, onChange }) => (
     <div className="flex flex-col mb-3">
         <label className="block text-sm text-gray-700">{label}</label>
-        <div className="flex gap-2">
+        <div className="flex gap-4">
             <InputField name={fromName} placeholder="Alates" value={filters[fromName]} onChange={onChange} />
             <InputField name={toName} placeholder="Kuni" value={filters[toName]} onChange={onChange} />
         </div>

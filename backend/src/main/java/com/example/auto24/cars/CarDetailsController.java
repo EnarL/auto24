@@ -1,6 +1,7 @@
 package com.example.auto24.cars;
 
 import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -18,8 +19,14 @@ public class CarDetailsController {
 
     @GetMapping("/preview")
     public ResponseEntity<List<CarPreviewDTO>> getAllCarDetailsPreview() {
-        return ResponseEntity.ok(carDetailsService.getAllCarsPreview());
+        try {
+            List<CarPreviewDTO> carDetails = carDetailsService.getAllCarsPreviewWithImages();
+            return ResponseEntity.ok(carDetails);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+
     @GetMapping("/users")
     public ResponseEntity<List<CarDTO>> getCarDetailsForUser() {
             return ResponseEntity.ok(carDetailsService.getCarDetailsForUser());

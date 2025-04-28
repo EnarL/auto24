@@ -24,55 +24,63 @@ const ChangePasswordPage: React.FC = () => {
 
     return (
         <UserLayout activeTab="Muuda parool">
-            <div className="w-[400px] ml-4  mt-6 flex flex-col">
-                <h2 className="text-[24px] font-semibold">Muuda parool</h2>
-                <p className="italic mt-2 mb-2 text-[12px] text-gray-600">
+            <div className="ml-[10px] w-[740px] mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Muuda parool</h2>
+                <p className="italic text-sm text-gray-500 mb-6">
                     Tärniga (*) tähistatud väljad on kohustuslikud!
                 </p>
 
-                <div className="border-l-4 border-gray-300 w-full p-3 bg-gray-50 text-[12px] text-gray-700">
+                <div className="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-lg text-sm text-blue-700 mb-6">
                     <p>Parool peab olema vähemalt 8 märki pikk.</p>
                 </div>
 
-                {success && <p className="mt-3 p-2 bg-green-100 text-green-700 text-sm border border-green-400 rounded">{success}</p>}
-                {error && <p className="mt-3 p-2 bg-red-100 text-red-700 text-sm border border-red-400 rounded">{error}</p>}
+                {success && (
+                    <p className="mb-4 p-3 bg-green-100 text-green-700 text-sm border border-green-400 rounded-lg">
+                        {success}
+                    </p>
+                )}
+                {error && (
+                    <p className="mb-4 p-3 bg-red-100 text-red-700 text-sm border border-red-400 rounded-lg">
+                        {error}
+                    </p>
+                )}
 
-                <form onSubmit={handlePasswordChange} className="mt-4">
-                    <div className="mt-3">
+                <form onSubmit={handlePasswordChange} className="space-y-6">
+                    <div>
                         <input
                             type="password"
                             value={currentPassword}
                             placeholder="Praegune parool *"
                             onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-full p-2 text-[14px] border border-gray-300 focus:border-blue-600 focus:outline-none"
+                            className="w-full p-3 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required
                         />
                     </div>
-                    <div className="mt-3">
+                    <div>
                         <input
                             type="password"
                             value={newPassword}
                             placeholder="Uus parool *"
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full p-2 text-[14px] border border-gray-300 focus:border-blue-600 focus:outline-none rounded"
+                            className="w-full p-3 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required
                         />
                     </div>
-                    <div className="mt-3">
+                    <div>
                         <input
                             type="password"
                             value={confirmPassword}
                             placeholder="Kinnita uus parool *"
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full p-2 text-[14px] border border-gray-300 focus:border-blue-600 focus:outline-none rounded"
+                            className="w-full p-3 text-sm border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required
                         />
                     </div>
 
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center">
                         <button
                             type="submit"
-                            className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300 w-[200px] p-1"
+                            className="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
                         >
                             MUUDA PAROOL
                         </button>

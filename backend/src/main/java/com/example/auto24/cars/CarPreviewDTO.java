@@ -6,7 +6,7 @@ public record CarPreviewDTO(
         String title,
         double price,
         String firstRegistrationDate,
-        List<String> imageKeys
+        List<String> imageUrls
 ) {
-
 }
+

@@ -3,7 +3,7 @@ const PlaceholderPage = () => {
         <div className="flex items-center justify-center h-full p-4 bg-gray-50 rounded-md shadow-md">
             <div className="text-left
             ">
-                <h2 className="text-xl">...</h2>
+                <h2 className="text-xl">Sellist lehte ei eksisteeri</h2>
             </div>
         </div>
     );

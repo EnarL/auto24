@@ -13,29 +13,45 @@ const popularCarBrands = [
 ];
 
 const Vali: React.FC = () => {
-    const columns = 7;
-    const rows = Math.ceil(popularCarBrands.length / columns);
-    const brandColumns = Array.from({ length: columns }, (_, i) =>
-        popularCarBrands.slice(i * rows, i * rows + rows)
-    );
+    // Group brands by their first letter
+    const groupedBrands = popularCarBrands.reduce((acc, brand) => {
+        const firstLetter = brand[0].toUpperCase();
+        if (!acc[firstLetter]) acc[firstLetter] = [];
+        acc[firstLetter].push(brand);
+        return acc;
+    }, {} as Record<string, string[]>);
+    const alphabet = Object.keys(groupedBrands).sort();
 
     return (
-        <div className="">
-            <h1 className="text-[24px] pt-2">MARGID</h1>
-            <div className="border mt-2">
-                <div className="grid md:grid-cols-7 grid-cols-3 dp-1">
-                    {brandColumns.map((column, colIndex) => (
-                        <div key={colIndex} className="p-1 text-left">
-                            {column.map((brand, index) => (
-                                <Link key={index} href={`search/cars?make=${brand}`}>
-                                    <div className="p-1 cursor-pointer hover:text-blue-500">
+        <div className="p-6 bg-gray-50 border-2 h-full">
+            <h1 className="text-3xl font-bold text-gray-800 mb-6">MARGID</h1>
+            <div className="flex flex-wrap gap-3 mb-8">
+                {alphabet.map((letter) => (
+                    <a
+                        key={letter}
+                        href={`#${letter}`}
+                        className="px-4 py-2 bg-gray-100 text-black font-medium rounded-lg shadow-sm hover:font-semibold hover:scale-105 transition duration-300"
+                    >
+                        {letter}
+                    </a>
+                ))}
+            </div>
+
+            <div className="border rounded-lg bg-white shadow-md p-6">
+                {alphabet.map((letter) => (
+                    <div key={letter} id={letter} className="mb-8">
+                        <h2 className="text-2xl font-semibold text-gray-700 mb-4">{letter}</h2>
+                        <div className="grid md:grid-cols-6 grid-cols-3 gap-4">
+                            {groupedBrands[letter].map((brand) => (
+                                <Link key={brand} href={`search/cars?make=${brand}`}>
+                                    <div className="p-2 text-center bg-gray-100 rounded-lg shadow-sm hover:scale-105 transition duration-300 cursor-pointer">
                                         {brand}
                                     </div>
                                 </Link>
                             ))}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
             </div>
         </div>
     );
