@@ -1,4 +1,4 @@
-#Car sale platform
+# Car sale platform
 
 ## Description 📜
 This project is a simplified version of the Auto24 website, a popular online marketplace for buying and selling vehicles.
