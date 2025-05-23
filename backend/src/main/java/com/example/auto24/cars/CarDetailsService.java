@@ -57,23 +57,6 @@ public class CarDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public CarPreviewDTO createCarPreviewDTOFromDetails(CarDetails carDetails) {
-        Optional<Car> carOptional = carRepository.findById(carDetails.getCarId());
-        if (carOptional.isEmpty() || !carOptional.get().isActive()) {
-            return null;
-        }
-        Car car = carOptional.get();
-        CarDetailsDTO carDetailsDTO = carDetailsDTOMapper.apply(carDetails);
-
-        List<String> imageKeys = car.getImageKeys() != null ? car.getImageKeys() : new ArrayList<>();
-        return new CarPreviewDTO(
-                car.getId(),
-                createCarTitle(carDetailsDTO),
-                carDetailsDTO.price(),
-                extractYearFromFirstRegistrationDate(carDetailsDTO),
-                imageKeys
-        );
-    }
 
     public void createAndSaveCarDetails(String carId, CarDetailsDTO carDetailsDTO) {
         CarDetails carDetails = carDetailsDTOMapper.toEntity(carDetailsDTO, carId);
@@ -93,6 +76,32 @@ public class CarDetailsService {
                 .collect(Collectors.toList());
     }
 
+    // Replace these methods in CarDetailsService.java
+
+    public CarPreviewDTO createCarPreviewDTOFromDetails(CarDetails carDetails) {
+        Optional<Car> carOptional = carRepository.findById(carDetails.getCarId());
+        if (carOptional.isEmpty() || !carOptional.get().isActive()) {
+            return null;
+        }
+        Car car = carOptional.get();
+        CarDetailsDTO carDetailsDTO = carDetailsDTOMapper.apply(carDetails);
+
+        // Convert image keys to public URLs
+        List<String> imageUrls = car.getImageKeys() != null
+                ? car.getImageKeys().stream()
+                .map(imageService::getPublicUrl)
+                .collect(Collectors.toList())
+                : new ArrayList<>();
+
+        return new CarPreviewDTO(
+                car.getId(),
+                createCarTitle(carDetailsDTO),
+                carDetailsDTO.price(),
+                extractYearFromFirstRegistrationDate(carDetailsDTO),
+                imageUrls // Now passing URLs instead of keys
+        );
+    }
+
     public CarPreviewDTO createCarPreviewDTO(Car car) {
         Optional<CarDetails> carDetailsOptional = carDetailsRepository.findByCarId(car.getId());
         if (carDetailsOptional.isEmpty()) {
@@ -100,14 +109,20 @@ public class CarDetailsService {
         }
         CarDetails carDetails = carDetailsOptional.get();
         CarDetailsDTO carDetailsDTO = carDetailsDTOMapper.apply(carDetails);
-        List<String> imageKeys = car.getImageKeys() != null ? car.getImageKeys() : new ArrayList<>();
+
+        // Convert image keys to public URLs
+        List<String> imageUrls = car.getImageKeys() != null
+                ? car.getImageKeys().stream()
+                .map(imageService::getPublicUrl)
+                .collect(Collectors.toList())
+                : new ArrayList<>();
 
         return new CarPreviewDTO(
                 car.getId(),
                 createCarTitle(carDetailsDTO),
                 carDetailsDTO.price(),
                 extractYearFromFirstRegistrationDate(carDetailsDTO),
-                imageKeys
+                imageUrls // Now passing URLs instead of keys
         );
     }
 
@@ -185,6 +200,7 @@ public class CarDetailsService {
     public List<CarPreviewDTO> getAllCarsPreviewWithImages() {
         List<Car> cars = carRepository.findAll().stream()
                 .filter(Car::isActive)
+                .limit(30)
                 .toList();
 
         return cars.stream()
@@ -197,12 +213,9 @@ public class CarDetailsService {
                     String title = createCarTitle(carDetailsDTOMapper.apply(carDetails));
                     double price = carDetails.getPrice();
                     String firstRegistrationDate = carDetails.getFirstRegistrationDate();
-
                     List<String> imageUrls = car.getImageKeys().stream()
-                            .map(imageService::generatePresignedUrl)
+                            .map(imageService::getPublicUrl)
                             .collect(Collectors.toList());
-
-                    // Return combined DTO
                     return new CarPreviewDTO(
                             car.getId(),
                             title,
@@ -211,6 +224,7 @@ public class CarDetailsService {
                             imageUrls
                     );
                 })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

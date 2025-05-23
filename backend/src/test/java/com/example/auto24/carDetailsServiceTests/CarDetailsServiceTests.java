@@ -290,7 +290,6 @@ public class CarDetailsServiceTests {
         assertEquals("Toyota XLE", preview.title());
         assertEquals(25000.0, preview.price());
         assertEquals("2020", preview.firstRegistrationDate());
-        assertEquals(mockCar.getImageKeys(), preview.imageKeys());
     }
 
     @Test

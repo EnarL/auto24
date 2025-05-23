@@ -12,6 +12,7 @@ interface AuthUserContextType {
     active: boolean;
     phoneNumber: string;
     loading: boolean;
+    initialized: boolean;
     setIsLoggedIn: (isLoggedIn: boolean) => void;
     setUsername: (username: string) => void;
     setFirstname: (firstname: string) => void;
@@ -21,7 +22,7 @@ interface AuthUserContextType {
     setEmail: (email: string) => void;
     setActive: (active: boolean) => void;
     updateUserData: () => void;
-    logout: () => Promise<void>; 
+    logout: () => Promise<void>;
 }
 
 const AuthUserContext = createContext<AuthUserContextType | undefined>(undefined);
@@ -36,14 +37,74 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [active, setActive] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [loading, setLoading] = useState(true);
+    const [initialized, setInitialized] = useState(false);
     const router = useRouter();
 
-    const fetchUserData = async () => {
+    // Replace the initializeAuth function in AuthUserContext.tsx
+
+    const initializeAuth = async () => {
+        if (initialized) return;
+
+        try {
+            // Check if user has valid session on startup
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-session`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                // User has valid session, set logged in and fetch user data
+                setIsLoggedIn(true);
+                await fetchUserDataOnly();
+            } else {
+                // No valid session, ensure clean state
+                clearUserData();
+            }
+        } catch (error) {
+            console.error("Initial auth check failed:", error);
+            clearUserData();
+        } finally {
+            setLoading(false);
+            setInitialized(true);
+        }
+    };
+
+// Also modify checkAuthStatus to remove the early return
+    const checkAuthStatus = async () => {
+        // Remove this early return check:
+        // if (!isLoggedIn) {
+        //     setLoading(false);
+        //     return;
+        // }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-session`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                setIsLoggedIn(true);
+                await fetchUserDataOnly();
+            } else {
+                clearUserData();
+            }
+        } catch (error) {
+            console.error("Auth check failed:", error);
+            clearUserData();
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Fetch user data without session check
+    const fetchUserDataOnly = async () => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
                 method: "GET",
                 credentials: "include",
             });
+
             if (response.ok) {
                 const data = await response.json();
                 setUsername(data.username);
@@ -53,15 +114,34 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 setNewsletter(data.newsletter);
                 setActive(data.active);
                 setPhoneNumber(data.phoneNumber);
-                setIsLoggedIn(true);
             } else {
-                console.info("User is not logged in");
+                console.info("Failed to fetch user data");
+                clearUserData();
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
-        } finally {
-            setLoading(false);
+            clearUserData();
         }
+    };
+
+    const clearUserData = () => {
+        setIsLoggedIn(false);
+        setUsername('');
+        setFirstname('');
+        setLastname('');
+        setEmail('');
+        setNewsletter(false);
+        setActive(false);
+        setPhoneNumber('');
+    };
+
+    // Public function for manual user data refresh
+    const fetchUserData = async () => {
+        if (!isLoggedIn) {
+            console.log("User is not authenticated, skipping user data fetch.");
+            return;
+        }
+        await fetchUserDataOnly();
     };
 
     const logout = async () => {
@@ -71,23 +151,39 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 credentials: "include",
             });
 
+            // Clear data regardless of response to ensure clean state
+            clearUserData();
+
             if (response.ok) {
-                setIsLoggedIn(false);
-                setUsername("");
-                setFirstname("");
-                setLastname("");
                 router.push("/login");
             } else {
-                console.error("Failed to log out");
+                console.error("Logout request failed, but user data cleared");
             }
         } catch (error) {
             console.error("Error during logout:", error);
+            // Still clear user data even if request fails
+            clearUserData();
         }
     };
 
+    const setIsLoggedInWithData = (loggedIn: boolean) => {
+        setIsLoggedIn(loggedIn);
+        if (!loggedIn) {
+            clearUserData();
+        }
+    };
+
+    // Initialize auth on mount
     useEffect(() => {
-        fetchUserData();
-    }, [router]);
+        initializeAuth();
+    }, []);
+
+    // Check auth status when isLoggedIn changes
+    useEffect(() => {
+        if (initialized) {
+            checkAuthStatus();
+        }
+    }, [isLoggedIn, initialized]);
 
     return (
         <AuthUserContext.Provider
@@ -101,7 +197,8 @@ export const AuthUserProvider: React.FC<{ children: ReactNode }> = ({ children }
                 active,
                 phoneNumber,
                 loading,
-                setIsLoggedIn,
+                initialized,
+                setIsLoggedIn: setIsLoggedInWithData,
                 setUsername,
                 setFirstname,
                 setLastname,

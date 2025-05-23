@@ -94,8 +94,8 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
 
     return (
         <div className={`relative inline-block ${isMenuVisible ? 'block' : 'hidden md:block'}`}>
-            <div className="flex items-center mb-4">
-                <p className="inline-flex w-[400px] md:w-[300px] items-center shadow-md px-4 py-2 bg-green-600 text-white font-semibold rounded-md text-sm cursor-pointer transition-all hover:brightness-110">
+            <div className="flex items-center mt-2">
+                <p className="inline-flex w-[400px] md:w-[300px] items-center shadow-md px-4 py-4 bg-green-600 text-white font-semibold rounded-md text-[16px] cursor-pointer transition-all hover:brightness-110">
                     <span className="flex items-center justify-center mr-2">
                         <FontAwesomeIcon icon={faSearch} className="text-white"/>
                     </span>
@@ -104,7 +104,7 @@ const ExtendedMenuBar: React.FC<MenuBarProps> = ({ showCarCount, isMenuVisible }
             </div>
 
             <div className="w-[400px] md:w-[300px] overflow-y-auto flex flex-col rounded-md shadow-lg">
-                <form className="text-sm text-black bg-gray-100 p-4 flex-1 flex flex-col justify-between rounded-md">
+                <form className="text-sm text-black bg-gray-100 p-3 flex-1 flex flex-col justify-between rounded-md">
                     <InputField name="make" placeholder="Mark" value={filters.make} onChange={handleInputChange}/>
                     <InputField name="model" placeholder="Mudel" value={filters.model} onChange={handleInputChange}/>
                     <RangeInput label="Aasta" fromName="yearFrom" toName="yearTo" filters={filters}

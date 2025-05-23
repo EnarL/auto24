@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Sidebar from "@/app/components/user/Sidebar";
-import Tabs from "@/app/components/user/Tabs";
 import { useAuthUser } from "@/app/context/AuthUserContext";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

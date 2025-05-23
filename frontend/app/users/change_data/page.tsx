@@ -85,7 +85,6 @@ const ChangeData: React.FC = () => {
                             label="Soovin saada auto24.ee uudiskirja e-postiga *"
                             checked={userData.newsletter}
                             onChange={(e) => setUserData((prev: UserDTO) => ({ ...prev, newsletter: e.target.checked }))}
-                            className="text-gray-700"
                         />
                     </div>
 
@@ -95,7 +94,6 @@ const ChangeData: React.FC = () => {
                             label="Nõustun andmekaitse-ja kasutusetingimustega *"
                             checked={true}
                             onChange={() => {}}
-                            className="text-gray-700"
                         />
                     </div>
 

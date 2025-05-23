@@ -7,7 +7,7 @@ interface CarPreviewDTO {
     title: string;
     price: number;
     firstRegistrationDate: string;
-    imageKeys?: string[];
+    imageUrls: string[]; // Use imageUrls directly
 }
 
 interface CarGridProps {
@@ -18,22 +18,22 @@ interface CarGridProps {
     };
     carCount: number;
     cars: CarPreviewDTO[];
-    carImages: Record<string, string[]>;
     loading: boolean;
     error: string | null;
     imageHeight?: string;
     imageWidth?: string;
+    prioritizeFirstImages?: boolean;
 }
 
 const CarGrid: React.FC<CarGridProps> = ({
                                              columns = { sm: 2, lg: 6 },
                                              carCount,
                                              cars,
-                                             carImages,
                                              loading,
                                              error,
                                              imageHeight = "h-32",
-                                             imageWidth = "w-full"
+                                             imageWidth = "w-full",
+                                             prioritizeFirstImages = false
                                          }) => {
     if (loading) {
         return <div>Loading...</div>;
@@ -57,21 +57,22 @@ const CarGrid: React.FC<CarGridProps> = ({
         ${columnClasses[String(columns.sm || 2)]} 
         md:${columnClasses[String(columns.md || 4)]} 
         lg:${columnClasses[String(columns.lg || 6)]}
-        gap-4
+        gap-2
     `;
 
     return (
         <div className={columnClass}>
-            {cars.slice(0, carCount).map((car) => (
+            {cars.slice(0, carCount).map((car, index) => (
                 <Link href={`/cars/${car.id}`} key={car.id}>
                     <div className="flex flex-col border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
                         <div className="relative">
-                            {carImages[car.id]?.length > 0 ? (
+                            {car.imageUrls?.length > 0 ? (
                                 <S3Image
-                                    src={carImages[car.id][0]}
+                                    src={car.imageUrls[0]} // Use imageUrls directly
                                     alt={`Car ${car.title} - Image 1`}
                                     className={`${imageWidth} ${imageHeight} object-cover`}
-                                    loading="lazy"
+                                    loading={prioritizeFirstImages && index < 4 ? "eager" : "lazy"}
+                                    priority={prioritizeFirstImages && index < 4}
                                 />
                             ) : (
                                 <div className={`${imageWidth} ${imageHeight} bg-gray-200 flex items-center justify-center`}>
@@ -89,7 +90,6 @@ const CarGrid: React.FC<CarGridProps> = ({
                                     {car.price} €
                                 </span>
                             </div>
-
                         </div>
                     </div>
                 </Link>

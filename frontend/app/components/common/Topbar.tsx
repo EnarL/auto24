@@ -5,16 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthUser } from "@/app/context/AuthUserContext";
 import AuthLinks from "@/app/components/auth/AuthLinks";
 
-const MenuItem = ({ href, label, isActive, onClick }: { href: string; label: string; isActive: boolean; onClick?: () => void }) => (
-    <li className="relative group">
+const SidebarMenuItem = ({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) => (
+    <li className="mx-3 my-2 overflow-hidden rounded-md">
         <Link
             href={href}
-            className={`
-                flex justify-center items-center px-4 py-2 sm:px-6 sm:py-3
-                rounded-lg text-center font-semibold text-sm sm:text-lg
-                transition-all duration-300 transform hover:scale-105
-                ${isActive ? "bg-green-700 text-white shadow-lg" : "bg-gray-200 text-gray-800"}
-            `}
+            className="flex items-center px-5 py-3 rounded-md text-gray-800 text-lg font-medium transition-all duration-200 transform hover:scale-105 hover:bg-green-600 hover:text-white"
             onClick={onClick}
         >
             {label}
@@ -44,17 +39,24 @@ const Topbar = () => {
             <div className="flex items-center justify-between px-6 py-4">
                 <ul className="flex space-x-4 sm:space-x-6">
                     {menuItems.map((item) => (
-                        <MenuItem
-                            key={item.href}
-                            href={item.href}
-                            label={item.label}
-                            isActive={currentPath === item.href}
-                        />
+                        <li key={item.href} className="relative group">
+                            <Link
+                                href={item.href}
+                                className={`
+                                    flex justify-center items-center px-4 py-2 sm:px-6 sm:py-3
+                                    rounded-lg text-center font-semibold text-sm sm:text-lg
+                                    transition-all duration-300 transform hover:scale-105
+                                    ${currentPath === item.href ? "bg-green-700 text-white shadow-lg" : "bg-gray-200 text-gray-800"}
+                                `}
+                            >
+                                {item.label}
+                            </Link>
+                        </li>
                     ))}
                     <li className="relative group">
                         <button
                             onClick={handleAddListingClick}
-                            className="flex justify-center items-center px-4 py-2 sm:px-6 sm:py-3 rounded-lg text-center font-semibold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 bg-green-600 text-white hover:bg-green-700"
+                            className="flex justify-center items-center px-4 py-2 sm:px-6 sm:py-3 rounded-lg text-center font-semibold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 bg-green-500 text-white hover:bg-green-700"
                         >
                             Lisa kuulutus
                         </button>
@@ -112,23 +114,14 @@ const Topbar = () => {
                         </div>
                         <ul className="py-3">
                             {menuItems.map((item) => (
-                                <MenuItem
+                                <SidebarMenuItem
                                     key={item.href}
                                     href={item.href}
                                     label={item.label}
-                                    isActive={currentPath === item.href}
                                     onClick={toggleSidebar}
                                 />
                             ))}
-                            <li className="mx-3 my-2 overflow-hidden rounded-md">
-                                <Link
-                                    href="/users/my"
-                                    className="flex items-center px-5 py-3 rounded-md text-gray-800 text-lg font-medium transition-all duration-200 transform hover:scale-105 hover:bg-green-600 hover:text-white"
-                                    onClick={toggleSidebar}
-                                >
-                                    Minu konto
-                                </Link>
-                            </li>
+                            <SidebarMenuItem href="/users/my" label="Minu konto" onClick={toggleSidebar} />
                             <li className="mx-3 my-2 overflow-hidden rounded-md">
                                 <div className="px-5 py-3">
                                     <AuthLinks onClick={toggleSidebar} />

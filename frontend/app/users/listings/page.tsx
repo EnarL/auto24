@@ -18,6 +18,8 @@ const ListingsPage: React.FC = () => {
                         columns={{ sm: 2, md: 3, lg: 3 }}
                         carCount={6}
                         cars={cars}
+
+
                         carImages={carImages}
                         loading={loading}
                         error={error}

@@ -15,7 +15,7 @@ const ResetPassword: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        handleResetPassword(newPassword, confirmPassword);
+        await handleResetPassword(newPassword, confirmPassword);
     };
 
     return (

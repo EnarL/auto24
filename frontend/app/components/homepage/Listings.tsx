@@ -11,15 +11,17 @@ interface ListingPageProps {
     };
     imageHeight?: string;
     imageWidth?: string;
+    prioritizeFirstImages?: boolean;
 }
 
 const ListingPage: React.FC<ListingPageProps> = ({
                                                      carCount = 30,
                                                      columns = { sm: 2, lg: 6 },
                                                      imageHeight = "h-32",
-                                                     imageWidth = "w-full"
+                                                     imageWidth = "w-full",
+                                                     prioritizeFirstImages = false
                                                  }) => {
-    const { cars, carImages, loading, error } = useCarPreview();
+    const { cars, loading, error } = useCarPreview();
 
     return (
         <div className="flex flex-col">
@@ -28,11 +30,11 @@ const ListingPage: React.FC<ListingPageProps> = ({
                 columns={columns}
                 carCount={carCount}
                 cars={cars}
-                carImages={carImages}
                 loading={loading}
                 error={error}
                 imageHeight={imageHeight}
                 imageWidth={imageWidth}
+                prioritizeFirstImages={prioritizeFirstImages}
             />
         </div>
     );

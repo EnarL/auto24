@@ -31,51 +31,76 @@ const ForgotPassword: React.FC = () => {
         }
     };
 
-
     return (
-        <div className="flex justify-center items-start min-h-screen bg-gray-100">
-            <div className="w-full max-w-md p-8 shadow-sm border bg-white mt-10 rounded-lg">
-                <h2 className="text-2xl font-bold mb-6 text-center">Unustasin parooli</h2>
-                <p className="text-gray-600 text-center mb-6">
-                    Sisesta oma e-posti aadress ja saadame taastamislingi.
-                </p>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center py-8 px-4">
+            <div className="bg-white shadow-xl rounded-2xl p-6 md:p-10 w-full max-w-lg">
+                <div className="text-center mb-8">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Unustasin parooli</h2>
+                    <p className="text-gray-600">
+                        Sisesta oma e-posti aadress ja saadame taastamislingi.
+                    </p>
+                </div>
 
-                <form onSubmit={handlePasswordReset}>
-                    <div className="mb-6">
+                <form onSubmit={handlePasswordReset} className="space-y-6">
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                            E-posti aadress
+                        </label>
                         <input
                             type="email"
+                            id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Sisesta e-mail *"
-                            className="w-full p-4 text-[14px] border border-gray-300 focus:border-blue-600 focus:outline-none "
+                            placeholder="Sisesta e-posti aadress"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
                             required
                         />
                     </div>
-                    {isLoading ? (
-                        <p className="text-center mt-4 text-gray-600">E-kirja saatmine...</p>
-                    ) : (
-                        message && (
-                            <p
-                                className={`text-center mt-4 ${
-                                    message.includes("ei leitud") || message.includes("valesti") || message.includes("Viga")
-                                        ? "text-red-600"
-                                        : "text-green-600"
-                                }`}
-                            >
+                    {isLoading && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <p className="text-blue-700 text-center text-sm">E-kirja saatmine...</p>
+                        </div>
+                    )}
+                    {message && !isLoading && (
+                        <div className={`border rounded-lg p-4 ${
+                            message.includes("ei leitud") || message.includes("valesti") || message.includes("Viga")
+                                ? "bg-red-50 border-red-200"
+                                : "bg-green-50 border-green-200"
+                        }`}>
+                            <p className={`text-center text-sm ${
+                                message.includes("ei leitud") || message.includes("valesti") || message.includes("Viga")
+                                    ? "text-red-700"
+                                    : "text-green-700"
+                            }`}>
                                 {message}
                             </p>
-                        )
+                        </div>
                     )}
 
-                    <div className="mt-6">
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-600 text-white p-1 hover:bg-blue-700 transition"
-                        >
-                            Saada link
-                        </button>
-                    </div>
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isLoading ? "Saatmine..." : "SAADA LINK"}
+                    </button>
                 </form>
+                <div className="mt-8 text-center">
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-3 bg-white text-gray-500">või</span>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => window.history.back()}
+                        className="mt-4 text-green-600 hover:text-green-800 hover:underline transition duration-200 text-sm font-medium"
+                    >
+                        Tagasi sisselogimise lehele
+                    </button>
+                </div>
             </div>
         </div>
     );

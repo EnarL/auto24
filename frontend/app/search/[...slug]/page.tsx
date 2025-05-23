@@ -22,28 +22,32 @@ const BrandPage = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
 
+    // State variables
     const [carDetails, setCarDetails] = useState<CarDetail[]>([]);
     const [carImages, setCarImages] = useState<CarImage>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [sortOption, setSortOption] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
+
     const carsPerPage = 10;
 
+    // Fetch car details and images
     useEffect(() => {
-        const fetchCarDetails = async () => {
+        const fetchCarData = async () => {
             setLoading(true);
-
             try {
                 const queryParams = new URLSearchParams(searchParams.toString());
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-details/search?${queryParams.toString()}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/car-details/search?${queryParams}`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 });
-                if (!response.ok) {
-                    throw new Error("Failed to fetch car details");
-                }
+
+                if (!response.ok) throw new Error("Failed to fetch car details");
+
                 const data: CarDetail[] = await response.json();
                 setCarDetails(data);
+
                 const imageRequests = data.map((car) =>
                     fetch(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${car.id}`)
                         .then((res) => (res.ok ? res.json() : []))
@@ -58,15 +62,16 @@ const BrandPage = () => {
 
                 setCarImages(newCarImages);
             } catch (error) {
-                console.error("An error occurred while fetching data:", error);
+                console.error("Error fetching car data:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchCarDetails();
+        fetchCarData();
     }, [searchParams]);
 
+    // Sorting logic
     const sortedCars = [...carDetails].sort((a, b) => {
         if (sortOption === "price-asc") return a.price - b.price;
         if (sortOption === "price-desc") return b.price - a.price;
@@ -76,20 +81,38 @@ const BrandPage = () => {
             return new Date(a.firstRegistrationDate).getTime() - new Date(b.firstRegistrationDate).getTime();
         return 0;
     });
-    const totalPages = Math.ceil(carDetails.length / carsPerPage);
-    const handleCarClick = (carId: string) => {
-        router.push(`/cars/${carId}`);
-    };
-    const handlePageChange = (newPage: number) => {
-        if (newPage < 1 || newPage > totalPages) return;
-        setCurrentPage(newPage);
-    };
 
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const toggleMenu = () => {
-        setIsMenuVisible((prev) => !prev);
-    };
+    // Pagination logic
+    const totalPages = Math.ceil(carDetails.length / carsPerPage);
     const paginatedCars = sortedCars.slice((currentPage - 1) * carsPerPage, currentPage * carsPerPage);
+
+    const handleCarClick = (carId: string) => router.push(`/cars/${carId}`);
+    const handlePageChange = (newPage: number) => {
+        if (newPage >= 1 && newPage <= totalPages) setCurrentPage(newPage);
+    };
+    const toggleMenu = () => setIsMenuVisible((prev) => !prev);
+
+    // Pagination controls component
+    const PaginationControls = () => (
+        <div className="flex items-center">
+            <button
+                className="p-2 border border-gray-500 rounded-md mx-1"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+            >
+                <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
+            <span className="px-3">{currentPage} / {totalPages}</span>
+            <button
+                className="p-2 border border-gray-500 rounded-md mx-1"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+            >
+                <FontAwesomeIcon icon={faChevronRight} />
+            </button>
+        </div>
+    );
+
     return (
         <div className="mt-2 flex overflow-x-hidden">
             <ExtendedMenuBar showCarCount={true} isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
@@ -98,37 +121,21 @@ const BrandPage = () => {
                     <button
                         className="border border-gray-500 px-2 py-1 mt-2 ml-4 flex items-center md:hidden"
                         onClick={toggleMenu}
-                    ><FontAwesomeIcon icon={faSlidersH} className="h-5 w-5 mr-1 text-gray-500"/>
+                    >
+                        <FontAwesomeIcon icon={faSlidersH} className="h-5 w-5 mr-1 text-gray-500" />
                         Filtrid
                     </button>
                 </div>
-                <div className="flex items-center justify-between w-full px-4 bg-gray-200 py-2">
+                <div className="rounded-md flex items-center justify-between w-full px-4 bg-gray-200 py-2.5">
                     <span className="text-lg font-semibold">Kokku: {carDetails.length}</span>
-                    <SortSelect sortOption={sortOption} onSortChange={setSortOption} />
-                    {carDetails.length > 0 && (
-                        <div className="flex items-center">
-                            <button
-                                className="p-2 border border-gray-500 rounded-md mx-1"
-                                onClick={() => handlePageChange(currentPage - 1)}
-                                disabled={currentPage === 1}
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft}/>
-                            </button>
-
-                            <span className="px-3">{currentPage} / {totalPages}</span>
-
-                            <button
-                                className="p-2 border border-gray-500 rounded-md mx-1"
-                                onClick={() => handlePageChange(currentPage + 1)}
-                                disabled={currentPage === totalPages}
-                            ><FontAwesomeIcon icon={faChevronRight}/>
-                            </button>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-x-4">
+                        <SortSelect sortOption={sortOption} onSortChange={setSortOption}/>
+                        {carDetails.length > 0 && <PaginationControls/>}
+                    </div>
                 </div>
                 <div className="w-full mt-2">
-                    {loading && <div>Loading...</div>}
-                    <CarList cars={paginatedCars} carImages={carImages} onCarClick={handleCarClick}/>
+                    {loading ? <div>Loading...</div> :
+                        <CarList cars={paginatedCars} carImages={carImages} onCarClick={handleCarClick}/>}
                 </div>
             </main>
         </div>

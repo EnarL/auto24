@@ -10,7 +10,6 @@ interface CarPreviewDTO {
 
 const useCarPreview = () => {
     const [cars, setCars] = useState<CarPreviewDTO[]>([]);
-    const [carImages, setCarImages] = useState<Record<string, string[]>>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -24,24 +23,6 @@ const useCarPreview = () => {
                 if (response.ok) {
                     const carDetails: CarPreviewDTO[] = await response.json();
                     setCars(carDetails);
-
-                    // Fetch image URLs for each car
-                    const imageFetchPromises = carDetails.map(car =>
-                        fetch(`${process.env.NEXT_PUBLIC_API_URL}/productImages/getCarImages/${car.id}`)
-                            .then(res => res.ok ? res.json() : [])
-                            .catch(() => [])
-                    );
-
-                    // Once all image fetches are completed, update carImages state
-                    const imagesArray = await Promise.all(imageFetchPromises);
-                    const imagesObject: Record<string, string[]> = {};
-
-                    // Map each car's ID to its images
-                    carDetails.forEach((car, index) => {
-                        imagesObject[car.id] = imagesArray[index];
-                    });
-
-                    setCarImages(imagesObject);
                 } else {
                     setError('Failed to fetch car details');
                 }
@@ -60,7 +41,7 @@ const useCarPreview = () => {
         fetchCarDetails();
     }, []);
 
-    return { cars, carImages, loading, error };
+    return { cars, loading, error };
 };
 
 export default useCarPreview;

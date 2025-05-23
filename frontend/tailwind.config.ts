@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#ffffff', // Set the background color to white
-        text: '#000000', // Set the text color to black
+        background: '#ffffff',
+        text: '#000000',
 
       },
     },

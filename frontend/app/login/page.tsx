@@ -61,10 +61,10 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center mt-16 ">
             <div className="bg-white shadow-lg rounded-lg p-8 md:p-16 w-full max-w-4xl flex flex-col md:flex-row">
                 <div className="w-full md:w-1/2 pr-0 md:pr-8 mb-8 md:mb-0">
-                    <h2 className="text-3xl font-bold text-blue-600 mb-6 text-center">Logi sisse</h2>
+                    <h2 className="text-3xl font-bold text-black mb-6 text-center">Logi sisse</h2>
                     {successMessage && <p className="text-green-500 mb-4 text-center">{successMessage}</p>}
 
                     <form onSubmit={handleLogin}>
@@ -92,23 +92,18 @@ const LoginPage: React.FC = () => {
                             />
                         </div>
                         <div className="flex justify-between items-center mt-2 mb-4 text-sm">
-                            <div className="flex items-center">
-                                <input type="checkbox" className="mr-2" />
-                                <p className="text-gray-600">Mäleta mind</p>
-                            </div>
                             <p
-                                className="text-blue-500 cursor-pointer hover:underline"
+                                className="text-green-700 cursor-pointer hover:underline ml-auto"
                                 onClick={() => router.push('/forgot_password')}
                             >
                                 Unustasin parooli
                             </p>
                         </div>
-
                         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
                         <button
                             type="submit"
-                            className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
+                            className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition duration-300"
                         >
                             SISENE
                         </button>
@@ -116,13 +111,13 @@ const LoginPage: React.FC = () => {
                 </div>
                 <div className="w-full md:w-1/2 pl-0 md:pl-8 flex flex-col justify-center items-center">
                     <button
-                        className="w-full bg-white border border-blue-500 text-blue-500 font-bold p-3 mb-4 rounded-lg hover:bg-blue-500 hover:text-white transition duration-300"
+                        className="w-full bg-white border border-green-700 text-green-600 font-bold p-3 mb-4 rounded-lg hover:bg:green-700 transition duration-300"
                         onClick={handleRegisterRedirect}
                     >
                         REGISTREERU
                     </button>
                     <button
-                        className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-500 transition duration-300"
+                        className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition duration-300"
                         onClick={handleAddListingClick}
                     >
                         LISA KUULUTUS
