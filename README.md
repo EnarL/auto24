@@ -8,9 +8,11 @@ This project was inspired by Auto24.ee website, a popular online marketplace for
 - **Vehicle Listing Management**: Add, edit, and delete vehicle listings.
 - **Search Functionality**: Easily search for vehicles based on different criteria.
 - **Image Storage**: Vehicle images are stored on **AWS S3** for scalability.
+  
 
+---
 
-## 🚀 Technologies Used
+### Technologies Used
 
 - **Frontend**: Built with [Next.js](https://nextjs.org/) and [Tailwind CSS](https://tailwindcss.com/)
 - **Backend**: Powered by [Spring Boot](https://spring.io/projects/spring-boot) and Java
