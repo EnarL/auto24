@@ -22,3 +22,10 @@ This project was inspired by Auto24.ee website, a popular online marketplace for
 - **Heroku**: Deployment
 
 ---
+
+### Ideas for future
+
+- CDN for AWS S3 to accelerate image loading
+- Car rental option
+- Prioritization of car listings
+- Watchlist for users to save cars
