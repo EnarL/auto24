@@ -76,9 +76,9 @@ const RegisterPage: React.FC = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
+        <div className="flex items-center justify-center min-h-screen">
             <div className="bg-white shadow-lg rounded-lg p-8 md:p-12 w-full max-w-lg">
-                <h2 className="text-2xl font-bold text-blue-600 mb-4 text-center">Kasutajaks registreerumine</h2>
+                <h2 className="text-2xl font-bold text-black mb-4 text-center">Kasutajaks registreerumine</h2>
                 <p className="italic text-sm text-gray-600 text-center mb-6">Tärniga (*) tähistatud väljad on kohustuslikud!</p>
                 <form className="space-y-4" onSubmit={handleRegister}>
                     <div>
@@ -166,14 +166,14 @@ const RegisterPage: React.FC = () => {
                             onChange={(e) => setTerms(e.target.checked)}
                         />
                         <label htmlFor="terms" className="text-sm text-gray-700">
-                            Nõustun <a href="https://www.auto24.ee/users/kasutustingimused.php" className="text-blue-500 underline hover:text-blue-600">andmekaitse- ja kasutusetingimustega</a> *
+                            Nõustun <a className="text-blue-500 underline hover:text-blue-600">andmekaitse- ja kasutusetingimustega</a> *
                         </label>
                     </div>
                     {error && <p className="text-red-500 text-sm text-center">{error}</p>}
                     {success && <p className="text-green-500 text-sm text-center">{success}</p>}
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
+                        className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
                     >
                         REGISTREERU
                     </button>
